@@ -3,7 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InvestPop</title>
+  <title>InvestPop — Radar de FIIs em tempo real</title>
+  <meta name="description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia, preços atualizados a cada 10 minutos." />
+  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
+  <link rel="canonical" href="https://investpop.com.br" />
+  <meta property="og:title" content="InvestPop — Radar de FIIs em tempo real" />
+  <meta property="og:description" content="Acompanhe os Fundos Imobiliários em tempo real. IFIX, maiores altas e quedas do dia." />
+  <meta property="og:url" content="https://investpop.com.br" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="InvestPop — Radar de FIIs" />
+  <meta name="twitter:description" content="FIIs em tempo real. IFIX, maiores altas e quedas do dia." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -83,8 +95,8 @@
       <!-- IFIX Hoje -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">IFIX Hoje</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3851,98</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,00%</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3852,91</p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,08%</span>
       </div>
 
       <!-- Maior Alta -->
@@ -92,15 +104,15 @@
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
         <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HFOF11</p>
         <span class="text-xs md:text-sm text-emerald-500 font-medium">+22,36%</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 6,44</div>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 6,46</div>
       </div>
 
       <!-- Maior Baixa -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
         <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HCTR11</p>
-        <span class="text-xs md:text-sm text-red-500 font-medium">-9,02%</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 16,72</div>
+        <span class="text-xs md:text-sm text-red-500 font-medium">-6,60%</span>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 16,74</div>
       </div>
     </div>
 
@@ -143,35 +155,35 @@
                 <td class="py-2.5 text-gray-500">1</td>
                 <td class="py-2.5 font-medium">HFOF11</td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+22,36%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 6,44</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 6,46</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">2</td>
                 <td class="py-2.5 font-medium">VGIR11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+7,64%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 9,63</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+8,79%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 9,62</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">3</td>
+                <td class="py-2.5 font-medium">TEPP11</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+5,54%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 8,51</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">4</td>
                 <td class="py-2.5 font-medium">KISU11</td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+4,44%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 6,77</td>
               </tr>
 
               <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">4</td>
+                <td class="py-2.5 text-gray-500">5</td>
                 <td class="py-2.5 font-medium">PORD11</td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+4,34%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 8,32</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">URPR11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+4,33%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 26,66</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 8,33</td>
               </tr>
             </tbody>
           </table>
@@ -202,36 +214,36 @@
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">1</td>
                 <td class="py-2.5 font-medium">HCTR11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-9,02%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 16,72</td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-6,60%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 16,74</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">2</td>
                 <td class="py-2.5 font-medium">DEVA11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-5,08%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 19,68</td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-5,58%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 19,73</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">3</td>
-                <td class="py-2.5 font-medium">KNSC11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-3,63%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 9,07</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">4</td>
                 <td class="py-2.5 font-medium">ALZR11</td>
                 <td class="py-2.5 text-right text-red-500 font-medium">-2,78%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 10,40</td>
               </tr>
 
               <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">4</td>
+                <td class="py-2.5 font-medium">KNSC11</td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-2,42%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 9,07</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">BRCR11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-1,98%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 44,49</td>
+                <td class="py-2.5 font-medium">GGRC11</td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-1,97%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 10,10</td>
               </tr>
             </tbody>
           </table>

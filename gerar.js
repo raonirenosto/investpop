@@ -26,13 +26,16 @@ function lerFiis() {
 
 async function buscarIfix() {
     try {
-        const r = await axios.get("https://mfinance.com.br/api/v1/fiis/ifix", { httpsAgent: agentSemSSL })
-        const dados = r.data
+        const r = await axios.get("https://query1.finance.yahoo.com/v8/finance/chart/IFIX.SA?interval=1d&range=1d", {
+            httpsAgent: agentSemSSL,
+            headers: { "User-Agent": "Mozilla/5.0" }
+        })
+        const meta = r.data.chart.result[0].meta
+        const preco = meta.regularMarketPrice
+        const anterior = meta.chartPreviousClose
+        const varNum = ((preco - anterior) / anterior) * 100
 
-        const valor = dados.lastPrice.toFixed(2).replace(".", ",")
-        const varNum = dados.closingPrice > 0
-            ? (dados.change / dados.closingPrice) * 100
-            : 0
+        const valor = preco.toFixed(2).replace(".", ",")
         const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
 
         console.log(`📊 IFIX: ${valor} | ${variacao}`)
@@ -368,7 +371,12 @@ async function main() {
     console.log("🚀 InvestPop — Gerando página...\n")
 
     const fiis = lerFiis()
-    console.log(`📋 ${fiis.length} FIIs carregados\n`)
+    const args = process.argv.slice(2)
+    const limitFlag = args.find(a => a.startsWith("--limit="))
+    const limit = limitFlag ? parseInt(limitFlag.split("=")[1]) : fiis.length
+    const fiisLimitados = fiis.slice(0, limit)
+
+    console.log(`📋 ${fiisLimitados.length} FIIs carregados\n`)
 
     // Buscar IFIX
     const ifix = await buscarIfix()
@@ -376,7 +384,7 @@ async function main() {
     // Buscar dados de cada FII
     const resultados = []
 
-    for (const ticker of fiis) {
+    for (const ticker of fiisLimitados) {
         await new Promise(r => setTimeout(r, 500))
         const dados = await buscarFii(ticker)
         resultados.push(dados)
