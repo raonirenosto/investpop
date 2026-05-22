@@ -1,4 +1,5 @@
-function headHtml(titulo, descricao) {
+function headHtml(titulo, descricao, jsonLd) {
+    var ldScript = jsonLd ? `\n  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : '';
     return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,9 +13,11 @@ function headHtml(titulo, descricao) {
   <meta property="og:description" content="${descricao}" />
   <meta property="og:url" content="https://investpop.com.br" />
   <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${titulo}" />
   <meta name="twitter:description" content="${descricao}" />
+  <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>\ud83d\udcc8</text></svg>" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +31,7 @@ function headHtml(titulo, descricao) {
     body { font-family: 'Inter', sans-serif; }
     #modal-breve { display: none; }
     #modal-breve.show { display: flex; }
-  </style>
+  </style>${ldScript}
 </head>
 <body class="bg-bg min-h-screen text-white">`
 }

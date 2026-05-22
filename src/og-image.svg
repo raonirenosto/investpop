@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#07111F"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="#0B1A2E" stroke="#132743" stroke-width="2"/>
+  <text x="600" y="280" text-anchor="middle" font-family="Inter,sans-serif" font-size="72" font-weight="bold" fill="white">Invest<tspan fill="#10B981">Pop</tspan></text>
+  <text x="600" y="360" text-anchor="middle" font-family="Inter,sans-serif" font-size="28" fill="#9CA3AF">Radar de Fundos Imobiliários em tempo real</text>
+  <text x="600" y="420" text-anchor="middle" font-family="Inter,sans-serif" font-size="22" fill="#6B7280">IFIX • Maiores Altas • Maiores Quedas • Atualizado a cada 10min</text>
+  <path d="M500 480 L540 460 L580 470 L620 440 L660 450 L700 420" stroke="#10B981" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>

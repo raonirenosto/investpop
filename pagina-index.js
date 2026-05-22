@@ -15,11 +15,21 @@ function gerarHtml(ifix, altas, quedas) {
     const maiorBaixa = quedas[0] || { ticker: "-", variacao: "-", preco: "-" }
     const corIfix = !ifix.variacao.includes("-") ? "text-emerald-500" : "text-red-500"
 
-    return `${headHtml("InvestPop \u2014 Radar de FIIs em tempo real", "Acompanhe os Fundos Imobili\u00e1rios (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia.")}
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "InvestPop",
+        "url": "https://investpop.com.br",
+        "description": "Acompanhe os Fundos Imobili\u00e1rios (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia.",
+        "publisher": { "@type": "Organization", "name": "InvestPop" }
+    }
+
+    return `${headHtml("InvestPop \u2014 Radar de FIIs em tempo real", "Acompanhe os Fundos Imobili\u00e1rios (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia.", jsonLd)}
 
 ${headerHtml()}
 
   <main class="px-4 md:px-8 py-6 md:py-8">
+    <h1 class="sr-only">InvestPop \u2014 Radar de Fundos Imobili\u00e1rios em tempo real</h1>
     <div class="flex items-center gap-2 mb-4">
       <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>

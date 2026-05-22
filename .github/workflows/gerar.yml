@@ -32,6 +32,9 @@ jobs:
           mkdir -p _site
           cp src/*.html _site/
           cp src/*.js _site/
+          cp src/robots.txt _site/
+          cp src/sitemap.xml _site/
+          cp src/og-image.svg _site/
           echo "investpop.com.br" > _site/CNAME
 
       - name: Upload Pages artifact
