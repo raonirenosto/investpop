@@ -112,6 +112,9 @@ async function main() {
     const limit = limitFlag ? parseInt(limitFlag.split("=")[1]) : fiis.length
     const fiisLimitados = fiis.slice(0, limit)
     const usarCache = args.includes("--cache")
+    const teste = args.includes("--teste")
+    global.INVESTPOP_TESTE = teste
+    if (teste) console.log("\u26a0\ufe0f Modo teste: tracking desativado\n")
 
     console.log(`📋 ${fiisLimitados.length} FIIs carregados\n`)
 

@@ -77,7 +77,7 @@ ${headerHtml()}
     </div>
   </main>
 
-${footerHtml()}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
 
   <script src="console.js"></script>
 

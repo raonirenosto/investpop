@@ -78,7 +78,33 @@ function headerHtml() {
   </nav>`
 }
 
-function footerHtml() {
+function footerHtml(opts) {
+    var tracking = '';
+    if (!opts || !opts.teste) {
+        tracking = `
+    // Tracking
+    (function() {
+      if(document.cookie.includes('ghost=true')) return;
+      if(location.pathname.includes('console')) return;
+      fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
+        var params = new URLSearchParams({
+          data: new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}),
+          ip: d.ip,
+          navegador: navigator.userAgent,
+          dispositivo: /Mobile|Android|iPhone/.test(navigator.userAgent)?'Mobile':'Desktop',
+          os: navigator.platform,
+          resolucao: screen.width+'x'+screen.height,
+          idioma: navigator.language,
+          referrer: document.referrer||'direto',
+          pagina: location.pathname||'index',
+          pais: d.country_name||'-',
+          cidade: d.city||'-'
+        });
+        fetch('https://script.google.com/macros/s/AKfycbw5g5LIgPk0xtQ9mxolmrc1yZfMJggyHlkCNbzGRA6OcQABdthqqyLaGWzVFzRv-XOrYA/exec?'+params,{mode:'no-cors'});
+      }).catch(function(){});
+    })();`;
+    }
+
     return `
   <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border">
     <a href="index.html" class="flex items-center gap-2">
@@ -121,28 +147,7 @@ function footerHtml() {
   <script>
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
-
-    // Tracking
-    (function() {
-      if(document.cookie.includes('ghost=true')) return;
-      if(location.pathname.includes('console')) return;
-      fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
-        var params = new URLSearchParams({
-          data: new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}),
-          ip: d.ip,
-          navegador: navigator.userAgent,
-          dispositivo: /Mobile|Android|iPhone/.test(navigator.userAgent)?'Mobile':'Desktop',
-          os: navigator.platform,
-          resolucao: screen.width+'x'+screen.height,
-          idioma: navigator.language,
-          referrer: document.referrer||'direto',
-          pagina: location.pathname||'index',
-          pais: d.country_name||'-',
-          cidade: d.city||'-'
-        });
-        fetch('https://script.google.com/macros/s/AKfycbw5g5LIgPk0xtQ9mxolmrc1yZfMJggyHlkCNbzGRA6OcQABdthqqyLaGWzVFzRv-XOrYA/exec?'+params,{mode:'no-cors'});
-      }).catch(function(){});
-    })();
+${tracking}
   </script>`
 }
 

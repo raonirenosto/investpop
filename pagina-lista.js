@@ -43,7 +43,7 @@ ${linhas}
     </div>
   </main>
 
-${footerHtml()}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
 
   <script>
     function filtrar() {
