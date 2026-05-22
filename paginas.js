@@ -154,6 +154,15 @@ ${headerHtml()}
     <a href="index.html" class="text-sm text-gray-400 hover:text-white mb-4 inline-block">&larr; Voltar</a>
     <h1 class="text-lg md:text-xl font-bold mb-6">${titulo}</h1>
 
+    <div class="mb-4">
+      <div class="flex items-center bg-card border border-card-border rounded-lg px-3 py-2 gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" id="busca" placeholder="Filtrar por nome do FII..." oninput="filtrar()" class="bg-transparent text-sm text-gray-300 outline-none w-full" />
+      </div>
+    </div>
+
     <div class="bg-card border border-card-border rounded-xl p-4 md:p-5">
       <table class="w-full text-sm">
         <thead>
@@ -164,7 +173,7 @@ ${headerHtml()}
             <th class="text-right pb-2 font-medium">Pre\u00e7o</th>
           </tr>
         </thead>
-        <tbody class="text-gray-200">
+        <tbody id="tabela-body" class="text-gray-200">
 ${linhasTabela(lista, cor)}
         </tbody>
       </table>
@@ -172,6 +181,17 @@ ${linhasTabela(lista, cor)}
   </main>
 
 ${footerHtml()}
+
+  <script>
+    function filtrar() {
+      const termo = document.getElementById('busca').value.toUpperCase();
+      const linhas = document.querySelectorAll('#tabela-body tr');
+      linhas.forEach(tr => {
+        const ticker = tr.cells[1]?.textContent || '';
+        tr.style.display = ticker.toUpperCase().includes(termo) ? '' : 'none';
+      });
+    }
+  </script>
 
 </body>
 </html>`
