@@ -1,4 +1,95 @@
-<!DOCTYPE html>
+const axios = require("axios")
+const fs = require("fs")
+const path = require("path")
+const https = require("https")
+
+const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
+
+// ===============================
+// 📥 LER FIIs
+// ===============================
+
+function lerFiis() {
+    if (!fs.existsSync("lista_fiis.txt")) {
+        console.log("⚠️ Arquivo lista_fiis.txt não encontrado")
+        return []
+    }
+    return fs.readFileSync("lista_fiis.txt", "utf-8")
+        .split(/[\r\n\s,]+/)
+        .map(l => l.trim().toUpperCase())
+        .filter(l => l)
+}
+
+// ===============================
+// 🌐 BUSCAR IFIX (mfinance)
+// ===============================
+
+async function buscarIfix() {
+    try {
+        const r = await axios.get("https://mfinance.com.br/api/v1/fiis/ifix", { httpsAgent: agentSemSSL })
+        const dados = r.data
+
+        const valor = dados.lastPrice.toFixed(2).replace(".", ",")
+        const varNum = dados.closingPrice > 0
+            ? (dados.change / dados.closingPrice) * 100
+            : 0
+        const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
+
+        console.log(`📊 IFIX: ${valor} | ${variacao}`)
+        return { valor, variacao }
+    } catch (e) {
+        console.log(`❌ Erro ao buscar IFIX: ${e.message}`)
+        return { valor: "-", variacao: "-" }
+    }
+}
+
+// ===============================
+// 🌐 BUSCAR FII (mfinance)
+// ===============================
+
+async function buscarFii(ticker) {
+    try {
+        const r = await axios.get(`https://mfinance.com.br/api/v1/fiis/${ticker}`, { httpsAgent: agentSemSSL })
+        const dados = r.data
+
+        const preco = dados.lastPrice.toFixed(2).replace(".", ",")
+        const varNum = dados.closingPrice > 0
+            ? (dados.change / dados.closingPrice) * 100
+            : 0
+        const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
+
+        console.log(`✅ ${ticker}: R$ ${preco} | ${variacao}`)
+
+        return { ticker, preco, variacao, varNum }
+    } catch (e) {
+        console.log(`❌ ${ticker}: ${e.message}`)
+        return { ticker, preco: "-", variacao: "0,00%", varNum: 0 }
+    }
+}
+
+// ===============================
+// 🧾 GERAR HTML
+// ===============================
+
+function gerarHtml(ifix, altas, quedas) {
+
+    const maiorAlta = altas[0] || { ticker: "-", variacao: "-", preco: "-" }
+    const maiorBaixa = quedas[0] || { ticker: "-", variacao: "-", preco: "-" }
+
+    const ifixPositivo = !ifix.variacao.includes("-")
+    const corIfix = ifixPositivo ? "text-emerald-500" : "text-red-500"
+
+    function linhasTabela(lista, cor) {
+        return lista.map((item, i) => `
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">${i + 1}</td>
+                <td class="py-2.5 font-medium">${item.ticker}</td>
+                <td class="py-2.5 text-right ${cor} font-medium">${item.variacao}</td>
+                <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
+              </tr>`).join("\n")
+    }
+
+    const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -83,24 +174,24 @@
       <!-- IFIX Hoje -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">IFIX Hoje</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3847,87</p>
-        <span class="text-xs md:text-sm text-red-500 font-medium">-0,00%</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">${ifix.valor}</p>
+        <span class="text-xs md:text-sm ${corIfix} font-medium">${ifix.variacao}</span>
       </div>
 
       <!-- Maior Alta -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HFOF11</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">+22,36%</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 6,45</div>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">${maiorAlta.ticker}</p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">${maiorAlta.variacao}</span>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorAlta.preco}</div>
       </div>
 
       <!-- Maior Baixa -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HCTR11</p>
-        <span class="text-xs md:text-sm text-red-500 font-medium">-5,89%</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 16,80</div>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">${maiorBaixa.ticker}</p>
+        <span class="text-xs md:text-sm text-red-500 font-medium">${maiorBaixa.variacao}</span>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorBaixa.preco}</div>
       </div>
     </div>
 
@@ -138,41 +229,7 @@
               </tr>
             </thead>
             <tbody class="text-gray-200">
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">1</td>
-                <td class="py-2.5 font-medium">HFOF11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+22,36%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 6,45</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">2</td>
-                <td class="py-2.5 font-medium">VGIR11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+6,59%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 9,62</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">3</td>
-                <td class="py-2.5 font-medium">PORD11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+4,34%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 8,32</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">4</td>
-                <td class="py-2.5 font-medium">KORE11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+2,95%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 68,87</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">URPR11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+2,73%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 26,54</td>
-              </tr>
+${linhasTabela(altas, "text-emerald-500")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -198,41 +255,7 @@
               </tr>
             </thead>
             <tbody class="text-gray-200">
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">1</td>
-                <td class="py-2.5 font-medium">HCTR11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-5,89%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 16,80</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">2</td>
-                <td class="py-2.5 font-medium">DEVA11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-4,77%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 19,73</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">3</td>
-                <td class="py-2.5 font-medium">TEPP11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-4,13%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 8,48</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">4</td>
-                <td class="py-2.5 font-medium">KNSC11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-3,63%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 9,06</td>
-              </tr>
-
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">CPTS11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-3,40%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 7,62</td>
-              </tr>
+${linhasTabela(quedas, "text-red-500")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -251,7 +274,7 @@
       </svg>
       <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
     </div>
-    <span class="text-xs text-gray-500">&copy; 2024 InvestPop. Todos os direitos reservados.</span>
+    <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
     <div class="flex items-center gap-4 text-gray-400">
       <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128172;</a>
       <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128247;</a>
@@ -319,4 +342,69 @@
   </script>
 
 </body>
-</html>
+</html>`
+
+    return html
+}
+
+// ===============================
+// 🚀 MAIN
+// ===============================
+
+async function main() {
+
+    console.log("🚀 InvestPop — Gerando página...\n")
+
+    const fiis = lerFiis()
+    console.log(`📋 ${fiis.length} FIIs carregados\n`)
+
+    // Buscar IFIX
+    const ifix = await buscarIfix()
+
+    // Buscar dados de cada FII
+    const resultados = []
+
+    for (const ticker of fiis) {
+        await new Promise(r => setTimeout(r, 500))
+        const dados = await buscarFii(ticker)
+        resultados.push(dados)
+    }
+
+    // Separar altas e quedas
+    const altas = resultados
+        .filter(r => r.varNum > 0)
+        .sort((a, b) => b.varNum - a.varNum)
+        .slice(0, 5)
+
+    const quedas = resultados
+        .filter(r => r.varNum < 0)
+        .sort((a, b) => a.varNum - b.varNum)
+        .slice(0, 5)
+
+    console.log(`\n📈 Altas: ${altas.length} | 📉 Quedas: ${quedas.length}`)
+
+    // Gerar HTML
+    const html = gerarHtml(ifix, altas, quedas)
+
+    const pasta = "src"
+    if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
+
+    fs.writeFileSync(path.join(pasta, "index.html"), html)
+    console.log("\n✅ Página gerada em src/index.html")
+
+    // Abrir no navegador (apenas local)
+    if (!process.argv.includes("--no-open")) {
+        const { exec } = require("child_process")
+        const caminho = path.resolve(pasta, "index.html")
+
+        if (process.platform === "win32") {
+            exec(`start "" "${caminho}"`)
+        } else if (process.platform === "darwin") {
+            exec(`open "${caminho}"`)
+        } else {
+            exec(`xdg-open "${caminho}"`)
+        }
+    }
+}
+
+main()
