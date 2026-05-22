@@ -2,6 +2,7 @@ const { headHtml, headerHtml, footerHtml } = require("./componentes")
 
 function gerarConsole() {
     return `${headHtml("InvestPop \u2014 Console", "Painel de acessos do InvestPop.")}
+  <meta name="robots" content="noindex, nofollow" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 ${headerHtml()}
