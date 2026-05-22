@@ -2,8 +2,10 @@ const axios = require("axios")
 const fs = require("fs")
 const path = require("path")
 const https = require("https")
+const { gerarHtml, gerarPaginaLista } = require("./paginas")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
+const CACHE_FILE = path.resolve(__dirname, "cache_fiis.csv")
 
 // ===============================
 // 📥 LER FIIs
@@ -21,7 +23,7 @@ function lerFiis() {
 }
 
 // ===============================
-// 🌐 BUSCAR IFIX (mfinance)
+// 🌐 BUSCAR IFIX (Yahoo Finance)
 // ===============================
 
 async function buscarIfix() {
@@ -62,7 +64,6 @@ async function buscarFii(ticker) {
         const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
 
         console.log(`✅ ${ticker}: R$ ${preco} | ${variacao}`)
-
         return { ticker, preco, variacao, varNum }
     } catch (e) {
         console.log(`❌ ${ticker}: ${e.message}`)
@@ -71,295 +72,29 @@ async function buscarFii(ticker) {
 }
 
 // ===============================
-// 🧾 GERAR HTML
+// 💾 CACHE
 // ===============================
 
-function gerarHtml(ifix, altas, quedas) {
-
-    const maiorAlta = altas[0] || { ticker: "-", variacao: "-", preco: "-" }
-    const maiorBaixa = quedas[0] || { ticker: "-", variacao: "-", preco: "-" }
-
-    const ifixPositivo = !ifix.variacao.includes("-")
-    const corIfix = ifixPositivo ? "text-emerald-500" : "text-red-500"
-
-    function linhasTabela(lista, cor) {
-        return lista.map((item, i) => `
-              <tr class="border-t border-card-border">
-                <td class="py-2.5 text-gray-500">${i + 1}</td>
-                <td class="py-2.5 font-medium">${item.ticker}</td>
-                <td class="py-2.5 text-right ${cor} font-medium">${item.variacao}</td>
-                <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
-              </tr>`).join("\n")
+function carregarCache() {
+    if (!fs.existsSync(CACHE_FILE)) return null
+    const linhas = fs.readFileSync(CACHE_FILE, "utf-8").split(/\r?\n/).filter(l => l.trim())
+    if (linhas.length < 2) return null
+    const resultados = []
+    for (let i = 1; i < linhas.length; i++) {
+        const [ticker, preco, variacao, varNum] = linhas[i].split(";")
+        if (ticker) resultados.push({ ticker, preco, variacao, varNum: parseFloat(varNum) })
     }
+    console.log(`💾 Cache carregado: ${resultados.length} FIIs`)
+    return resultados
+}
 
-    const html = `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InvestPop — Radar de FIIs em tempo real</title>
-  <meta name="description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia, preços atualizados a cada 10 minutos." />
-  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
-  <link rel="canonical" href="https://investpop.com.br" />
-  <meta property="og:title" content="InvestPop — Radar de FIIs em tempo real" />
-  <meta property="og:description" content="Acompanhe os Fundos Imobiliários em tempo real. IFIX, maiores altas e quedas do dia." />
-  <meta property="og:url" content="https://investpop.com.br" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="InvestPop — Radar de FIIs" />
-  <meta name="twitter:description" content="FIIs em tempo real. IFIX, maiores altas e quedas do dia." />
-  <meta name="robots" content="index, follow" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            bg: '#07111F',
-            card: '#0B1A2E',
-            'card-border': '#132743',
-          }
-        }
-      }
+function salvarCache(resultados) {
+    let csv = "ticker;preco;variacao;varNum\n"
+    for (const r of resultados) {
+        csv += `${r.ticker};${r.preco};${r.variacao};${r.varNum}\n`
     }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    #modal-breve { display: none; }
-    #modal-breve.show { display: flex; }
-  </style>
-</head>
-<body class="bg-bg min-h-screen text-white">
-
-  <!-- NAVBAR -->
-  <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
-    <div class="flex items-center gap-2">
-      <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      </svg>
-      <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
-    </div>
-    <div class="hidden md:flex items-center gap-6 text-sm">
-      <a href="#" onclick="emBreve(event)" class="text-emerald-500 font-medium">FIIs</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ações</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ferramentas</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Sobre</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Contato</a>
-    </div>
-    <div class="hidden lg:flex items-center gap-3">
-      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
-      </div>
-      <button onclick="emBreve(event)" class="text-gray-400 hover:text-white">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-      </button>
-    </div>
-    <div class="flex md:hidden items-center gap-4">
-      <button onclick="emBreve(event)" class="text-gray-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-      </button>
-      <button onclick="emBreve(event)" class="text-gray-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
-    </div>
-  </nav>
-
-  <!-- RESUMO DO MERCADO -->
-  <main class="px-4 md:px-8 py-6 md:py-8">
-    <div class="flex items-center gap-2 mb-4">
-      <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      </svg>
-      <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Resumo do Mercado</h2>
-    </div>
-
-    <div class="grid grid-cols-3 md:grid-cols-3 gap-3 md:gap-5">
-      <!-- IFIX Hoje -->
-      <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
-        <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">IFIX Hoje</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">${ifix.valor}</p>
-        <span class="text-xs md:text-sm ${corIfix} font-medium">${ifix.variacao}</span>
-      </div>
-
-      <!-- Maior Alta -->
-      <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
-        <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">${maiorAlta.ticker}</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">${maiorAlta.variacao}</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorAlta.preco}</div>
-      </div>
-
-      <!-- Maior Baixa -->
-      <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
-        <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">${maiorBaixa.ticker}</p>
-        <span class="text-xs md:text-sm text-red-500 font-medium">${maiorBaixa.variacao}</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorBaixa.preco}</div>
-      </div>
-    </div>
-
-    <!-- RADAR DO DIA -->
-    <div class="mt-8">
-      <div class="flex items-center gap-2 mb-4">
-        <div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
-          <span class="text-[10px] font-bold">+</span>
-        </div>
-        <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Radar do Dia</h2>
-      </div>
-
-      <!-- Tabs Mobile -->
-      <div class="flex md:hidden gap-4 mb-4 border-b border-card-border">
-        <button id="tab-altas" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500" onclick="showTab('altas')">Maiores Altas</button>
-        <button id="tab-quedas" class="pb-2 text-sm font-medium text-gray-500" onclick="showTab('quedas')">Maiores Quedas</button>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <!-- TOP 5 MAIORES ALTAS -->
-        <div id="panel-altas" class="bg-card border border-card-border rounded-xl p-4 md:p-5">
-          <div class="flex items-center gap-2 mb-4">
-            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
-            </svg>
-            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Maiores Altas do Dia</h3>
-          </div>
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-gray-500 text-xs">
-                <th class="text-left pb-2 font-medium">#</th>
-                <th class="text-left pb-2 font-medium">FII</th>
-                <th class="text-right pb-2 font-medium">Var. Dia</th>
-                <th class="text-right pb-2 font-medium">Preço</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-200">
-${linhasTabela(altas, "text-emerald-500")}
-            </tbody>
-          </table>
-          <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a>
-          </div>
-        </div>
-
-        <!-- TOP 5 MAIORES QUEDAS -->
-        <div id="panel-quedas" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
-          <div class="flex items-center gap-2 mb-4">
-            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Maiores Quedas do Dia</h3>
-          </div>
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-gray-500 text-xs">
-                <th class="text-left pb-2 font-medium">#</th>
-                <th class="text-left pb-2 font-medium">FII</th>
-                <th class="text-right pb-2 font-medium">Var. Dia</th>
-                <th class="text-right pb-2 font-medium">Preço</th>
-              </tr>
-            </thead>
-            <tbody class="text-gray-200">
-${linhasTabela(quedas, "text-red-500")}
-            </tbody>
-          </table>
-          <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-red-500 text-xs font-medium hover:underline">Ver todos</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- FOOTER Desktop -->
-  <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border">
-    <div class="flex items-center gap-2">
-      <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-      </svg>
-      <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
-    </div>
-    <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
-    <div class="flex items-center gap-4 text-gray-400">
-      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128172;</a>
-      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128247;</a>
-      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#9654;</a>
-      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128038;</a>
-    </div>
-  </footer>
-
-  <!-- BOTTOM NAV Mobile/Tablet -->
-  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
-    <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-emerald-500">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-      <span class="text-[10px] font-medium">FIIs</span>
-    </a>
-    <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-gray-500">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-      <span class="text-[10px] font-medium">Ações</span>
-    </a>
-  </nav>
-
-  <div class="lg:hidden h-16"></div>
-
-  <!-- MODAL EM BREVE -->
-  <div id="modal-breve" class="fixed inset-0 z-50 items-center justify-center bg-black/60" onclick="fecharModal()">
-    <div class="bg-card border border-card-border rounded-xl p-6 mx-4 max-w-sm text-center" onclick="event.stopPropagation()">
-      <div class="text-3xl mb-3">🚧</div>
-      <h3 class="text-lg font-bold mb-2">Em breve!</h3>
-      <p class="text-sm text-gray-400">Essa funcionalidade ainda está em desenvolvimento.</p>
-      <button onclick="fecharModal()" class="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600">Entendi</button>
-    </div>
-  </div>
-
-  <script>
-    function emBreve(e) {
-      e.preventDefault();
-      document.getElementById('modal-breve').classList.add('show');
-    }
-    function fecharModal() {
-      document.getElementById('modal-breve').classList.remove('show');
-    }
-
-    function showTab(tab) {
-      const altas = document.getElementById('panel-altas');
-      const quedas = document.getElementById('panel-quedas');
-      const tabAltas = document.getElementById('tab-altas');
-      const tabQuedas = document.getElementById('tab-quedas');
-
-      if (tab === 'altas') {
-        altas.classList.remove('hidden');
-        quedas.classList.add('hidden');
-        tabAltas.classList.add('text-emerald-500', 'border-b-2', 'border-emerald-500');
-        tabAltas.classList.remove('text-gray-500');
-        tabQuedas.classList.remove('text-red-500', 'border-b-2', 'border-red-500');
-        tabQuedas.classList.add('text-gray-500');
-      } else {
-        altas.classList.add('hidden');
-        quedas.classList.remove('hidden');
-        quedas.classList.remove('md:block');
-        tabQuedas.classList.add('text-red-500', 'border-b-2', 'border-red-500');
-        tabQuedas.classList.remove('text-gray-500');
-        tabAltas.classList.remove('text-emerald-500', 'border-b-2', 'border-emerald-500');
-        tabAltas.classList.add('text-gray-500');
-      }
-    }
-  </script>
-
-</body>
-</html>`
-
-    return html
+    fs.writeFileSync(CACHE_FILE, csv)
+    console.log(`💾 Cache salvo: ${resultados.length} FIIs`)
 }
 
 // ===============================
@@ -367,7 +102,6 @@ ${linhasTabela(quedas, "text-red-500")}
 // ===============================
 
 async function main() {
-
     console.log("🚀 InvestPop — Gerando página...\n")
 
     const fiis = lerFiis()
@@ -375,55 +109,56 @@ async function main() {
     const limitFlag = args.find(a => a.startsWith("--limit="))
     const limit = limitFlag ? parseInt(limitFlag.split("=")[1]) : fiis.length
     const fiisLimitados = fiis.slice(0, limit)
+    const usarCache = args.includes("--cache")
 
     console.log(`📋 ${fiisLimitados.length} FIIs carregados\n`)
 
-    // Buscar IFIX
     const ifix = await buscarIfix()
 
-    // Buscar dados de cada FII
-    const resultados = []
+    let resultados = []
 
-    for (const ticker of fiisLimitados) {
-        await new Promise(r => setTimeout(r, 500))
-        const dados = await buscarFii(ticker)
-        resultados.push(dados)
+    if (usarCache) {
+        const cached = carregarCache()
+        if (cached) {
+            resultados = cached
+        } else {
+            console.log("⚠️ Cache não encontrado, buscando todos online...\n")
+            for (const ticker of fiis) {
+                await new Promise(r => setTimeout(r, 500))
+                const dados = await buscarFii(ticker)
+                resultados.push(dados)
+            }
+            salvarCache(resultados)
+        }
+    } else {
+        for (const ticker of fiisLimitados) {
+            await new Promise(r => setTimeout(r, 500))
+            const dados = await buscarFii(ticker)
+            resultados.push(dados)
+        }
     }
 
-    // Separar altas e quedas
-    const altas = resultados
-        .filter(r => r.varNum > 0)
-        .sort((a, b) => b.varNum - a.varNum)
-        .slice(0, 5)
+    const todasAltas = resultados.filter(r => r.varNum > 0).sort((a, b) => b.varNum - a.varNum)
+    const todasQuedas = resultados.filter(r => r.varNum < 0).sort((a, b) => a.varNum - b.varNum)
+    const altas = todasAltas.slice(0, 5)
+    const quedas = todasQuedas.slice(0, 5)
 
-    const quedas = resultados
-        .filter(r => r.varNum < 0)
-        .sort((a, b) => a.varNum - b.varNum)
-        .slice(0, 5)
-
-    console.log(`\n📈 Altas: ${altas.length} | 📉 Quedas: ${quedas.length}`)
-
-    // Gerar HTML
-    const html = gerarHtml(ifix, altas, quedas)
+    console.log(`\n📈 Altas: ${todasAltas.length} | 📉 Quedas: ${todasQuedas.length}`)
 
     const pasta = "src"
     if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
 
-    fs.writeFileSync(path.join(pasta, "index.html"), html)
-    console.log("\n✅ Página gerada em src/index.html")
+    fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas))
+    fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
+    console.log("\n✅ Páginas geradas em src/")
 
-    // Abrir no navegador (apenas local)
-    if (!process.argv.includes("--no-open")) {
+    if (!args.includes("--no-open")) {
         const { exec } = require("child_process")
         const caminho = path.resolve(pasta, "index.html")
-
-        if (process.platform === "win32") {
-            exec(`start "" "${caminho}"`)
-        } else if (process.platform === "darwin") {
-            exec(`open "${caminho}"`)
-        } else {
-            exec(`xdg-open "${caminho}"`)
-        }
+        if (process.platform === "win32") exec(`start "" "${caminho}"`)
+        else if (process.platform === "darwin") exec(`open "${caminho}"`)
+        else exec(`xdg-open "${caminho}"`)
     }
 }
 

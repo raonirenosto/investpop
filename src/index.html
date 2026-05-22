@@ -4,30 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InvestPop — Radar de FIIs em tempo real</title>
-  <meta name="description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia, preços atualizados a cada 10 minutos." />
+  <meta name="description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia." />
   <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
   <link rel="canonical" href="https://investpop.com.br" />
   <meta property="og:title" content="InvestPop — Radar de FIIs em tempo real" />
-  <meta property="og:description" content="Acompanhe os Fundos Imobiliários em tempo real. IFIX, maiores altas e quedas do dia." />
+  <meta property="og:description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia." />
   <meta property="og:url" content="https://investpop.com.br" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="InvestPop — Radar de FIIs" />
-  <meta name="twitter:description" content="FIIs em tempo real. IFIX, maiores altas e quedas do dia." />
+  <meta name="twitter:title" content="InvestPop — Radar de FIIs em tempo real" />
+  <meta name="twitter:description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia." />
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            bg: '#07111F',
-            card: '#0B1A2E',
-            'card-border': '#132743',
-          }
-        }
-      }
+      theme: { extend: { colors: { bg: '#07111F', card: '#0B1A2E', 'card-border': '#132743' } } }
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -39,14 +31,14 @@
 </head>
 <body class="bg-bg min-h-screen text-white">
 
-  <!-- NAVBAR -->
+
   <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
-    <div class="flex items-center gap-2">
+    <a href="index.html" class="flex items-center gap-2">
       <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
       <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
-    </div>
+    </a>
     <div class="hidden md:flex items-center gap-6 text-sm">
       <a href="#" onclick="emBreve(event)" class="text-emerald-500 font-medium">FIIs</a>
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ações</a>
@@ -82,7 +74,6 @@
     </div>
   </nav>
 
-  <!-- RESUMO DO MERCADO -->
   <main class="px-4 md:px-8 py-6 md:py-8">
     <div class="flex items-center gap-2 mb-4">
       <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
@@ -91,32 +82,26 @@
       <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Resumo do Mercado</h2>
     </div>
 
-    <div class="grid grid-cols-3 md:grid-cols-3 gap-3 md:gap-5">
-      <!-- IFIX Hoje -->
+    <div class="grid grid-cols-3 gap-3 md:gap-5">
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">IFIX Hoje</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3852,91</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,08%</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3853,79</p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,10%</span>
       </div>
-
-      <!-- Maior Alta -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
         <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HFOF11</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">+22,36%</span>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+27,24%</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 6,46</div>
       </div>
-
-      <!-- Maior Baixa -->
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
         <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HCTR11</p>
-        <span class="text-xs md:text-sm text-red-500 font-medium">-6,60%</span>
-        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 16,74</div>
+        <span class="text-xs md:text-sm text-red-500 font-medium">-6,95%</span>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 16,79</div>
       </div>
     </div>
 
-    <!-- RADAR DO DIA -->
     <div class="mt-8">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
@@ -125,14 +110,12 @@
         <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Radar do Dia</h2>
       </div>
 
-      <!-- Tabs Mobile -->
       <div class="flex md:hidden gap-4 mb-4 border-b border-card-border">
         <button id="tab-altas" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500" onclick="showTab('altas')">Maiores Altas</button>
         <button id="tab-quedas" class="pb-2 text-sm font-medium text-gray-500" onclick="showTab('quedas')">Maiores Quedas</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <!-- TOP 5 MAIORES ALTAS -->
         <div id="panel-altas" class="bg-card border border-card-border rounded-xl p-4 md:p-5">
           <div class="flex items-center gap-2 mb-4">
             <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,45 +137,44 @@
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">1</td>
                 <td class="py-2.5 font-medium">HFOF11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+22,36%</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+27,24%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 6,46</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">2</td>
-                <td class="py-2.5 font-medium">VGIR11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+8,79%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 9,62</td>
+                <td class="py-2.5 font-medium">XPSF11</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+9,37%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 6,55</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">3</td>
-                <td class="py-2.5 font-medium">TEPP11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+5,54%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 8,51</td>
+                <td class="py-2.5 font-medium">VGIR11</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+7,64%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 9,63</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">4</td>
-                <td class="py-2.5 font-medium">KISU11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+4,44%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 6,77</td>
+                <td class="py-2.5 font-medium">PORD11</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+5,79%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 8,33</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">PORD11</td>
-                <td class="py-2.5 text-right text-emerald-500 font-medium">+4,34%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 8,33</td>
+                <td class="py-2.5 font-medium">TEPP11</td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+5,54%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 8,51</td>
               </tr>
             </tbody>
           </table>
           <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a>
+            <a href="altas.html" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a>
           </div>
         </div>
 
-        <!-- TOP 5 MAIORES QUEDAS -->
         <div id="panel-quedas" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
           <div class="flex items-center gap-2 mb-4">
             <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,15 +196,15 @@
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">1</td>
                 <td class="py-2.5 font-medium">HCTR11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-6,60%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 16,74</td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-6,95%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 16,79</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">2</td>
                 <td class="py-2.5 font-medium">DEVA11</td>
                 <td class="py-2.5 text-right text-red-500 font-medium">-5,58%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 19,73</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 19,68</td>
               </tr>
 
               <tr class="border-t border-card-border">
@@ -241,28 +223,28 @@
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">GGRC11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-1,97%</td>
-                <td class="py-2.5 text-right text-gray-400">R$ 10,10</td>
+                <td class="py-2.5 font-medium">BRCR11</td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-2,34%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 44,38</td>
               </tr>
             </tbody>
           </table>
           <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-red-500 text-xs font-medium hover:underline">Ver todos</a>
+            <a href="quedas.html" class="text-red-500 text-xs font-medium hover:underline">Ver todos</a>
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- FOOTER Desktop -->
+
   <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border">
-    <div class="flex items-center gap-2">
+    <a href="index.html" class="flex items-center gap-2">
       <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
       <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
-    </div>
+    </a>
     <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
     <div class="flex items-center gap-4 text-gray-400">
       <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128172;</a>
@@ -272,7 +254,6 @@
     </div>
   </footer>
 
-  <!-- BOTTOM NAV Mobile/Tablet -->
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
     <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-emerald-500">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
@@ -286,7 +267,6 @@
 
   <div class="lg:hidden h-16"></div>
 
-  <!-- MODAL EM BREVE -->
   <div id="modal-breve" class="fixed inset-0 z-50 items-center justify-center bg-black/60" onclick="fecharModal()">
     <div class="bg-card border border-card-border rounded-xl p-6 mx-4 max-w-sm text-center" onclick="event.stopPropagation()">
       <div class="text-3xl mb-3">🚧</div>
@@ -297,20 +277,16 @@
   </div>
 
   <script>
-    function emBreve(e) {
-      e.preventDefault();
-      document.getElementById('modal-breve').classList.add('show');
-    }
-    function fecharModal() {
-      document.getElementById('modal-breve').classList.remove('show');
-    }
+    function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
+    function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+  </script>
 
+  <script>
     function showTab(tab) {
       const altas = document.getElementById('panel-altas');
       const quedas = document.getElementById('panel-quedas');
       const tabAltas = document.getElementById('tab-altas');
       const tabQuedas = document.getElementById('tab-quedas');
-
       if (tab === 'altas') {
         altas.classList.remove('hidden');
         quedas.classList.add('hidden');
