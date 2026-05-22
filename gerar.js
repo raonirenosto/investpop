@@ -94,7 +94,19 @@ function gerarHtml(ifix, altas, quedas) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InvestPop</title>
+  <title>InvestPop — Radar de FIIs em tempo real</title>
+  <meta name="description" content="Acompanhe os Fundos Imobiliários (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia, preços atualizados a cada 10 minutos." />
+  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
+  <link rel="canonical" href="https://investpop.com.br" />
+  <meta property="og:title" content="InvestPop — Radar de FIIs em tempo real" />
+  <meta property="og:description" content="Acompanhe os Fundos Imobiliários em tempo real. IFIX, maiores altas e quedas do dia." />
+  <meta property="og:url" content="https://investpop.com.br" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="InvestPop — Radar de FIIs" />
+  <meta name="twitter:description" content="FIIs em tempo real. IFIX, maiores altas e quedas do dia." />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
