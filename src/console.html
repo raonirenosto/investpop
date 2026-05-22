@@ -1,22 +1,21 @@
-function headHtml(titulo, descricao) {
-    return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${titulo}</title>
-  <meta name="description" content="${descricao}" />
+  <title>InvestPop — Console</title>
+  <meta name="description" content="Painel de acessos do InvestPop." />
   <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
   <link rel="canonical" href="https://investpop.com.br" />
-  <meta property="og:title" content="${titulo}" />
-  <meta property="og:description" content="${descricao}" />
+  <meta property="og:title" content="InvestPop — Console" />
+  <meta property="og:description" content="Painel de acessos do InvestPop." />
   <meta property="og:url" content="https://investpop.com.br" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="${titulo}" />
-  <meta name="twitter:description" content="${descricao}" />
+  <meta name="twitter:title" content="InvestPop — Console" />
+  <meta name="twitter:description" content="Painel de acessos do InvestPop." />
   <meta name="robots" content="index, follow" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>\ud83d\udcc8</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -30,11 +29,10 @@ function headHtml(titulo, descricao) {
     #modal-breve.show { display: flex; }
   </style>
 </head>
-<body class="bg-bg min-h-screen text-white">`
-}
+<body class="bg-bg min-h-screen text-white">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-function headerHtml() {
-    return `
+
   <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-2">
       <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
@@ -44,7 +42,7 @@ function headerHtml() {
     </a>
     <div class="hidden md:flex items-center gap-6 text-sm">
       <a href="#" onclick="emBreve(event)" class="text-emerald-500 font-medium">FIIs</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">A\u00e7\u00f5es</a>
+      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ações</a>
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ferramentas</a>
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Sobre</a>
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Contato</a>
@@ -75,11 +73,73 @@ function headerHtml() {
         </svg>
       </button>
     </div>
-  </nav>`
-}
+  </nav>
 
-function footerHtml() {
-    return `
+  <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
+    <a href="index.html" class="text-sm text-gray-400 hover:text-white mb-4 inline-block">&larr; Voltar</a>
+    <h1 class="text-lg md:text-xl font-bold mb-6">&#128202; Console de Acessos</h1>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="bg-card border border-card-border rounded-xl p-4 text-center">
+        <p class="text-3xl mb-1">&#128101;</p>
+        <p class="text-2xl font-bold" id="total">-</p>
+        <span class="text-xs text-gray-500">Total Acessos</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-4 text-center">
+        <p class="text-3xl mb-1">&#128197;</p>
+        <p class="text-2xl font-bold" id="hoje">-</p>
+        <span class="text-xs text-gray-500">Hoje</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-4 text-center">
+        <p class="text-3xl mb-1">&#128241;</p>
+        <p class="text-2xl font-bold" id="mobile">-</p>
+        <span class="text-xs text-gray-500">Mobile</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-4 text-center">
+        <p class="text-3xl mb-1">&#128187;</p>
+        <p class="text-2xl font-bold" id="desktop">-</p>
+        <span class="text-xs text-gray-500">Desktop</span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center bg-card border border-card-border rounded-lg px-3 py-2 gap-2 flex-1 mr-3">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" id="busca" placeholder="Filtrar por IP, dispositivo, idioma..." oninput="filtrar()" class="bg-transparent text-sm text-gray-300 outline-none w-full" />
+      </div>
+      <button onclick="limparDados()" class="px-3 py-2 bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-medium rounded-lg hover:bg-red-500/30">&#128465; Limpar</button>
+    </div>
+
+    <div class="bg-card border border-card-border rounded-xl p-4 overflow-x-auto">
+      <table class="w-full text-xs table-fixed">
+        <thead>
+          <tr class="text-gray-500">
+            <th class="text-left pb-2 font-medium w-[140px]">Data</th>
+            <th class="text-left pb-2 font-medium w-[120px]">IP</th>
+            <th class="text-center pb-2 font-medium w-[40px]" title="Navegador">Nav</th>
+            <th class="text-center pb-2 font-medium w-[40px]" title="Dispositivo">Disp</th>
+            <th class="text-center pb-2 font-medium w-[40px]" title="Sistema Operacional">OS</th>
+            <th class="text-center pb-2 font-medium w-[80px]">Tela</th>
+            <th class="text-center pb-2 font-medium w-[40px]" title="Idioma">Lng</th>
+            <th class="text-center pb-2 font-medium w-[40px]" title="País">País</th>
+            <th class="text-left pb-2 font-medium w-[80px]">Cidade</th>
+            <th class="text-left pb-2 font-medium">Página</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-body" class="text-gray-200"></tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-500 mt-3" id="status">Carregando...</p>
+
+    <div class="bg-card border border-card-border rounded-xl p-4 mt-6">
+      <h2 class="text-sm font-semibold text-gray-300 mb-4">Acessos por dia (&#250;ltimos 14 dias)</h2>
+      <canvas id="grafico" height="100"></canvas>
+    </div>
+  </main>
+
+
   <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border">
     <a href="index.html" class="flex items-center gap-2">
       <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
@@ -103,7 +163,7 @@ function footerHtml() {
     </a>
     <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-gray-500">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-      <span class="text-[10px] font-medium">A\u00e7\u00f5es</span>
+      <span class="text-[10px] font-medium">Ações</span>
     </a>
   </nav>
 
@@ -111,9 +171,9 @@ function footerHtml() {
 
   <div id="modal-breve" class="fixed inset-0 z-50 items-center justify-center bg-black/60" onclick="fecharModal()">
     <div class="bg-card border border-card-border rounded-xl p-6 mx-4 max-w-sm text-center" onclick="event.stopPropagation()">
-      <div class="text-3xl mb-3">\ud83d\udea7</div>
+      <div class="text-3xl mb-3">🚧</div>
       <h3 class="text-lg font-bold mb-2">Em breve!</h3>
-      <p class="text-sm text-gray-400">Essa funcionalidade ainda est\u00e1 em desenvolvimento.</p>
+      <p class="text-sm text-gray-400">Essa funcionalidade ainda está em desenvolvimento.</p>
       <button onclick="fecharModal()" class="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600">Entendi</button>
     </div>
   </div>
@@ -141,7 +201,9 @@ function footerHtml() {
         fetch('https://script.google.com/macros/s/AKfycbw5g5LIgPk0xtQ9mxolmrc1yZfMJggyHlkCNbzGRA6OcQABdthqqyLaGWzVFzRv-XOrYA/exec?'+params,{mode:'no-cors'});
       }).catch(function(){});
     })();
-  </script>`
-}
+  </script>
 
-module.exports = { headHtml, headerHtml, footerHtml }
+  <script src="console.js"></script>
+
+</body>
+</html>

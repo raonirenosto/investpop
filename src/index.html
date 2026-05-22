@@ -85,8 +85,8 @@
     <div class="grid grid-cols-3 gap-3 md:gap-5">
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">IFIX Hoje</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3853,71</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,10%</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">3855,09</p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,13%</span>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
@@ -279,14 +279,34 @@
   <script>
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+
+    // Tracking
+    (function() {
+      fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
+        var params = new URLSearchParams({
+          data: new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}),
+          ip: d.ip,
+          navegador: navigator.userAgent,
+          dispositivo: /Mobile|Android|iPhone/.test(navigator.userAgent)?'Mobile':'Desktop',
+          os: navigator.platform,
+          resolucao: screen.width+'x'+screen.height,
+          idioma: navigator.language,
+          referrer: document.referrer||'direto',
+          pagina: location.pathname||'index',
+          pais: d.country_name||'-',
+          cidade: d.city||'-'
+        });
+        fetch('https://script.google.com/macros/s/AKfycbw5g5LIgPk0xtQ9mxolmrc1yZfMJggyHlkCNbzGRA6OcQABdthqqyLaGWzVFzRv-XOrYA/exec?'+params,{mode:'no-cors'});
+      }).catch(function(){});
+    })();
   </script>
 
   <script>
     function showTab(tab) {
-      const altas = document.getElementById('panel-altas');
-      const quedas = document.getElementById('panel-quedas');
-      const tabAltas = document.getElementById('tab-altas');
-      const tabQuedas = document.getElementById('tab-quedas');
+      var altas = document.getElementById('panel-altas');
+      var quedas = document.getElementById('panel-quedas');
+      var tabAltas = document.getElementById('tab-altas');
+      var tabQuedas = document.getElementById('tab-quedas');
       if (tab === 'altas') {
         altas.classList.remove('hidden');
         quedas.classList.add('hidden');

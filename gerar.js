@@ -2,7 +2,9 @@ const axios = require("axios")
 const fs = require("fs")
 const path = require("path")
 const https = require("https")
-const { gerarHtml, gerarPaginaLista } = require("./paginas")
+const { gerarHtml } = require("./pagina-index")
+const { gerarPaginaLista } = require("./pagina-lista")
+const { gerarConsole } = require("./pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
 const CACHE_FILE = path.resolve(__dirname, "cache_fiis.csv")
@@ -151,6 +153,7 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas))
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
+    fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     console.log("\n✅ Páginas geradas em src/")
 
     if (!args.includes("--no-open")) {
@@ -159,6 +162,12 @@ async function main() {
         if (process.platform === "win32") exec(`start "" "${caminho}"`)
         else if (process.platform === "darwin") exec(`open "${caminho}"`)
         else exec(`xdg-open "${caminho}"`)
+    }
+
+    if (args.includes("--serve")) {
+        const { exec } = require("child_process")
+        exec(`npx http-server src -p 8080 -o /console.html`, { cwd: __dirname })
+        console.log("\n\ud83c\udf10 Servidor local: http://localhost:8080/console.html")
     }
 }
 
