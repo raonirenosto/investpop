@@ -124,6 +124,8 @@ function footerHtml() {
 
     // Tracking
     (function() {
+      if(document.cookie.includes('ghost=true')) return;
+      if(location.pathname.includes('console')) return;
       fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
         var params = new URLSearchParams({
           data: new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}),

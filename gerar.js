@@ -154,6 +154,7 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
+    fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
     console.log("\n✅ Páginas geradas em src/")
 
     if (!args.includes("--no-open")) {

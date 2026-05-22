@@ -86,9 +86,36 @@ function renderizar(lista) {
   }).join('');
 }
 
-function filtrar() {
+function isBot(d) {
+  if(d.resolucao && d.resolucao.trim() === '800x600') return true;
+  if(d.navegador && (d.navegador.includes('bot') || d.navegador.includes('Bot') || d.navegador.includes('crawler') || d.navegador.includes('spider'))) return true;
+  if(d.cidade && (d.cidade.includes('Boardman') || d.cidade.includes('Ashburn') || d.cidade.includes('Dublin'))) return true;
+  return false;
+}
+
+function aplicarFiltros() {
+  var filtrados = dados;
+  if(document.getElementById('filtro-bots').checked) {
+    filtrados = filtrados.filter(function(d){ return !isBot(d); });
+  }
   var t = document.getElementById('busca').value.toLowerCase();
-  renderizar(dados.filter(function(d) { return Object.values(d).join(' ').toLowerCase().includes(t); }));
+  if(t) {
+    filtrados = filtrados.filter(function(d){ return Object.values(d).join(' ').toLowerCase().includes(t); });
+  }
+  renderizar(filtrados);
+  atualizarContadores(filtrados);
+}
+
+function atualizarContadores(lista) {
+  document.getElementById('total').textContent = lista.length;
+  var hoje = new Date().toLocaleDateString('pt-BR');
+  document.getElementById('hoje').textContent = lista.filter(function(d){return d.data&&d.data.includes(hoje);}).length;
+  document.getElementById('mobile').textContent = lista.filter(function(d){return d.dispositivo&&d.dispositivo.trim()==='Mobile';}).length;
+  document.getElementById('desktop').textContent = lista.filter(function(d){return d.dispositivo&&d.dispositivo.trim()==='Desktop';}).length;
+}
+
+function filtrar() {
+  aplicarFiltros();
 }
 
 function limparDados() {
@@ -140,12 +167,7 @@ fetch(CSV_URL).then(function(r){return r.text();}).then(function(csv) {
     return {data:c[0]||'',ip:c[1]||'',navegador:c[2]||'',dispositivo:c[3]||'',os:c[4]||'',resolucao:c[5]||'',idioma:c[6]||'',referrer:c[7]||'',pagina:c[8]||'',pais:c[9]||'',cidade:c[10]||''};
   }).reverse();
 
-  document.getElementById('total').textContent = dados.length;
-  var hoje = new Date().toLocaleDateString('pt-BR');
-  document.getElementById('hoje').textContent = dados.filter(function(d){return d.data&&d.data.includes(hoje);}).length;
-  document.getElementById('mobile').textContent = dados.filter(function(d){return d.dispositivo&&d.dispositivo.trim()==='Mobile';}).length;
-  document.getElementById('desktop').textContent = dados.filter(function(d){return d.dispositivo&&d.dispositivo.trim()==='Desktop';}).length;
-
+  atualizarContadores(dados);
   renderizar(dados);
   renderGrafico(dados);
   document.getElementById('status').textContent = 'Atualizado - ' + dados.length + ' registros';

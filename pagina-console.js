@@ -43,6 +43,13 @@ ${headerHtml()}
       <button onclick="limparDados()" class="px-3 py-2 bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-medium rounded-lg hover:bg-red-500/30">&#128465; Limpar</button>
     </div>
 
+    <div class="mb-4">
+      <label class="text-xs text-gray-400 cursor-pointer flex items-center gap-2">
+        <input type="checkbox" id="filtro-bots" onchange="aplicarFiltros()" class="rounded" />
+        Filtrar bots
+      </label>
+    </div>
+
     <div class="bg-card border border-card-border rounded-xl p-4 overflow-x-auto">
       <table class="w-full text-xs table-fixed">
         <thead>
