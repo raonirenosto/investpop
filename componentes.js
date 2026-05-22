@@ -86,10 +86,10 @@ function footerHtml(opts) {
     (function() {
       if(document.cookie.includes('ghost=true')) return;
       if(location.pathname.includes('console')) return;
-      fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
+      fetch('https://free.freeipapi.com/api/json').then(r=>r.json()).then(d=>{
         var params = new URLSearchParams({
           data: new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}),
-          ip: d.ip,
+          ip: d.ipAddress,
           navegador: navigator.userAgent,
           dispositivo: /Mobile|Android|iPhone/.test(navigator.userAgent)?'Mobile':'Desktop',
           os: navigator.platform,
@@ -97,8 +97,8 @@ function footerHtml(opts) {
           idioma: navigator.language,
           referrer: document.referrer||'direto',
           pagina: location.pathname||'index',
-          pais: d.country_name||'-',
-          cidade: d.city||'-'
+          pais: d.countryName||'-',
+          cidade: d.cityName||'-'
         });
         fetch('https://script.google.com/macros/s/AKfycbw5g5LIgPk0xtQ9mxolmrc1yZfMJggyHlkCNbzGRA6OcQABdthqqyLaGWzVFzRv-XOrYA/exec?'+params,{mode:'no-cors'});
       }).catch(function(){});
