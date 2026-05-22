@@ -45,24 +45,23 @@ ${headerHtml()}
 
     <div class="mb-4">
       <label class="text-xs text-gray-400 cursor-pointer flex items-center gap-2">
-        <input type="checkbox" id="filtro-bots" onchange="aplicarFiltros()" class="rounded" />
+        <input type="checkbox" id="filtro-bots" onchange="aplicarFiltros()" class="rounded" checked />
         Filtrar bots
       </label>
     </div>
 
     <div class="bg-card border border-card-border rounded-xl p-4 overflow-x-auto">
-      <table class="w-full text-xs table-fixed">
+      <table class="text-xs min-w-[800px] w-full">
         <thead>
           <tr class="text-gray-500">
-            <th class="text-left pb-2 font-medium w-[140px]">Data</th>
-            <th class="text-left pb-2 font-medium w-[120px]">IP</th>
-            <th class="text-center pb-2 font-medium w-[40px]" title="Navegador">Nav</th>
-            <th class="text-center pb-2 font-medium w-[40px]" title="Dispositivo">Disp</th>
-            <th class="text-center pb-2 font-medium w-[40px]" title="Sistema Operacional">OS</th>
-            <th class="text-center pb-2 font-medium w-[80px]">Tela</th>
-            <th class="text-center pb-2 font-medium w-[40px]" title="Idioma">Lng</th>
-            <th class="text-center pb-2 font-medium w-[40px]" title="Pa\u00eds">Pa\u00eds</th>
-            <th class="text-left pb-2 font-medium w-[80px]">Cidade</th>
+            <th class="text-left pb-2 font-medium whitespace-nowrap pr-3">Data</th>
+            <th class="text-left pb-2 font-medium whitespace-nowrap pr-3">IP</th>
+            <th class="text-center pb-2 font-medium pr-2" title="Navegador">Nav</th>
+            <th class="text-center pb-2 font-medium pr-2" title="Dispositivo">Disp</th>
+            <th class="text-center pb-2 font-medium pr-2" title="Sistema Operacional">OS</th>
+            <th class="text-center pb-2 font-medium whitespace-nowrap pr-3">Tela</th>
+            <th class="text-center pb-2 font-medium pr-2" title="Pa\u00eds">Pa\u00eds</th>
+            <th class="text-left pb-2 font-medium whitespace-nowrap pr-3">Cidade</th>
             <th class="text-left pb-2 font-medium">P\u00e1gina</th>
           </tr>
         </thead>

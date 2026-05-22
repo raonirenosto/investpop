@@ -3,11 +3,11 @@ var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxWt4f-DM6zyWLt
 var dados = [];
 
 function getBrowser(ua) {
-  if(ua.includes('Edg')) return '<img src="https://cdn.jsdelivr.net/gh/nicedoc/browser-logos/edge/edge.svg" class="w-5 h-5 inline" title="Edge">';
-  if(ua.includes('Firefox')) return '<img src="https://cdn.jsdelivr.net/gh/nicedoc/browser-logos/firefox/firefox.svg" class="w-5 h-5 inline" title="Firefox">';
-  if(ua.includes('Chrome')) return '<img src="https://cdn.jsdelivr.net/gh/nicedoc/browser-logos/chrome/chrome.svg" class="w-5 h-5 inline" title="Chrome">';
-  if(ua.includes('Safari')) return '<img src="https://cdn.jsdelivr.net/gh/nicedoc/browser-logos/safari/safari.svg" class="w-5 h-5 inline" title="Safari">';
-  if(ua.includes('Opera')) return '<img src="https://cdn.jsdelivr.net/gh/nicedoc/browser-logos/opera/opera.svg" class="w-5 h-5 inline" title="Opera">';
+  if(ua.includes('Edg')) return '<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos@main/src/edge/edge.svg" style="width:20px;height:20px;max-width:none;display:inline" title="Edge">';
+  if(ua.includes('Firefox')) return '<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos@main/src/firefox/firefox.svg" style="width:20px;height:20px;max-width:none;display:inline" title="Firefox">';
+  if(ua.includes('Chrome')) return '<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos@main/src/chrome/chrome.svg" style="width:20px;height:20px;max-width:none;display:inline" title="Chrome">';
+  if(ua.includes('Safari')) return '<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos@main/src/safari/safari.svg" style="width:20px;height:20px;max-width:none;display:inline" title="Safari">';
+  if(ua.includes('Opera')) return '<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos@main/src/opera/opera.svg" style="width:20px;height:20px;max-width:none;display:inline" title="Opera">';
   return '?';
 }
 
@@ -27,7 +27,7 @@ function getIdioma(lang) {
   else if(lang.startsWith('es')) code = 'es';
   else if(lang.startsWith('fr')) code = 'fr';
   else if(lang.startsWith('de')) code = 'de';
-  return '<img src="https://hatscripts.github.io/circle-flags/flags/'+code+'.svg" class="w-5 h-5 inline" title="'+lang+'">';
+  return '<img src="https://hatscripts.github.io/circle-flags/flags/'+code+'.svg" style="width:20px;height:20px;max-width:none;display:inline" title="'+lang+'">';
 }
 
 function getPais(pais) {
@@ -35,7 +35,13 @@ function getPais(pais) {
   var p=pais.trim();
   var codes={'Brazil':'br','Brasil':'br','United States':'us','EUA':'us','Portugal':'pt','Argentina':'ar','Germany':'de','Alemanha':'de','France':'fr','Spain':'es','Espanha':'es','United Kingdom':'gb','UK':'gb','Japan':'jp','China':'cn','Italy':'it','Mexico':'mx','Colombia':'co','Chile':'cl','Canada':'ca','Australia':'au'};
   var code=codes[p]||p.substring(0,2).toLowerCase();
-  return '<img src="https://hatscripts.github.io/circle-flags/flags/'+code+'.svg" class="w-5 h-5 inline" title="'+p+'">';
+  return '<img src="https://hatscripts.github.io/circle-flags/flags/'+code+'.svg" style="width:20px;height:20px;max-width:none;display:inline" title="'+p+'">';
+}
+
+function truncarIP(ip) {
+  if(!ip) return '-';
+  if(ip.length > 20) return ip.substring(0,16)+'…';
+  return ip;
 }
 
 function parseCSV(csv) {
@@ -69,18 +75,16 @@ function renderizar(lista) {
   document.getElementById('tabela-body').innerHTML = lista.map(function(d) {
     var nav = getBrowser(d.navegador);
     var os = getOS(d.os, d.navegador);
-    var idioma = getIdioma(d.idioma);
     var disp = d.dispositivo && d.dispositivo.trim()==='Mobile' ? '<span title="Mobile">&#128241;</span>' : '<span title="Desktop">&#128187;</span>';
     return '<tr class="border-t border-card-border hover:bg-card-border/30">' +
-      '<td class="py-2.5 whitespace-nowrap">' + (d.data||'-') + '</td>' +
-      '<td class="py-2.5 font-mono text-gray-400">' + (d.ip||'-') + '</td>' +
-      '<td class="py-2.5 text-center">' + nav + '</td>' +
-      '<td class="py-2.5 text-center">' + disp + '</td>' +
-      '<td class="py-2.5 text-center">' + os + '</td>' +
-      '<td class="py-2.5 text-center text-gray-400">' + (d.resolucao||'-') + '</td>' +
-      '<td class="py-2.5 text-center">' + idioma + '</td>' +
-      '<td class="py-2.5 text-center">' + getPais(d.pais) + '</td>' +
-      '<td class="py-2.5">' + (d.cidade||'-') + '</td>' +
+      '<td class="py-2.5 pr-6 whitespace-nowrap">' + (d.data||'-') + '</td>' +
+      '<td class="py-2.5 pr-6 font-mono text-gray-400 whitespace-nowrap" title="'+(d.ip||'')+'">' + truncarIP(d.ip) + '</td>' +
+      '<td class="py-2.5 px-4 text-center">' + nav + '</td>' +
+      '<td class="py-2.5 px-4 text-center">' + disp + '</td>' +
+      '<td class="py-2.5 px-4 text-center">' + os + '</td>' +
+      '<td class="py-2.5 px-4 text-center text-gray-400">' + (d.resolucao||'-') + '</td>' +
+      '<td class="py-2.5 px-4 text-center">' + getPais(d.pais) + '</td>' +
+      '<td class="py-2.5 pr-6">' + (d.cidade||'-') + '</td>' +
       '<td class="py-2.5 text-gray-400">' + (d.pagina||'-') + '</td>' +
       '</tr>';
   }).join('');
@@ -104,6 +108,7 @@ function aplicarFiltros() {
   }
   renderizar(filtrados);
   atualizarContadores(filtrados);
+  renderGrafico(filtrados);
 }
 
 function atualizarContadores(lista) {
@@ -126,9 +131,11 @@ function limparDados() {
   });
 }
 
-function renderGrafico(dados) {
+var graficoInstance = null;
+
+function renderGrafico(lista) {
   var contagem = {};
-  dados.forEach(function(d) {
+  lista.forEach(function(d) {
     if(!d.data) return;
     var dia = d.data.split(',')[0].trim();
     contagem[dia] = (contagem[dia]||0) + 1;
@@ -136,8 +143,9 @@ function renderGrafico(dados) {
   var labels = Object.keys(contagem).reverse().slice(-14);
   var values = labels.map(function(l){return contagem[l];});
 
+  if(graficoInstance) graficoInstance.destroy();
   var ctx = document.getElementById('grafico').getContext('2d');
-  new Chart(ctx, {
+  graficoInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: labels,
@@ -168,7 +176,6 @@ fetch(CSV_URL).then(function(r){return r.text();}).then(function(csv) {
   }).reverse();
 
   atualizarContadores(dados);
-  renderizar(dados);
-  renderGrafico(dados);
+  aplicarFiltros();
   document.getElementById('status').textContent = 'Atualizado - ' + dados.length + ' registros';
 }).catch(function(){ document.getElementById('status').textContent = 'Erro ao carregar'; });
