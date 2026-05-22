@@ -51,26 +51,51 @@ async function buscarIfix() {
 }
 
 // ===============================
-// 🌐 BUSCAR FII (mfinance)
+// 🌐 BUSCAR FIIs (Yahoo Finance - batch)
 // ===============================
 
-async function buscarFii(ticker) {
-    try {
-        const r = await axios.get(`https://mfinance.com.br/api/v1/fiis/${ticker}`, { httpsAgent: agentSemSSL })
-        const dados = r.data
+async function buscarFiis(tickers) {
+    const resultados = []
+    const batchSize = 20
 
-        const preco = dados.lastPrice.toFixed(2).replace(".", ",")
-        const varNum = dados.closingPrice > 0
-            ? (dados.change / dados.closingPrice) * 100
-            : 0
-        const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
+    for (let i = 0; i < tickers.length; i += batchSize) {
+        const batch = tickers.slice(i, i + batchSize)
+        const symbols = batch.map(t => t + '.SA').join(',')
 
-        console.log(`✅ ${ticker}: R$ ${preco} | ${variacao}`)
-        return { ticker, preco, variacao, varNum }
-    } catch (e) {
-        console.log(`❌ ${ticker}: ${e.message}`)
-        return { ticker, preco: "-", variacao: "0,00%", varNum: 0 }
+        try {
+            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=1d&interval=1d`, {
+                httpsAgent: agentSemSSL,
+                headers: { "User-Agent": "Mozilla/5.0" }
+            })
+
+            for (const ticker of batch) {
+                const dados = r.data[ticker + '.SA']
+                if (dados && dados.close && dados.close.length > 0) {
+                    const precoNum = dados.close[dados.close.length - 1]
+                    const anterior = dados.chartPreviousClose
+                    const varNum = anterior > 0 ? ((precoNum - anterior) / anterior) * 100 : 0
+
+                    const preco = precoNum.toFixed(2).replace(".", ",")
+                    const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
+
+                    console.log(`✅ ${ticker}: R$ ${preco} | ${variacao}`)
+                    resultados.push({ ticker, preco, variacao, varNum })
+                } else {
+                    console.log(`❌ ${ticker}: sem dados`)
+                    resultados.push({ ticker, preco: "-", variacao: "0,00%", varNum: 0 })
+                }
+            }
+        } catch (e) {
+            console.log(`❌ Batch erro: ${e.message}`)
+            for (const ticker of batch) {
+                resultados.push({ ticker, preco: "-", variacao: "0,00%", varNum: 0 })
+            }
+        }
+
+        if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 500))
     }
+
+    return resultados
 }
 
 // ===============================
@@ -114,7 +139,7 @@ async function main() {
     const usarCache = args.includes("--cache")
     const teste = args.includes("--teste")
     global.INVESTPOP_TESTE = teste
-    if (teste) console.log("\u26a0\ufe0f Modo teste: tracking desativado\n")
+    if (teste) console.log("⚠️ Modo teste: tracking desativado\n")
 
     console.log(`📋 ${fiisLimitados.length} FIIs carregados\n`)
 
@@ -128,19 +153,11 @@ async function main() {
             resultados = cached
         } else {
             console.log("⚠️ Cache não encontrado, buscando todos online...\n")
-            for (const ticker of fiis) {
-                await new Promise(r => setTimeout(r, 500))
-                const dados = await buscarFii(ticker)
-                resultados.push(dados)
-            }
+            resultados = await buscarFiis(fiis)
             salvarCache(resultados)
         }
     } else {
-        for (const ticker of fiisLimitados) {
-            await new Promise(r => setTimeout(r, 500))
-            const dados = await buscarFii(ticker)
-            resultados.push(dados)
-        }
+        resultados = await buscarFiis(fiisLimitados)
     }
 
     const todasAltas = resultados.filter(r => r.varNum > 0).sort((a, b) => b.varNum - a.varNum)
@@ -160,18 +177,16 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
     console.log("\n✅ Páginas geradas em src/")
 
-    if (!args.includes("--no-open")) {
+    if (args.includes("--serve")) {
+        const { exec } = require("child_process")
+        exec(`npx http-server src -p 8080 -o /console.html`, { cwd: __dirname })
+        console.log("\n🌐 Servidor local: http://localhost:8080/console.html")
+    } else if (!args.includes("--no-open")) {
         const { exec } = require("child_process")
         const caminho = path.resolve(pasta, "index.html")
         if (process.platform === "win32") exec(`start "" "${caminho}"`)
         else if (process.platform === "darwin") exec(`open "${caminho}"`)
         else exec(`xdg-open "${caminho}"`)
-    }
-
-    if (args.includes("--serve")) {
-        const { exec } = require("child_process")
-        exec(`npx http-server src -p 8080 -o /console.html`, { cwd: __dirname })
-        console.log("\n\ud83c\udf10 Servidor local: http://localhost:8080/console.html")
     }
 }
 
