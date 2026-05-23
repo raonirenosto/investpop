@@ -10,3 +10,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.4.0** — Console de acessos com tracking, ícones SVG, bandeiras, gráfico Chart.js, refatoração em módulos
 - **v0.4.1** — Fix tracking (ipapi.co → freeipapi.com), console responsivo, ícones browser corrigidos, filtro bots padrão com gráfico
 - **v0.5.0** — Refatoração em pastas (generators/, data/, assets/, pages/), SEO (robots.txt, sitemap, JSON-LD, og:image), testes com Jest
+- **v0.6.0** — Rankings com dados reais (DY via Investidor 10, Var.Ano YTD, Consistência mfinance+Yahoo), validação cruzada com múltiplas fontes
