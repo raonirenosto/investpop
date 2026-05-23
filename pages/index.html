@@ -50,11 +50,16 @@
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Contato</a>
     </div>
     <div class="hidden lg:flex items-center gap-3">
-      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
+      <div class="relative flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
+        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" id="busca-nav" oninput="buscarNav()" autocomplete="off" />
+        <div id="busca-resultado" class="hidden absolute top-full mt-1 left-0 right-0 bg-card border border-card-border rounded-lg shadow-xl z-50 overflow-hidden">
+          <a href="HCTR11.html" class="flex items-center justify-between px-3 py-2 hover:bg-[#132743] text-sm">
+            <span class="font-medium">HCTR11</span><span class="text-xs text-gray-500">Hectare CE</span>
+          </a>
+        </div>
       </div>
       <button onclick="emBreve(event)" class="text-gray-400 hover:text-white">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +69,7 @@
       </button>
     </div>
     <div class="flex md:hidden items-center gap-4">
-      <button onclick="emBreve(event)" class="text-gray-400">
+      <button onclick="abrirBuscaMobile()" class="text-gray-400">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
@@ -76,6 +81,24 @@
       </button>
     </div>
   </nav>
+
+  <!-- Busca mobile -->
+  <div id="busca-mobile" class="hidden md:hidden fixed inset-0 z-50 bg-bg/95 px-4 pt-4">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="relative flex-1 flex items-center bg-card border border-card-border rounded-lg px-3 py-2.5 gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" id="busca-mobile-input" placeholder="Buscar FII, ticker..." oninput="buscarMobile()" autocomplete="off" class="bg-transparent text-sm text-gray-300 outline-none w-full" autofocus />
+      </div>
+      <button onclick="fecharBuscaMobile()" class="text-gray-400 text-sm">Cancelar</button>
+    </div>
+    <div id="busca-mobile-resultado" class="hidden">
+      <a href="HCTR11.html" class="flex items-center justify-between px-3 py-3 bg-card border border-card-border rounded-lg text-sm">
+        <span class="font-medium">HCTR11</span><span class="text-xs text-gray-500">Hectare CE</span>
+      </a>
+    </div>
+  </div>
 
   <main class="px-4 md:px-8 py-6 md:py-8">
     <h1 class="sr-only">InvestPop — Radar de Fundos Imobiliários em tempo real</h1>
@@ -100,7 +123,7 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">HCTR11</p>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="HCTR11.html" class="hover:underline">HCTR11</a></p>
         <span class="text-xs md:text-sm text-red-500 font-medium">-2,24%</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 16,59</div>
       </div>
@@ -199,8 +222,7 @@
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">1</td>
-                <td class="py-2.5 font-medium">HCTR11</td>
-                <td class="py-2.5 text-right text-red-500 font-medium">-2,24%</td>
+                <td class="py-2.5 font-medium"><a href="HCTR11.html" class="hover:underline">HCTR11</a></td>
                 <td class="py-2.5 text-right text-gray-400">R$ 16,59</td>
               </tr>
 
@@ -278,7 +300,7 @@
 
               <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">DEVA11</td><td class="py-2.5 text-right text-emerald-500 font-medium">21,90%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">HCTR11</td><td class="py-2.5 text-right text-emerald-500 font-medium">21,37%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="HCTR11.html" class="hover:underline">HCTR11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">21,37%</td></tr>
 
               <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">VGRI11</td><td class="py-2.5 text-right text-emerald-500 font-medium">20,96%</td></tr>
             </tbody>
@@ -305,7 +327,7 @@
             </thead>
             <tbody class="text-gray-200">
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">HCTR11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,16</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="HCTR11.html" class="hover:underline">HCTR11</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,16</td></tr>
 
               <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">DEVA11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,20</td></tr>
 
@@ -432,6 +454,27 @@
   <script>
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+    function buscarNav() {
+      var v = document.getElementById('busca-nav').value.toUpperCase();
+      var r = document.getElementById('busca-resultado');
+      if (v.length >= 2 && 'HCTR11'.includes(v)) { r.classList.remove('hidden'); }
+      else { r.classList.add('hidden'); }
+    }
+    function abrirBuscaMobile() {
+      document.getElementById('busca-mobile').classList.remove('hidden');
+      setTimeout(function() { document.getElementById('busca-mobile-input').focus(); }, 100);
+    }
+    function fecharBuscaMobile() {
+      document.getElementById('busca-mobile').classList.add('hidden');
+      document.getElementById('busca-mobile-input').value = '';
+      document.getElementById('busca-mobile-resultado').classList.add('hidden');
+    }
+    function buscarMobile() {
+      var v = document.getElementById('busca-mobile-input').value.toUpperCase();
+      var r = document.getElementById('busca-mobile-resultado');
+      if (v.length >= 2 && 'HCTR11'.includes(v)) { r.classList.remove('hidden'); }
+      else { r.classList.add('hidden'); }
+    }
 
   </script>
 

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCTR11 — InvestPop</title>
+  <meta name="description" content="HCTR11 - Hectare CE. Cotação, dividendos, indicadores e dados do fundo imobiliário." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { bg: '#07111F', card: '#0B1A2E', 'card-border': '#132743' } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-bg min-h-screen text-white">
+
+  <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-3">
+      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
+      </div>
+    </div>
+    <div class="flex md:hidden items-center gap-4">
+      <a href="index.html" class="text-gray-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </a>
+    </div>
+  </nav>
+
+  <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
+
+    <!-- Breadcrumb desktop -->
+    <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 mb-4">
+      <a href="index.html" class="hover:text-white">Início</a>
+      <span>›</span>
+      <span>Fundos Imobiliários</span>
+      <span>›</span>
+      <span class="text-gray-300">HCTR11</span>
+    </div>
+
+    <!-- Header do FII -->
+    <div class="flex items-center justify-between gap-3 mb-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl md:text-3xl font-bold">HCTR11</h1>
+          <span class="text-xs md:text-sm text-gray-400">Hectare CE</span>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 16,59</p>
+        <div class="flex items-center gap-1 justify-end">
+          <span class="text-xs md:text-sm text-red-500 font-medium">-2,24%</span>
+          <span class="text-[10px] md:text-xs text-gray-500">(↓ R$ 0,38)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicadores -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Dividend Yield (12M)</span>
+        <p class="text-lg font-bold text-emerald-400 mt-1">21,37%</p>
+        <span class="text-[10px] text-gray-500">Últimos 12 meses</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">P/VP</span>
+        <p class="text-lg font-bold mt-1">0,16</p>
+        <span class="text-[10px] text-gray-500">Valor Patrimonial R$ 103,75</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Patrimônio Líquido</span>
+        <p class="text-lg font-bold mt-1">R$ 2,34 bi</p>
+        <span class="text-[10px] text-gray-500">22.084.202 cotas</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Cotistas</span>
+        <p class="text-lg font-bold mt-1">130.689</p>
+        <span class="text-[10px] text-gray-500">Taxa Adm: 0,21% a.a.</span>
+      </div>
+    </div>
+
+    <!-- Grid principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+      <!-- Sobre o Fundo -->
+      <div class="lg:col-span-2 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Sobre o Fundo</h2>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">O fundo HECTARE CE (HCTR11) é um fundo imobiliário do tipo Fundo de Papel e do segmento Títulos e Valores Mobiliários. Possui atualmente 22.084.202 cotas divididas entre 130.689 cotistas.</p>
+        <div class="grid grid-cols-2 gap-y-2 text-xs">
+          <div><span class="text-gray-500">Tipo</span></div>
+          <div class="text-gray-300">Fundo de Papel</div>
+          <div><span class="text-gray-500">Segmento</span></div>
+          <div class="text-gray-300">Títulos e Val. Mobiliários</div>
+          <div><span class="text-gray-500">Taxa de Administração</span></div>
+          <div class="text-gray-300">0,21% a.a.</div>
+          <div><span class="text-gray-500">CNPJ</span></div>
+          <div class="text-gray-300">30.248.180/0001-96</div>
+        </div>
+      </div>
+
+      <!-- Rentabilidade -->
+      <div class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Rentabilidade</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">Último mês</span>
+            <span class="text-sm font-medium text-red-500">-13,68%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">No ano (YTD)</span>
+            <span class="text-sm font-medium text-red-500">-21,00%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">12 meses</span>
+            <span class="text-sm font-medium text-red-500">-15,49%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">5 anos</span>
+            <span class="text-sm font-medium text-red-500">-74,85%</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-card-border">
+          <span class="text-[10px] text-gray-500">Inclui valorização + dividendos</span>
+        </div>
+      </div>
+
+      <!-- Últimos Dividendos -->
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-gray-300 uppercase">Últimos Dividendos</h2>
+          <span class="text-xs text-gray-500">Média: R$ 0,30/mês</span>
+        </div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-gray-500 text-xs">
+              <th class="text-left pb-2 font-medium">Data Com</th>
+              <th class="text-left pb-2 font-medium">Pagamento</th>
+              <th class="text-right pb-2 font-medium">Valor</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-200">
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">08/05/2026</td>
+              <td class="py-2.5">15/05/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,26</td>
+            </tr>
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">08/04/2026</td>
+              <td class="py-2.5">15/04/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,23</td>
+            </tr>
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">06/03/2026</td>
+              <td class="py-2.5">13/03/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,26</td>
+            </tr>
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">06/02/2026</td>
+              <td class="py-2.5">13/02/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,27</td>
+            </tr>
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">08/01/2026</td>
+              <td class="py-2.5">15/01/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,40</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-3 pt-3 border-t border-card-border text-xs text-gray-500">
+          Total 12M: R$ 3,55 por cota • DY 12M: 21,37%
+        </div>
+      </div>
+
+      <!-- Simulador de Renda -->
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por mês?</h2>
+        <p class="text-xs text-gray-500 mb-3">Baseado na média mensal de R$ 0,30/cota (cota a R$ 16,59)</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 100</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 1,81</span>
+          </div>
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 500</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 9,04</span>
+          </div>
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 1.000</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 18,08</span>
+          </div>
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 5.000</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 90,42</span>
+          </div>
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 10.000</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 180,83</span>
+          </div>
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 50.000</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 904,16</span>
+          </div>
+          <div class="text-center py-2">
+            <span class="text-xs text-gray-500 block">R$ 100.000</span>
+            <span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 1.808,32</span>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </main>
+
+  <!-- Footer mobile -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      <span class="text-[10px] font-medium">Início</span>
+    </a>
+    <a href="ranking-dy.html" class="flex flex-col items-center gap-1 text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      <span class="text-[10px] font-medium">Rankings</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-1 text-emerald-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      <span class="text-[10px] font-medium">FII</span>
+    </a>
+  </nav>
+
+  <div class="lg:hidden h-16"></div>
+
+  <!-- Footer desktop -->
+  <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border mt-8">
+    <a href="index.html" class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
+  </footer>
+
+</body>
+</html>
