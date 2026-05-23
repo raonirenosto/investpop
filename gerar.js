@@ -7,18 +7,18 @@ const { gerarPaginaLista } = require("./generators/pagina-lista")
 const { gerarConsole } = require("./generators/pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
-const CACHE_FILE = path.resolve(__dirname, "cache_fiis.csv")
+const CACHE_FILE = path.resolve(__dirname, "data/cache_fiis.csv")
 
 // ===============================
 // 📥 LER FIIs
 // ===============================
 
 function lerFiis() {
-    if (!fs.existsSync("lista_fiis.txt")) {
-        console.log("⚠️ Arquivo lista_fiis.txt não encontrado")
+    if (!fs.existsSync("data/lista_fiis.txt")) {
+        console.log("⚠️ Arquivo data/lista_fiis.txt não encontrado")
         return []
     }
-    return fs.readFileSync("lista_fiis.txt", "utf-8")
+    return fs.readFileSync("data/lista_fiis.txt", "utf-8")
         .split(/[\r\n\s,]+/)
         .map(l => l.trim().toUpperCase())
         .filter(l => l)
