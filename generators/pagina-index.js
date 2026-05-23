@@ -122,6 +122,135 @@ ${linhasTabela(quedas, "text-red-500")}
         </div>
       </div>
     </div>
+    <div class="mt-8">
+      <div class="flex items-center gap-2 mb-4">
+        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Rankings</h2>
+      </div>
+
+      <div class="flex md:hidden gap-4 mb-4 border-b border-card-border overflow-x-auto">
+        <button id="tab-rank-pagam" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500 whitespace-nowrap" onclick="showRankTab('pagam')">Mais Pagam</button>
+        <button id="tab-rank-baratos" class="pb-2 text-sm font-medium text-gray-500 whitespace-nowrap" onclick="showRankTab('baratos')">Mais Baratos</button>
+        <button id="tab-rank-valorizacao" class="pb-2 text-sm font-medium text-gray-500 whitespace-nowrap" onclick="showRankTab('valorizacao')">Valoriza\u00e7\u00e3o</button>
+        <button id="tab-rank-consistentes" class="pb-2 text-sm font-medium text-gray-500 whitespace-nowrap" onclick="showRankTab('consistentes')">Consistentes</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div id="panel-rank-pagam" class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 que Mais Pagam</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-500 text-xs">
+                <th class="text-left pb-2 font-medium">#</th>
+                <th class="text-left pb-2 font-medium">FII</th>
+                <th class="text-right pb-2 font-medium">DY (12M)</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-200">
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">MXRF11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,25%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">HGLG11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,10%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">VINO11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,05%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">BCFF11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,00%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">KNCR11</td><td class="py-2.5 text-right text-emerald-500 font-medium">0,95%</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center">
+            <a href="#" onclick="emBreve(event)" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a>
+          </div>
+        </div>
+
+        <div id="panel-rank-baratos" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Mais Baratos</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-500 text-xs">
+                <th class="text-left pb-2 font-medium">#</th>
+                <th class="text-left pb-2 font-medium">FII</th>
+                <th class="text-right pb-2 font-medium">P/VP</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-200">
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">HCTR11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,75</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">VISC11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,79</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">RBRP11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,82</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">HGRE11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,83</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">XPML11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,85</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center">
+            <a href="#" onclick="emBreve(event)" class="text-blue-500 text-xs font-medium hover:underline">Ver todos</a>
+          </div>
+        </div>
+
+        <div id="panel-rank-valorizacao" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            </svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 que Mais Valorizaram no Ano</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-500 text-xs">
+                <th class="text-left pb-2 font-medium">#</th>
+                <th class="text-left pb-2 font-medium">FII</th>
+                <th class="text-right pb-2 font-medium">Var. Ano</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-200">
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">TRBL11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+32,45%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">KNSC11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+28,31%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">RBRL11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+26,11%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">GGRI11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+24,50%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">VSLH11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+22,18%</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center">
+            <a href="#" onclick="emBreve(event)" class="text-purple-500 text-xs font-medium hover:underline">Ver todos</a>
+          </div>
+        </div>
+
+        <div id="panel-rank-consistentes" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Pagadores Consistentes</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-gray-500 text-xs">
+                <th class="text-left pb-2 font-medium">#</th>
+                <th class="text-left pb-2 font-medium">FII</th>
+                <th class="text-right pb-2 font-medium">\u00cdndice</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-200">
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">HGLG11</td><td class="py-2.5 text-right text-orange-400 font-medium">98,2%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">BCFF11</td><td class="py-2.5 text-right text-orange-400 font-medium">97,6%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">VINO11</td><td class="py-2.5 text-right text-orange-400 font-medium">96,8%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">KCFI11</td><td class="py-2.5 text-right text-orange-400 font-medium">96,1%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">MXRF11</td><td class="py-2.5 text-right text-orange-400 font-medium">95,4%</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center">
+            <a href="#" onclick="emBreve(event)" class="text-orange-500 text-xs font-medium hover:underline">Ver todos</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
 ${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
@@ -148,6 +277,25 @@ ${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
         tabAltas.classList.remove('text-emerald-500', 'border-b-2', 'border-emerald-500');
         tabAltas.classList.add('text-gray-500');
       }
+    }
+
+    function showRankTab(tab) {
+      var tabs = ['pagam','baratos','valorizacao','consistentes'];
+      var colors = {'pagam':'emerald','baratos':'blue','valorizacao':'purple','consistentes':'orange'};
+      tabs.forEach(function(t) {
+        var panel = document.getElementById('panel-rank-'+t);
+        var btn = document.getElementById('tab-rank-'+t);
+        if (t === tab) {
+          panel.classList.remove('hidden');
+          btn.classList.add('text-'+colors[t]+'-500', 'border-b-2', 'border-'+colors[t]+'-500');
+          btn.classList.remove('text-gray-500');
+        } else {
+          panel.classList.add('hidden');
+          panel.classList.remove('md:block');
+          btn.classList.remove('text-'+colors[t]+'-500', 'border-b-2', 'border-'+colors[t]+'-500');
+          btn.classList.add('text-gray-500');
+        }
+      });
     }
   </script>
 
