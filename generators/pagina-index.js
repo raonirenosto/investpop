@@ -173,7 +173,7 @@ ${linhasRanking(rankings.topDY, "text-emerald-500")}
             <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
             </svg>
-            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Mais Baratos (Mockado)</h3>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Mais Baratos</h3>
           </div>
           <table class="w-full text-sm">
             <thead>
@@ -184,15 +184,11 @@ ${linhasRanking(rankings.topDY, "text-emerald-500")}
               </tr>
             </thead>
             <tbody class="text-gray-200">
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">HCTR11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,75</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">VISC11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,79</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">RBRP11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,82</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">HGRE11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,83</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">XPML11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,85</td></tr>
+${linhasRanking(rankings.topBaratos, "text-blue-400")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-blue-500 text-xs font-medium hover:underline">Ver todos</a>
+            <a href="ranking-baratos.html" class="text-blue-500 text-xs font-medium hover:underline">Ver todos</a>
           </div>
         </div>
 

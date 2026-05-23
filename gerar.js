@@ -144,97 +144,103 @@ function calcularMesesSemQuebra(rendimentos) {
 
 async function buscarRankings(tickers) {
     const resultados = []
-    const batchSize = 10
+    const startTime = Date.now()
 
-    // Buscar variação YTD via spark (batch)
+    // Buscar variação do dia e YTD via Yahoo Finance (batch, rápido)
+    const varDiaBatch = {}
     const varAnoBatch = {}
     for (let i = 0; i < tickers.length; i += 20) {
         const batch = tickers.slice(i, i + 20)
         const symbols = batch.map(t => t + '.SA').join(',')
         try {
-            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=ytd&interval=1mo`, {
-                httpsAgent: agentSemSSL,
-                headers: { "User-Agent": "Mozilla/5.0" }
-            })
+            const [rDia, rYtd] = await Promise.all([
+                axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=1d&interval=1d`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } }),
+                axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=ytd&interval=1mo`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+            ])
             for (const t of batch) {
-                const d = r.data[t + '.SA']
-                if (d && d.close && d.close.length > 0 && d.chartPreviousClose > 0) {
-                    const varAno = ((d.close[d.close.length - 1] - d.chartPreviousClose) / d.chartPreviousClose) * 100
-                    varAnoBatch[t] = varAno
+                const dDia = rDia.data[t + '.SA']
+                if (dDia && dDia.close && dDia.close.length > 0 && dDia.chartPreviousClose > 0) {
+                    varDiaBatch[t] = ((dDia.close[dDia.close.length - 1] - dDia.chartPreviousClose) / dDia.chartPreviousClose) * 100
+                }
+                const dYtd = rYtd.data[t + '.SA']
+                if (dYtd && dYtd.close && dYtd.close.length > 0 && dYtd.chartPreviousClose > 0) {
+                    varAnoBatch[t] = ((dYtd.close[dYtd.close.length - 1] - dYtd.chartPreviousClose) / dYtd.chartPreviousClose) * 100
                 }
             }
         } catch (e) {}
         if (i + 20 < tickers.length) await new Promise(r => setTimeout(r, 300))
     }
+    console.log(`  Yahoo batch: ${Object.keys(varDiaBatch).length} preços, ${Object.keys(varAnoBatch).length} YTD (${Date.now() - startTime}ms)`)
 
-    // Buscar DY via Investidor 10 (scraping) e consistência via mfinance + Yahoo
-    for (let i = 0; i < tickers.length; i += batchSize) {
-        const batch = tickers.slice(i, i + batchSize)
-        const promises = batch.map(async t => {
-            try {
-                // DY via Investidor 10
-                let dy = 0
-                try {
-                    const rInv10 = await axios.get(`https://investidor10.com.br/fiis/${t.toLowerCase()}/`, {
-                        httpsAgent: agentSemSSL,
-                        headers: { "User-Agent": "Mozilla/5.0" }
-                    })
-                    const dyMatch = rInv10.data.match(/dividend\s*yield\s*de\s*(\d+[,.]\d+)\s*%/i)
-                    if (dyMatch) dy = parseFloat(dyMatch[1].replace(',', '.'))
-                } catch (e) {}
+    // Buscar DY, P/VP e consistência via Investidor 10 (1 ticker por vez, 2 chamadas paralelas)
+    for (let i = 0; i < tickers.length; i++) {
+        const t = tickers[i]
+        try {
+            const [rPrincipal, rDivs] = await Promise.all([
+                axios.get(`https://investidor10.com.br/fiis/${t.toLowerCase()}/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } }),
+                axios.get(`https://investidor10.com.br/fiis/${t.toLowerCase()}/dividendos/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+            ])
 
-                // Yahoo: dividendos recentes
-                const rYahoo = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${t}.SA?interval=1mo&range=5y&events=div`, {
-                    httpsAgent: agentSemSSL,
-                    headers: { "User-Agent": "Mozilla/5.0" }
-                })
-                const resYahoo = rYahoo.data.chart.result[0]
-                const divsYahoo = resYahoo.events?.dividends ? Object.values(resYahoo.events.dividends) : []
+            // Extrair DY e P/VP
+            const html = rPrincipal.data
+            const dyMatch = html.match(/dividend\s*yield\s*de\s*(\d+[,.]\d+)\s*%/i)
+            const pvpMatch = html.match(/P\/VP\s*de\s*(\d+[,.]\d+)/i)
+            const dy = dyMatch ? parseFloat(dyMatch[1].replace(',', '.')) : 0
+            const pvp = pvpMatch ? parseFloat(pvpMatch[1].replace(',', '.')) : null
 
-                // mfinance: histórico completo
-                let mfinData = []
-                try {
-                    const rMfin = await axios.get(`https://mfinance.com.br/api/v1/fiis/dividends/${t}`, { httpsAgent: agentSemSSL })
-                    mfinData = (rMfin.data.dividends || []).reverse().map(d => ({ data: d.declaredDate.split('T')[0], valor: d.value }))
-                } catch (e) {}
-
-                // Combinar: Yahoo novos + mfinance histórico
-                divsYahoo.sort((a, b) => b.date - a.date)
-                const yahooData = divsYahoo.map(d => ({ data: new Date(d.date * 1000).toISOString().split('T')[0], valor: d.amount }))
-                let combinado
-                if (mfinData.length > 0) {
-                    const mesesMfinance = new Set(mfinData.map(d => d.data.slice(0, 7)))
-                    const yahooNovos = yahooData.filter(d => !mesesMfinance.has(d.data.slice(0, 7)))
-                    combinado = [...yahooNovos, ...mfinData]
-                } else {
-                    combinado = yahooData
+            // Extrair rendimentos
+            const rendimentos = []
+            const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi
+            let trMatch
+            while ((trMatch = trRegex.exec(rDivs.data)) !== null) {
+                const tds = []
+                const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi
+                let tdMatch
+                while ((tdMatch = tdRegex.exec(trMatch[1])) !== null) {
+                    tds.push(tdMatch[1].replace(/<[^>]+>/g, '').trim())
                 }
-
-                const consistencia = calcularMesesSemQuebra(combinado)
-                return { ticker: t, dy, varAno: varAnoBatch[t] || 0, mesesConsistentes: consistencia.meses }
-            } catch (e) {
-                return { ticker: t, dy: 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 }
+                if (tds.length >= 4 && tds[0].toLowerCase().includes('dividendo')) {
+                    rendimentos.push({ data: tds[1], valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
+                }
             }
-        })
-        const batch_results = await Promise.all(promises)
-        resultados.push(...batch_results)
-        if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 1500))
+
+            const consistencia = calcularMesesSemQuebra(rendimentos)
+
+            resultados.push({
+                ticker: t,
+                dy,
+                pvp,
+                varDia: varDiaBatch[t] || 0,
+                varAno: varAnoBatch[t] || 0,
+                mesesConsistentes: consistencia.meses
+            })
+
+            if ((i + 1) % 10 === 0) console.log(`  Investidor 10: ${i + 1}/${tickers.length} (${Date.now() - startTime}ms)`)
+        } catch (e) {
+            resultados.push({ ticker: t, dy: 0, pvp: null, varDia: varDiaBatch[t] || 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 })
+        }
+        if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 500))
     }
 
     const allDY = resultados.filter(r => r.dy > 0).sort((a, b) => b.dy - a.dy)
         .map(r => ({ ticker: r.ticker, valor: r.dy.toFixed(2).replace('.', ',') + '%' }))
+    const allBaratos = resultados.filter(r => r.pvp && r.pvp > 0).sort((a, b) => a.pvp - b.pvp)
+        .map(r => ({ ticker: r.ticker, valor: r.pvp.toFixed(2).replace('.', ',') }))
     const allVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno)
         .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
     const allConsistentes = resultados.sort((a, b) => b.mesesConsistentes - a.mesesConsistentes)
         .map(r => ({ ticker: r.ticker, valor: r.mesesConsistentes + ' meses' }))
 
     const topDY = allDY.slice(0, 5)
+    const topBaratos = allBaratos.slice(0, 5)
     const topVarAno = allVarAno.slice(0, 5)
     const topConsistentes = allConsistentes.slice(0, 5)
 
-    console.log(`🏆 Rankings: DY(${allDY.length}) | Var.Ano(${allVarAno.length}) | Consistentes(${allConsistentes.length})`)
-    return { topDY, topVarAno, topConsistentes, allDY, allVarAno, allConsistentes }
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+    console.log(`🏆 Rankings: DY(${allDY.length}) | Baratos(${allBaratos.length}) | Var.Ano(${allVarAno.length}) | Consistentes(${allConsistentes.length}) | Tempo: ${elapsed}s`)
+    return { topDY, topBaratos, topVarAno, topConsistentes, allDY, allBaratos, allVarAno, allConsistentes }
 }
+
 
 // ===============================
 // 🚀 MAIN
@@ -290,6 +296,7 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
     fs.writeFileSync(path.join(pasta, "ranking-dy.html"), gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "ranking-baratos.html"), gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
     fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
