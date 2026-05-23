@@ -167,35 +167,65 @@ async function buscarRankings(tickers) {
         if (i + 20 < tickers.length) await new Promise(r => setTimeout(r, 300))
     }
 
-    // Buscar DY e consistência via chart individual (5y + dividendos)
+    // Buscar DY via Investidor 10 (scraping) e consistência via mfinance + Yahoo
     for (let i = 0; i < tickers.length; i += batchSize) {
         const batch = tickers.slice(i, i + batchSize)
-        const promises = batch.map(t =>
-            axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${t}.SA?interval=1mo&range=5y&events=div`, {
-                httpsAgent: agentSemSSL,
-                headers: { "User-Agent": "Mozilla/5.0" }
-            }).then(r => {
-                const res = r.data.chart.result[0]
-                const preco = res.meta.regularMarketPrice
-                const divs = res.events?.dividends ? Object.values(res.events.dividends) : []
-                const totalDiv12m = divs.filter(d => d.date > (Date.now() / 1000 - 365 * 24 * 60 * 60)).reduce((s, d) => s + d.amount, 0)
-                const dy = preco > 0 ? (totalDiv12m / preco) * 100 : 0
-                divs.sort((a, b) => b.date - a.date)
-                const rendimentos = divs.map(d => ({ data: new Date(d.date * 1000).toLocaleDateString('pt-BR'), valor: d.amount }))
-                const consistencia = calcularMesesSemQuebra(rendimentos)
+        const promises = batch.map(async t => {
+            try {
+                // DY via Investidor 10
+                let dy = 0
+                try {
+                    const rInv10 = await axios.get(`https://investidor10.com.br/fiis/${t.toLowerCase()}/`, {
+                        httpsAgent: agentSemSSL,
+                        headers: { "User-Agent": "Mozilla/5.0" }
+                    })
+                    const dyMatch = rInv10.data.match(/dividend\s*yield\s*de\s*(\d+[,.]\d+)\s*%/i)
+                    if (dyMatch) dy = parseFloat(dyMatch[1].replace(',', '.'))
+                } catch (e) {}
+
+                // Yahoo: dividendos recentes
+                const rYahoo = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${t}.SA?interval=1mo&range=5y&events=div`, {
+                    httpsAgent: agentSemSSL,
+                    headers: { "User-Agent": "Mozilla/5.0" }
+                })
+                const resYahoo = rYahoo.data.chart.result[0]
+                const divsYahoo = resYahoo.events?.dividends ? Object.values(resYahoo.events.dividends) : []
+
+                // mfinance: histórico completo
+                let mfinData = []
+                try {
+                    const rMfin = await axios.get(`https://mfinance.com.br/api/v1/fiis/dividends/${t}`, { httpsAgent: agentSemSSL })
+                    mfinData = (rMfin.data.dividends || []).reverse().map(d => ({ data: d.declaredDate.split('T')[0], valor: d.value }))
+                } catch (e) {}
+
+                // Combinar: Yahoo novos + mfinance histórico
+                divsYahoo.sort((a, b) => b.date - a.date)
+                const yahooData = divsYahoo.map(d => ({ data: new Date(d.date * 1000).toISOString().split('T')[0], valor: d.amount }))
+                let combinado
+                if (mfinData.length > 0) {
+                    const mesesMfinance = new Set(mfinData.map(d => d.data.slice(0, 7)))
+                    const yahooNovos = yahooData.filter(d => !mesesMfinance.has(d.data.slice(0, 7)))
+                    combinado = [...yahooNovos, ...mfinData]
+                } else {
+                    combinado = yahooData
+                }
+
+                const consistencia = calcularMesesSemQuebra(combinado)
                 return { ticker: t, dy, varAno: varAnoBatch[t] || 0, mesesConsistentes: consistencia.meses }
-            }).catch(() => ({ ticker: t, dy: 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 }))
-        )
+            } catch (e) {
+                return { ticker: t, dy: 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 }
+            }
+        })
         const batch_results = await Promise.all(promises)
         resultados.push(...batch_results)
-        if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 500))
+        if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 1500))
     }
 
     const allDY = resultados.filter(r => r.dy > 0).sort((a, b) => b.dy - a.dy)
         .map(r => ({ ticker: r.ticker, valor: r.dy.toFixed(2).replace('.', ',') + '%' }))
     const allVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno)
         .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
-    const allConsistentes = resultados.filter(r => r.mesesConsistentes >= 3).sort((a, b) => b.mesesConsistentes - a.mesesConsistentes)
+    const allConsistentes = resultados.sort((a, b) => b.mesesConsistentes - a.mesesConsistentes)
         .map(r => ({ ticker: r.ticker, valor: r.mesesConsistentes + ' meses' }))
 
     const topDY = allDY.slice(0, 5)
