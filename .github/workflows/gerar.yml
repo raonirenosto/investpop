@@ -30,11 +30,11 @@ jobs:
       - name: Preparar deploy
         run: |
           mkdir -p _site
-          cp src/*.html _site/
-          cp src/*.js _site/
-          cp src/robots.txt _site/
-          cp src/sitemap.xml _site/
-          cp src/og-image.svg _site/
+          cp pages/*.html _site/
+          cp assets/*.js _site/
+          cp assets/robots.txt _site/
+          cp assets/sitemap.xml _site/
+          cp assets/og-image.svg _site/
           echo "investpop.com.br" > _site/CNAME
 
       - name: Upload Pages artifact

@@ -167,7 +167,7 @@ async function main() {
 
     console.log(`\n📈 Altas: ${todasAltas.length} | 📉 Quedas: ${todasQuedas.length}`)
 
-    const pasta = "src"
+    const pasta = "pages"
     if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
 
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas))
@@ -175,11 +175,11 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
-    console.log("\n✅ Páginas geradas em src/")
+    console.log("\n✅ Páginas geradas em pages/")
 
     if (args.includes("--serve")) {
         const { exec } = require("child_process")
-        exec(`npx http-server src -p 8080 -o /console.html`, { cwd: __dirname })
+        exec(`npx http-server pages -p 8080 -o /console.html`, { cwd: __dirname })
         console.log("\n🌐 Servidor local: http://localhost:8080/console.html")
     } else if (!args.includes("--no-open")) {
         const { exec } = require("child_process")
