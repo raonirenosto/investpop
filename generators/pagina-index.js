@@ -232,7 +232,7 @@ ${linhasRanking(rankings.topVarAno, "text-emerald-500")}
               <tr class="text-gray-500 text-xs">
                 <th class="text-left pb-2 font-medium">#</th>
                 <th class="text-left pb-2 font-medium">FII</th>
-                <th class="text-right pb-2 font-medium">\u00cdndice</th>
+                <th class="text-right pb-2 font-medium">Consist\u00eancia</th>
               </tr>
             </thead>
             <tbody class="text-gray-200">

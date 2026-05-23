@@ -128,6 +128,20 @@ function salvarCache(resultados) {
 // 🏆 BUSCAR RANKINGS (Yahoo Finance - chart + dividendos)
 // ===============================
 
+function calcularMesesSemQuebra(rendimentos) {
+    if (rendimentos.length < 3) return { meses: rendimentos.length, quebra: null }
+    let meses = 1
+    for (let i = 0; i < rendimentos.length - 2; i++) {
+        const atual = rendimentos[i]
+        const proximo = rendimentos[i + 1]
+        const depois = rendimentos[i + 2]
+        if (atual.valor >= proximo.valor) { meses++; continue }
+        if (proximo.valor > atual.valor && depois.valor <= atual.valor) { meses++; continue }
+        return { meses, quebra: proximo.data }
+    }
+    return { meses: rendimentos.length, quebra: null }
+}
+
 async function buscarRankings(tickers) {
     const resultados = []
     const batchSize = 10
@@ -135,7 +149,7 @@ async function buscarRankings(tickers) {
     for (let i = 0; i < tickers.length; i += batchSize) {
         const batch = tickers.slice(i, i + batchSize)
         const promises = batch.map(t =>
-            axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${t}.SA?interval=1mo&range=1y&events=div`, {
+            axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${t}.SA?interval=1mo&range=5y&events=div`, {
                 httpsAgent: agentSemSSL,
                 headers: { "User-Agent": "Mozilla/5.0" }
             }).then(r => {
@@ -145,10 +159,13 @@ async function buscarRankings(tickers) {
                 const primeiroClose = closes[0]
                 const varAno = primeiroClose > 0 ? ((preco - primeiroClose) / primeiroClose) * 100 : 0
                 const divs = res.events?.dividends ? Object.values(res.events.dividends) : []
-                const totalDiv = divs.reduce((s, d) => s + d.amount, 0)
-                const dy = preco > 0 ? (totalDiv / preco) * 100 : 0
-                return { ticker: t, dy, varAno, pagamentos: divs.length }
-            }).catch(() => ({ ticker: t, dy: 0, varAno: 0, pagamentos: 0 }))
+                const totalDiv12m = divs.filter(d => d.date > (Date.now() / 1000 - 365 * 24 * 60 * 60)).reduce((s, d) => s + d.amount, 0)
+                const dy = preco > 0 ? (totalDiv12m / preco) * 100 : 0
+                divs.sort((a, b) => b.date - a.date)
+                const rendimentos = divs.map(d => ({ data: new Date(d.date * 1000).toLocaleDateString('pt-BR'), valor: d.amount }))
+                const consistencia = calcularMesesSemQuebra(rendimentos)
+                return { ticker: t, dy, varAno, mesesConsistentes: consistencia.meses }
+            }).catch(() => ({ ticker: t, dy: 0, varAno: 0, mesesConsistentes: 0 }))
         )
         const batch_results = await Promise.all(promises)
         resultados.push(...batch_results)
@@ -159,8 +176,8 @@ async function buscarRankings(tickers) {
         .map(r => ({ ticker: r.ticker, valor: r.dy.toFixed(2).replace('.', ',') + '%' }))
     const allVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno)
         .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
-    const allConsistentes = resultados.filter(r => r.pagamentos > 0).sort((a, b) => b.pagamentos - a.pagamentos || b.dy - a.dy)
-        .map(r => ({ ticker: r.ticker, valor: ((r.pagamentos / 12) * 100).toFixed(1).replace('.', ',') + '%' }))
+    const allConsistentes = resultados.filter(r => r.mesesConsistentes >= 3).sort((a, b) => b.mesesConsistentes - a.mesesConsistentes)
+        .map(r => ({ ticker: r.ticker, valor: r.mesesConsistentes + ' meses' }))
 
     const topDY = allDY.slice(0, 5)
     const topVarAno = allVarAno.slice(0, 5)
@@ -225,7 +242,7 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
     fs.writeFileSync(path.join(pasta, "ranking-dy.html"), gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "\u00cdndice", rankings.allConsistentes, "text-orange-400"))
+    fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
     console.log("\n✅ Páginas geradas em pages/")

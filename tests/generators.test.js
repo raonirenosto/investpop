@@ -23,8 +23,8 @@ const mockRankings = {
     { ticker: 'VISC11', valor: '+4,21%' },
   ],
   topConsistentes: [
-    { ticker: 'KNRI11', valor: '100,0%' },
-    { ticker: 'MXRF11', valor: '100,0%' },
+    { ticker: 'HGLG11', valor: '50 meses' },
+    { ticker: 'XPLG11', valor: '48 meses' },
   ]
 }
 
@@ -120,7 +120,7 @@ describe('pagina-index', () => {
     expect(html).toContain('MXRF11')
     expect(html).toContain('12,06%')
     expect(html).toContain('+10,01%')
-    expect(html).toContain('100,0%')
+    expect(html).toContain('50 meses')
   })
 
   test('funciona com rankings vazio/null', () => {
@@ -176,10 +176,10 @@ describe('pagina-ranking', () => {
 
   test('gera página de ranking consistentes', () => {
     global.INVESTPOP_TESTE = true
-    const html = gerarPaginaRanking('FIIs Pagadores Consistentes', '\u00cdndice', mockRankings.topConsistentes, 'text-orange-400')
+    const html = gerarPaginaRanking('FIIs Pagadores Consistentes', 'Consist\u00eancia', mockRankings.topConsistentes, 'text-orange-400')
     expect(html).toContain('Pagadores Consistentes')
     expect(html).toContain('text-orange-400')
-    expect(html).toContain('100,0%')
+    expect(html).toContain('50 meses')
   })
 
   test('inclui campo de busca e link voltar', () => {
