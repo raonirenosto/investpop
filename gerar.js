@@ -320,4 +320,4 @@ if (require.main === module) {
     main()
 }
 
-module.exports = { lerFiis, buscarIfix, buscarFiis, buscarRankings, carregarCache, salvarCache, main }
+module.exports = { lerFiis, buscarIfix, buscarFiis, buscarRankings, calcularMesesSemQuebra, carregarCache, salvarCache, main }
