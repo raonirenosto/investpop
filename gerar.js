@@ -8,6 +8,7 @@ const { gerarConsole } = require("./generators/pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
 const CACHE_FILE = path.resolve(__dirname, "data/cache_fiis.csv")
+const CACHE_FULL = path.resolve(__dirname, "data/cache_full.json")
 
 // ===============================
 // 📥 LER FIIs
@@ -101,6 +102,20 @@ async function buscarFiis(tickers) {
 // ===============================
 // 💾 CACHE
 // ===============================
+
+function carregarCacheFull() {
+    if (!fs.existsSync(CACHE_FULL)) return null
+    try {
+        const data = JSON.parse(fs.readFileSync(CACHE_FULL, "utf-8"))
+        console.log(`💾 Cache full carregado (${data.fiis.length} FIIs, rankings, IFIX)`)
+        return data
+    } catch (e) { return null }
+}
+
+function salvarCacheFull(data) {
+    fs.writeFileSync(CACHE_FULL, JSON.stringify(data))
+    console.log(`💾 Cache full salvo`)
+}
 
 function carregarCache() {
     if (!fs.existsSync(CACHE_FILE)) return null
@@ -266,17 +281,50 @@ async function main() {
     let resultados = []
 
     if (usarCache) {
-        const cached = carregarCache()
-        if (cached) {
-            resultados = cached
-        } else {
-            console.log("⚠️ Cache não encontrado, buscando todos online...\n")
-            resultados = await buscarFiis(fiis)
-            salvarCache(resultados)
+        const cacheFull = carregarCacheFull()
+        if (cacheFull) {
+            const ifix = cacheFull.ifix
+            const resultados = cacheFull.fiis
+            const rankings = cacheFull.rankings
+
+            const todasAltas = resultados.filter(r => r.varNum > 0).sort((a, b) => b.varNum - a.varNum)
+            const todasQuedas = resultados.filter(r => r.varNum < 0).sort((a, b) => a.varNum - b.varNum)
+            const altas = todasAltas.slice(0, 5)
+            const quedas = todasQuedas.slice(0, 5)
+
+            console.log(`\n📈 Altas: ${todasAltas.length} | 📉 Quedas: ${todasQuedas.length}`)
+
+            const pasta = "pages"
+            if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
+
+            fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
+            fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
+            fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
+            fs.writeFileSync(path.join(pasta, "ranking-dy.html"), gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
+            fs.writeFileSync(path.join(pasta, "ranking-baratos.html"), gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
+            fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
+            fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
+            fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
+            fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
+            console.log("\n✅ Páginas geradas em pages/ (via cache)")
+
+            if (args.includes("--serve")) {
+                const { exec } = require("child_process")
+                exec(`npx http-server pages -p 8080 -o /console.html`, { cwd: __dirname })
+                console.log("\n🌐 Servidor local: http://localhost:8080/console.html")
+            } else if (!args.includes("--no-open")) {
+                const { exec } = require("child_process")
+                const caminho = path.resolve(pasta, "index.html")
+                if (process.platform === "darwin") exec(`open "${caminho}"`)
+                else if (process.platform === "win32") exec(`start "" "${caminho}"`)
+                else exec(`xdg-open "${caminho}"`)
+            }
+            return
         }
-    } else {
-        resultados = await buscarFiis(fiisLimitados)
+        console.log("⚠️ Cache full não encontrado, buscando online...\n")
     }
+
+    resultados = await buscarFiis(fiisLimitados)
 
     const todasAltas = resultados.filter(r => r.varNum > 0).sort((a, b) => b.varNum - a.varNum)
     const todasQuedas = resultados.filter(r => r.varNum < 0).sort((a, b) => a.varNum - b.varNum)
@@ -302,6 +350,9 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
     console.log("\n✅ Páginas geradas em pages/")
+
+    // Salvar cache full para uso local
+    salvarCacheFull({ ifix, fiis: resultados, rankings })
 
     if (args.includes("--serve")) {
         const { exec } = require("child_process")

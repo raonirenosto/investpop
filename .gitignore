@@ -1,3 +1,4 @@
 .idea/
 node_modules/
 cache_fiis.csv
+data/cache_full.json
