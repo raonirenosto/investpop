@@ -190,4 +190,8 @@ async function main() {
     }
 }
 
-main()
+if (require.main === module) {
+    main()
+}
+
+module.exports = { lerFiis, buscarIfix, buscarFiis, carregarCache, salvarCache, main }

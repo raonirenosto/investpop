@@ -4,9 +4,13 @@
   "private": true,
   "main": "gerar.js",
   "scripts": {
-    "gerar": "node gerar.js"
+    "gerar": "node gerar.js",
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^1.13.6"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2"
   }
 }
