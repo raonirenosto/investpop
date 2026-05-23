@@ -3,7 +3,7 @@ const fs = require("fs")
 const path = require("path")
 const https = require("https")
 const { gerarHtml } = require("./generators/pagina-index")
-const { gerarPaginaLista } = require("./generators/pagina-lista")
+const { gerarPaginaLista, gerarPaginaRanking } = require("./generators/pagina-lista")
 const { gerarConsole } = require("./generators/pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
@@ -155,15 +155,19 @@ async function buscarRankings(tickers) {
         if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 500))
     }
 
-    const topDY = resultados.filter(r => r.dy > 0).sort((a, b) => b.dy - a.dy).slice(0, 5)
+    const allDY = resultados.filter(r => r.dy > 0).sort((a, b) => b.dy - a.dy)
         .map(r => ({ ticker: r.ticker, valor: r.dy.toFixed(2).replace('.', ',') + '%' }))
-    const topVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno).slice(0, 5)
+    const allVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno)
         .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
-    const topConsistentes = resultados.filter(r => r.pagamentos > 0).sort((a, b) => b.pagamentos - a.pagamentos || b.dy - a.dy).slice(0, 5)
+    const allConsistentes = resultados.filter(r => r.pagamentos > 0).sort((a, b) => b.pagamentos - a.pagamentos || b.dy - a.dy)
         .map(r => ({ ticker: r.ticker, valor: ((r.pagamentos / 12) * 100).toFixed(1).replace('.', ',') + '%' }))
 
-    console.log(`🏆 Rankings: DY(${topDY.length}) | Var.Ano(${topVarAno.length}) | Consistentes(${topConsistentes.length})`)
-    return { topDY, topVarAno, topConsistentes }
+    const topDY = allDY.slice(0, 5)
+    const topVarAno = allVarAno.slice(0, 5)
+    const topConsistentes = allConsistentes.slice(0, 5)
+
+    console.log(`🏆 Rankings: DY(${allDY.length}) | Var.Ano(${allVarAno.length}) | Consistentes(${allConsistentes.length})`)
+    return { topDY, topVarAno, topConsistentes, allDY, allVarAno, allConsistentes }
 }
 
 // ===============================
@@ -219,6 +223,9 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
+    fs.writeFileSync(path.join(pasta, "ranking-dy.html"), gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "\u00cdndice", rankings.allConsistentes, "text-orange-400"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
     console.log("\n✅ Páginas geradas em pages/")

@@ -1,6 +1,6 @@
 const { headHtml, headerHtml, footerHtml } = require('../generators/componentes')
 const { gerarHtml } = require('../generators/pagina-index')
-const { gerarPaginaLista } = require('../generators/pagina-lista')
+const { gerarPaginaLista, gerarPaginaRanking } = require('../generators/pagina-lista')
 const { gerarConsole } = require('../generators/pagina-console')
 
 const mockIfix = { valor: '3.855,09', variacao: '+0,13%' }
@@ -153,6 +153,42 @@ describe('pagina-lista', () => {
     const html = gerarPaginaLista('Teste', mockAltas, 'text-emerald-500')
     expect(html).toContain('index.html')
     expect(html).toContain('Voltar')
+  })
+})
+
+describe('pagina-ranking', () => {
+  test('gera página de ranking DY com título e dados', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarPaginaRanking('FIIs que Mais Pagam (DY 12M)', 'DY (12M)', mockRankings.topDY, 'text-emerald-500')
+    expect(html).toContain('FIIs que Mais Pagam (DY 12M)')
+    expect(html).toContain('DY (12M)')
+    expect(html).toContain('MXRF11')
+    expect(html).toContain('12,06%')
+  })
+
+  test('gera página de ranking valorização', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarPaginaRanking('FIIs que Mais Valorizaram no Ano', 'Var. Ano', mockRankings.topVarAno, 'text-emerald-500')
+    expect(html).toContain('Var. Ano')
+    expect(html).toContain('KNRI11')
+    expect(html).toContain('+10,01%')
+  })
+
+  test('gera página de ranking consistentes', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarPaginaRanking('FIIs Pagadores Consistentes', '\u00cdndice', mockRankings.topConsistentes, 'text-orange-400')
+    expect(html).toContain('Pagadores Consistentes')
+    expect(html).toContain('text-orange-400')
+    expect(html).toContain('100,0%')
+  })
+
+  test('inclui campo de busca e link voltar', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarPaginaRanking('Teste', 'Valor', mockRankings.topDY, 'text-emerald-500')
+    expect(html).toContain('id="busca"')
+    expect(html).toContain('filtrar()')
+    expect(html).toContain('Voltar')
+    expect(html).toContain('index.html')
   })
 })
 

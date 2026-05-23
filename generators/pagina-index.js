@@ -164,7 +164,7 @@ ${linhasRanking(rankings.topDY, "text-emerald-500")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a>
+            <a href="ranking-dy.html" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a>
           </div>
         </div>
 
@@ -216,7 +216,7 @@ ${linhasRanking(rankings.topVarAno, "text-emerald-500")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-purple-500 text-xs font-medium hover:underline">Ver todos</a>
+            <a href="ranking-valorizacao.html" class="text-purple-500 text-xs font-medium hover:underline">Ver todos</a>
           </div>
         </div>
 
@@ -240,7 +240,7 @@ ${linhasRanking(rankings.topConsistentes, "text-orange-400")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
-            <a href="#" onclick="emBreve(event)" class="text-orange-500 text-xs font-medium hover:underline">Ver todos</a>
+            <a href="ranking-consistentes.html" class="text-orange-500 text-xs font-medium hover:underline">Ver todos</a>
           </div>
         </div>
       </div>
