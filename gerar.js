@@ -146,6 +146,28 @@ async function buscarRankings(tickers) {
     const resultados = []
     const batchSize = 10
 
+    // Buscar variação YTD via spark (batch)
+    const varAnoBatch = {}
+    for (let i = 0; i < tickers.length; i += 20) {
+        const batch = tickers.slice(i, i + 20)
+        const symbols = batch.map(t => t + '.SA').join(',')
+        try {
+            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=ytd&interval=1mo`, {
+                httpsAgent: agentSemSSL,
+                headers: { "User-Agent": "Mozilla/5.0" }
+            })
+            for (const t of batch) {
+                const d = r.data[t + '.SA']
+                if (d && d.close && d.close.length > 0 && d.chartPreviousClose > 0) {
+                    const varAno = ((d.close[d.close.length - 1] - d.chartPreviousClose) / d.chartPreviousClose) * 100
+                    varAnoBatch[t] = varAno
+                }
+            }
+        } catch (e) {}
+        if (i + 20 < tickers.length) await new Promise(r => setTimeout(r, 300))
+    }
+
+    // Buscar DY e consistência via chart individual (5y + dividendos)
     for (let i = 0; i < tickers.length; i += batchSize) {
         const batch = tickers.slice(i, i + batchSize)
         const promises = batch.map(t =>
@@ -154,18 +176,15 @@ async function buscarRankings(tickers) {
                 headers: { "User-Agent": "Mozilla/5.0" }
             }).then(r => {
                 const res = r.data.chart.result[0]
-                const closes = res.indicators.quote[0].close
                 const preco = res.meta.regularMarketPrice
-                const primeiroClose = closes[0]
-                const varAno = primeiroClose > 0 ? ((preco - primeiroClose) / primeiroClose) * 100 : 0
                 const divs = res.events?.dividends ? Object.values(res.events.dividends) : []
                 const totalDiv12m = divs.filter(d => d.date > (Date.now() / 1000 - 365 * 24 * 60 * 60)).reduce((s, d) => s + d.amount, 0)
                 const dy = preco > 0 ? (totalDiv12m / preco) * 100 : 0
                 divs.sort((a, b) => b.date - a.date)
                 const rendimentos = divs.map(d => ({ data: new Date(d.date * 1000).toLocaleDateString('pt-BR'), valor: d.amount }))
                 const consistencia = calcularMesesSemQuebra(rendimentos)
-                return { ticker: t, dy, varAno, mesesConsistentes: consistencia.meses }
-            }).catch(() => ({ ticker: t, dy: 0, varAno: 0, mesesConsistentes: 0 }))
+                return { ticker: t, dy, varAno: varAnoBatch[t] || 0, mesesConsistentes: consistencia.meses }
+            }).catch(() => ({ ticker: t, dy: 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 }))
         )
         const batch_results = await Promise.all(promises)
         resultados.push(...batch_results)
