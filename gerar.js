@@ -125,6 +125,48 @@ function salvarCache(resultados) {
 }
 
 // ===============================
+// 🏆 BUSCAR RANKINGS (Yahoo Finance - chart + dividendos)
+// ===============================
+
+async function buscarRankings(tickers) {
+    const resultados = []
+    const batchSize = 10
+
+    for (let i = 0; i < tickers.length; i += batchSize) {
+        const batch = tickers.slice(i, i + batchSize)
+        const promises = batch.map(t =>
+            axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${t}.SA?interval=1mo&range=1y&events=div`, {
+                httpsAgent: agentSemSSL,
+                headers: { "User-Agent": "Mozilla/5.0" }
+            }).then(r => {
+                const res = r.data.chart.result[0]
+                const closes = res.indicators.quote[0].close
+                const preco = res.meta.regularMarketPrice
+                const primeiroClose = closes[0]
+                const varAno = primeiroClose > 0 ? ((preco - primeiroClose) / primeiroClose) * 100 : 0
+                const divs = res.events?.dividends ? Object.values(res.events.dividends) : []
+                const totalDiv = divs.reduce((s, d) => s + d.amount, 0)
+                const dy = preco > 0 ? (totalDiv / preco) * 100 : 0
+                return { ticker: t, dy, varAno, pagamentos: divs.length }
+            }).catch(() => ({ ticker: t, dy: 0, varAno: 0, pagamentos: 0 }))
+        )
+        const batch_results = await Promise.all(promises)
+        resultados.push(...batch_results)
+        if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 500))
+    }
+
+    const topDY = resultados.filter(r => r.dy > 0).sort((a, b) => b.dy - a.dy).slice(0, 5)
+        .map(r => ({ ticker: r.ticker, valor: r.dy.toFixed(2).replace('.', ',') + '%' }))
+    const topVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno).slice(0, 5)
+        .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
+    const topConsistentes = resultados.filter(r => r.pagamentos > 0).sort((a, b) => b.pagamentos - a.pagamentos || b.dy - a.dy).slice(0, 5)
+        .map(r => ({ ticker: r.ticker, valor: ((r.pagamentos / 12) * 100).toFixed(1).replace('.', ',') + '%' }))
+
+    console.log(`🏆 Rankings: DY(${topDY.length}) | Var.Ano(${topVarAno.length}) | Consistentes(${topConsistentes.length})`)
+    return { topDY, topVarAno, topConsistentes }
+}
+
+// ===============================
 // 🚀 MAIN
 // ===============================
 
@@ -167,10 +209,14 @@ async function main() {
 
     console.log(`\n📈 Altas: ${todasAltas.length} | 📉 Quedas: ${todasQuedas.length}`)
 
+    // Rankings
+    console.log("\n🏆 Buscando rankings...")
+    const rankings = await buscarRankings(fiis)
+
     const pasta = "pages"
     if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
 
-    fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas))
+    fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
@@ -194,4 +240,4 @@ if (require.main === module) {
     main()
 }
 
-module.exports = { lerFiis, buscarIfix, buscarFiis, carregarCache, salvarCache, main }
+module.exports = { lerFiis, buscarIfix, buscarFiis, buscarRankings, carregarCache, salvarCache, main }

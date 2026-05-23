@@ -13,6 +13,21 @@ const mockQuedas = [
   { ticker: 'SNCI11', preco: '85,86', variacao: '-2,18%', varNum: -2.18 },
 ]
 
+const mockRankings = {
+  topDY: [
+    { ticker: 'MXRF11', valor: '12,06%' },
+    { ticker: 'HGLG11', valor: '10,50%' },
+  ],
+  topVarAno: [
+    { ticker: 'KNRI11', valor: '+10,01%' },
+    { ticker: 'VISC11', valor: '+4,21%' },
+  ],
+  topConsistentes: [
+    { ticker: 'KNRI11', valor: '100,0%' },
+    { ticker: 'MXRF11', valor: '100,0%' },
+  ]
+}
+
 describe('componentes', () => {
   test('headHtml gera DOCTYPE e meta tags', () => {
     const html = headHtml('Titulo', 'Descricao')
@@ -54,7 +69,7 @@ describe('componentes', () => {
 describe('pagina-index', () => {
   test('gera HTML completo com IFIX, altas e quedas', () => {
     global.INVESTPOP_TESTE = true
-    const html = gerarHtml(mockIfix, mockAltas, mockQuedas)
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, mockRankings)
     expect(html).toContain('<!DOCTYPE html>')
     expect(html).toContain('3.855,09')
     expect(html).toContain('+0,13%')
@@ -65,28 +80,54 @@ describe('pagina-index', () => {
 
   test('inclui h1 para SEO', () => {
     global.INVESTPOP_TESTE = true
-    const html = gerarHtml(mockIfix, mockAltas, mockQuedas)
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, mockRankings)
     expect(html).toContain('<h1')
   })
 
   test('inclui JSON-LD', () => {
     global.INVESTPOP_TESTE = true
-    const html = gerarHtml(mockIfix, mockAltas, mockQuedas)
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, mockRankings)
     expect(html).toContain('application/ld+json')
   })
 
   test('inclui links para ver todos', () => {
     global.INVESTPOP_TESTE = true
-    const html = gerarHtml(mockIfix, mockAltas, mockQuedas)
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, mockRankings)
     expect(html).toContain('altas.html')
     expect(html).toContain('quedas.html')
   })
 
   test('lida com listas vazias', () => {
     global.INVESTPOP_TESTE = true
-    const html = gerarHtml(mockIfix, [], [])
+    const html = gerarHtml(mockIfix, [], [], mockRankings)
     expect(html).toContain('<!DOCTYPE html>')
     expect(html).toContain('-')
+  })
+
+  test('inclui seção Rankings com dados dinâmicos', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, mockRankings)
+    expect(html).toContain('Rankings')
+    expect(html).toContain('Top 5 que Mais Pagam')
+    expect(html).toContain('Top 5 que Mais Valorizaram no Ano')
+    expect(html).toContain('Top 5 Pagadores Consistentes')
+    expect(html).toContain('Mockado')
+  })
+
+  test('renderiza dados de rankings corretamente', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, mockRankings)
+    expect(html).toContain('MXRF11')
+    expect(html).toContain('12,06%')
+    expect(html).toContain('+10,01%')
+    expect(html).toContain('100,0%')
+  })
+
+  test('funciona com rankings vazio/null', () => {
+    global.INVESTPOP_TESTE = true
+    const html = gerarHtml(mockIfix, mockAltas, mockQuedas, null)
+    expect(html).toContain('<!DOCTYPE html>')
+    expect(html).toContain('Rankings')
   })
 })
 

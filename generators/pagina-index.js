@@ -10,10 +10,16 @@ function linhasTabela(lista, cor) {
               </tr>`).join("\n")
 }
 
-function gerarHtml(ifix, altas, quedas) {
+function linhasRanking(lista, cor) {
+    return lista.map((item, i) => `
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">${i + 1}</td><td class="py-2.5 font-medium">${item.ticker}</td><td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td></tr>`).join("\n")
+}
+
+function gerarHtml(ifix, altas, quedas, rankings) {
     const maiorAlta = altas[0] || { ticker: "-", variacao: "-", preco: "-" }
     const maiorBaixa = quedas[0] || { ticker: "-", variacao: "-", preco: "-" }
     const corIfix = !ifix.variacao.includes("-") ? "text-emerald-500" : "text-red-500"
+    rankings = rankings || { topDY: [], topVarAno: [], topConsistentes: [] }
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -154,11 +160,7 @@ ${linhasTabela(quedas, "text-red-500")}
               </tr>
             </thead>
             <tbody class="text-gray-200">
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">MXRF11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,25%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">HGLG11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,10%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">VINO11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,05%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">BCFF11</td><td class="py-2.5 text-right text-emerald-500 font-medium">1,00%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">KNCR11</td><td class="py-2.5 text-right text-emerald-500 font-medium">0,95%</td></tr>
+${linhasRanking(rankings.topDY, "text-emerald-500")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -171,7 +173,7 @@ ${linhasTabela(quedas, "text-red-500")}
             <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
             </svg>
-            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Mais Baratos</h3>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Mais Baratos (Mockado)</h3>
           </div>
           <table class="w-full text-sm">
             <thead>
@@ -210,11 +212,7 @@ ${linhasTabela(quedas, "text-red-500")}
               </tr>
             </thead>
             <tbody class="text-gray-200">
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">TRBL11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+32,45%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">KNSC11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+28,31%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">RBRL11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+26,11%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">GGRI11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+24,50%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">VSLH11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+22,18%</td></tr>
+${linhasRanking(rankings.topVarAno, "text-emerald-500")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -238,11 +236,7 @@ ${linhasTabela(quedas, "text-red-500")}
               </tr>
             </thead>
             <tbody class="text-gray-200">
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">HGLG11</td><td class="py-2.5 text-right text-orange-400 font-medium">98,2%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">BCFF11</td><td class="py-2.5 text-right text-orange-400 font-medium">97,6%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">VINO11</td><td class="py-2.5 text-right text-orange-400 font-medium">96,8%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">KCFI11</td><td class="py-2.5 text-right text-orange-400 font-medium">96,1%</td></tr>
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">MXRF11</td><td class="py-2.5 text-right text-orange-400 font-medium">95,4%</td></tr>
+${linhasRanking(rankings.topConsistentes, "text-orange-400")}
             </tbody>
           </table>
           <div class="mt-3 text-center">
