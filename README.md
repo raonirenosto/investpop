@@ -9,3 +9,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.3.0** — Páginas Ver Todos com busca, refatoração em módulos, cache local, IFIX via Yahoo Finance
 - **v0.4.0** — Console de acessos com tracking, ícones SVG, bandeiras, gráfico Chart.js, refatoração em módulos
 - **v0.4.1** — Fix tracking (ipapi.co → freeipapi.com), console responsivo, ícones browser corrigidos, filtro bots padrão com gráfico
+- **v0.5.0** — Refatoração em pastas (generators/, data/, assets/, pages/), SEO (robots.txt, sitemap, JSON-LD, og:image), testes com Jest
