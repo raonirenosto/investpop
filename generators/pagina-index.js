@@ -136,11 +136,11 @@ ${linhasTabela(quedas, "text-red-500")}
         <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Rankings</h2>
       </div>
 
-      <div class="flex md:hidden gap-4 mb-4 border-b border-card-border overflow-x-auto">
-        <button id="tab-rank-pagam" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500 whitespace-nowrap" onclick="showRankTab('pagam')">Mais Pagam</button>
-        <button id="tab-rank-baratos" class="pb-2 text-sm font-medium text-gray-500 whitespace-nowrap" onclick="showRankTab('baratos')">Mais Baratos</button>
-        <button id="tab-rank-valorizacao" class="pb-2 text-sm font-medium text-gray-500 whitespace-nowrap" onclick="showRankTab('valorizacao')">Valoriza\u00e7\u00e3o</button>
-        <button id="tab-rank-consistentes" class="pb-2 text-sm font-medium text-gray-500 whitespace-nowrap" onclick="showRankTab('consistentes')">Consistentes</button>
+      <div class="flex md:hidden gap-3 mb-4 border-b border-card-border flex-wrap">
+        <button id="tab-rank-pagam" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500 " onclick="showRankTab('pagam')">Mais Pagam</button>
+        <button id="tab-rank-baratos" class="pb-2 text-sm font-medium text-gray-500 " onclick="showRankTab('baratos')">Mais Baratos</button>
+        <button id="tab-rank-valorizacao" class="pb-2 text-sm font-medium text-gray-500 " onclick="showRankTab('valorizacao')">Valoriza\u00e7\u00e3o</button>
+        <button id="tab-rank-consistentes" class="pb-2 text-sm font-medium text-gray-500 " onclick="showRankTab('consistentes')">Consistentes</button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">

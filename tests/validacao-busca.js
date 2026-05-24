@@ -217,13 +217,133 @@ async function testarBuscaMobile(browser) {
         return
     }
 
+    // Testar cancelar fecha overlay
+    const cancelOk = await page.evaluate(() => {
+        var cancelBtn = document.getElementById('busca-mob-cancel')
+        if (!cancelBtn) return { erro: 'botão cancelar não encontrado' }
+        cancelBtn.click()
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var overlay = document.getElementById('busca-mobile-overlay')
+                resolve({ fechou: overlay && overlay.classList.contains('hidden') })
+            }, 200)
+        })
+    })
+
+    if (cancelOk.fechou) {
+        console.log('   ✅ Cancelar fecha overlay')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Cancelar não fechou overlay: ' + (cancelOk.erro || ''))
+        console.log('   Status: ❌ FALHOU')
+        await page.close()
+        return
+    }
+
+    // Testar click fora fecha overlay
+    const clickForaOk = await page.evaluate(() => {
+        // Reabrir overlay
+        var btns = document.querySelectorAll('button')
+        var lupaBtn = null
+        btns.forEach(function(b) {
+            if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+        })
+        if (lupaBtn) lupaBtn.click()
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var overlay = document.getElementById('busca-mobile-overlay')
+                if (!overlay || overlay.classList.contains('hidden')) { resolve({ erro: 'overlay não reabriu' }); return }
+                // Click no overlay (fora do conteúdo)
+                overlay.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+                setTimeout(() => {
+                    resolve({ fechou: overlay.classList.contains('hidden') })
+                }, 200)
+            }, 300)
+        })
+    })
+
+    if (clickForaOk.fechou) {
+        console.log('   ✅ Click fora fecha overlay')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Click fora não fechou overlay: ' + (clickForaOk.erro || ''))
+        console.log('   Status: ❌ FALHOU')
+        await page.close()
+        return
+    }
+
     await page.close()
     totalPassou++
     console.log('   Status: ✅ PASSOU')
 }
 
+async function testarTabletBusca(browser) {
+    console.log('\n🔍 TESTE 5 — Busca visível no tablet retrato (768px)')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 768, height: 1024 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var input = document.querySelector('nav input[type="text"]')
+        if (!input) return { visivel: false, erro: 'input não encontrado' }
+        var rect = input.getBoundingClientRect()
+        return { visivel: rect.width > 0 && rect.height > 0 }
+    })
+
+    await page.close()
+
+    if (resultado.visivel) {
+        totalPassou++
+        console.log('   ✅ Input de busca visível no tablet 768px')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Input de busca NÃO visível no tablet 768px: ' + (resultado.erro || ''))
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarTabsRanking(browser) {
+    console.log('\n🔍 TESTE 6 — Tabs de ranking não cortadas no mobile (414px)')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 414, height: 896 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var tabs = document.querySelectorAll('[id^="tab-rank-"]')
+        if (!tabs.length) return { erro: 'tabs não encontradas' }
+        var todas_visiveis = true
+        var cortadas = []
+        tabs.forEach(function(tab) {
+            var rect = tab.getBoundingClientRect()
+            // Tab está cortada se o right ultrapassa a viewport
+            if (rect.right > window.innerWidth) {
+                todas_visiveis = false
+                cortadas.push(tab.textContent.trim())
+            }
+        })
+        return { ok: todas_visiveis, cortadas: cortadas, total: tabs.length }
+    })
+
+    await page.close()
+
+    if (resultado.ok) {
+        totalPassou++
+        console.log('   ✅ Todas as ' + resultado.total + ' tabs visíveis sem corte')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Tabs cortadas: ' + resultado.cortadas.join(', '))
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 5 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 7 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -287,6 +407,8 @@ async function main() {
 
     await testarBuscaFuncional(browser)
     await testarBuscaMobile(browser)
+    await testarTabletBusca(browser)
+    await testarTabsRanking(browser)
     await testarNavegacao(browser)
 
     await browser.close()

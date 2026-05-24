@@ -52,11 +52,24 @@
     };
   }
 
-  document.getElementById('busca-mob-cancel').onclick = function() {
-    overlay.classList.add('hidden');
-    mobInput.value = '';
-    mobResults.innerHTML = '';
-  };
+  var cancelBtn = document.getElementById('busca-mob-cancel');
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      overlay.classList.add('hidden');
+      mobInput.value = '';
+      mobResults.innerHTML = '';
+    });
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      overlay.classList.add('hidden');
+      mobInput.value = '';
+      mobResults.innerHTML = '';
+    }
+  });
 
   mobInput.addEventListener('input', function() {
     var v = this.value.toUpperCase();
