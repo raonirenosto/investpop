@@ -150,6 +150,7 @@ function footerHtml(opts) {
     var FIIS_LISTA = ${JSON.stringify(fiisLista)};
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+    window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });
 ${tracking}
   </script>
   <script src="${base}busca.js"></script>`

@@ -432,8 +432,45 @@ async function testarOverlayFechaAoVoltar(browser) {
     }
 }
 
+async function testarModalEmBreveNaoAbreAoVoltar(browser) {
+    console.log('\n🔍 TESTE 7 — Modal "Em breve" não abre ao voltar (pageshow) (#14)')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 414, height: 896 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        // Simular que o modal estava aberto (como o bfcache restauraria)
+        var modal = document.getElementById('modal-breve')
+        if (modal) modal.classList.add('show')
+
+        // Disparar pageshow como se voltasse do bfcache
+        var event = new PageTransitionEvent('pageshow', { persisted: true })
+        window.dispatchEvent(event)
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var modalVisivel = modal && modal.classList.contains('show')
+                resolve({ modalVisivel: modalVisivel })
+            }, 200)
+        })
+    })
+
+    await page.close()
+
+    if (!resultado.modalVisivel) {
+        totalPassou++
+        console.log('   ✅ Modal "Em breve" fecha ao voltar (pageshow)')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Modal "Em breve" continua visível após pageshow')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 7 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 8 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -461,7 +498,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 8 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 9 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -498,7 +535,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 9 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 10 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -564,6 +601,7 @@ async function main() {
     await testarBuscaMobile(browser)
     await testarBuscaMobileDetalhe(browser)
     await testarOverlayFechaAoVoltar(browser)
+    await testarModalEmBreveNaoAbreAoVoltar(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
     await testarNavegacao(browser)
