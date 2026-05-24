@@ -5,6 +5,8 @@
 
 ## Ao receber um pedido para resolver uma issue (bug ou enhancement):
 
+**IMPORTANTE: Executar TODOS os passos sequencialmente sem pedir confirmação entre eles.**
+
 ### Passo 1 — Criar teste que FALHA
 - Adicionar teste automatizado em `tests/validacao-busca.js` (ou suite apropriada)
 - O teste deve verificar exatamente o comportamento esperado após a correção
