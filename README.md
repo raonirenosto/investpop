@@ -18,3 +18,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.8.0** — Card "Aparece nos Rankings" nos detalhes, foco automático busca mobile, fix iOS focus, 16 testes automatizados
 - **v0.8.1** — Fix overlay busca ao voltar no iOS Safari (pageshow/bfcache), 9 testes de busca
 - **v0.8.2** — Fix modal "Em breve" ao voltar no iOS Safari, 10 testes de busca
+- **v0.8.3** — Fix zoom iOS no input da busca mobile (font-size 16px), 11 testes de busca
