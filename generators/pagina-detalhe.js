@@ -1,6 +1,6 @@
 const { headHtml, headerHtml, footerHtml } = require("./componentes")
 
-function gerarPaginaDetalhe(fii, todosFiis) {
+function gerarPaginaDetalhe(fii, todosFiis, rankings) {
     const corVar = fii.varDia >= 0 ? 'text-emerald-500' : 'text-red-500'
     const setaVar = fii.varDia >= 0 ? '↑' : '↓'
     const varDiaFmt = (fii.varDia >= 0 ? '+' : '') + fii.varDia.toFixed(2).replace('.', ',') + '%'
@@ -8,6 +8,19 @@ function gerarPaginaDetalhe(fii, todosFiis) {
 
     const corYtd = fii.varAno >= 0 ? 'text-emerald-500' : 'text-red-500'
     const ytdFmt = (fii.varAno >= 0 ? '+' : '') + fii.varAno.toFixed(2).replace('.', ',') + '%'
+
+    // Verificar em quais tops o FII aparece
+    const tops = []
+    const r = rankings || {}
+    const posTop = (lista, ticker) => { const idx = (lista || []).findIndex(x => x.ticker === ticker); return idx >= 0 && idx < 5 ? idx + 1 : -1 }
+    const posDY = posTop(r.allDY, fii.ticker)
+    const posPVP = posTop(r.allBaratos, fii.ticker)
+    const posYTD = posTop(r.allVarAno, fii.ticker)
+    const posCons = posTop(r.allConsistentes, fii.ticker)
+    if (posDY > 0) tops.push({ nome: 'Mais Pagam', pos: posDY, cor: 'text-emerald-400', link: '../ranking-dy.html' })
+    if (posPVP > 0) tops.push({ nome: 'Mais Baratos', pos: posPVP, cor: 'text-blue-400', link: '../ranking-baratos.html' })
+    if (posYTD > 0) tops.push({ nome: 'Maior Valoriza\u00e7\u00e3o', pos: posYTD, cor: 'text-purple-400', link: '../ranking-valorizacao.html' })
+    if (posCons > 0) tops.push({ nome: 'Mais Consistentes', pos: posCons, cor: 'text-orange-400', link: '../ranking-consistentes.html' })
 
     const mediaMensal = fii.dividendos && fii.dividendos.length > 0
         ? fii.dividendos.slice(0, 12).reduce((s, d) => s + d.valor, 0) / Math.min(fii.dividendos.length, 12)
@@ -146,6 +159,16 @@ ${linhasDividendos}
           <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(100000)}</span></div>
         </div>
       </div>
+${tops.length > 0 ? `
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Aparece nos Rankings</h2>
+        <div class="flex flex-wrap gap-3">
+${tops.map(t => `          <a href="${t.link}" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">
+            <span class="text-xs font-bold ${t.cor}">#${t.pos}</span>
+            <span class="text-sm text-gray-300">${t.nome}</span>
+          </a>`).join('\n')}
+        </div>
+      </div>` : ''}
 
     </div>
   </main>

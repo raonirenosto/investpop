@@ -61,7 +61,7 @@
       e.preventDefault();
       e.stopPropagation();
       overlay.classList.remove('hidden');
-      setTimeout(function() { mobInput.focus(); }, 150);
+      mobInput.focus();
     });
   }
 

@@ -381,7 +381,7 @@ async function main() {
     for (const det of rankings.detalhes) {
         const cotacao = resultados.find(r => r.ticker === det.ticker)
         if (cotacao) det.preco = parseFloat(cotacao.preco.replace(',', '.')) || 0
-        fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes))
+        fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings))
     }
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
