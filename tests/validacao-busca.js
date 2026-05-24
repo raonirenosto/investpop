@@ -277,8 +277,99 @@ async function testarBuscaMobile(browser) {
     console.log('   Status: ✅ PASSOU')
 }
 
+async function testarBuscaMobileDetalhe(browser) {
+    console.log('\n🔍 TESTE 5 — Busca mobile na página de detalhe')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 414, height: 896 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'fiis', 'HGLG11.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var historyBefore = history.length
+
+        // Encontrar e clicar na lupa
+        var btns = document.querySelectorAll('button')
+        var lupaBtn = null
+        btns.forEach(function(b) {
+            if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+        })
+        if (!lupaBtn) return { erro: 'botão lupa não encontrado na página de detalhe' }
+        lupaBtn.click()
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var overlay = document.getElementById('busca-mobile-overlay')
+                if (!overlay || overlay.classList.contains('hidden')) {
+                    resolve({ erro: 'overlay não abriu na página de detalhe' })
+                    return
+                }
+
+                var historyAfterOpen = history.length
+
+                var input = document.getElementById('busca-mob-input')
+                if (!input) { resolve({ erro: 'input não encontrado' }); return }
+
+                input.value = 'MX'
+                input.dispatchEvent(new Event('input'))
+
+                setTimeout(() => {
+                    var results = document.getElementById('busca-mob-results')
+                    var links = results ? results.querySelectorAll('a') : []
+
+                    // Fechar overlay
+                    var cancelBtn = document.getElementById('busca-mob-cancel')
+                    if (cancelBtn) cancelBtn.click()
+
+                    setTimeout(() => {
+                        var historyAfterClose = history.length
+
+                        if (links.length > 0) {
+                            var href = links[0].getAttribute('href')
+                            resolve({
+                                ok: true,
+                                resultados: links.length,
+                                primeiro: links[0].textContent.trim(),
+                                href: href,
+                                historyBefore: historyBefore,
+                                historyAfterOpen: historyAfterOpen,
+                                historyAfterClose: historyAfterClose
+                            })
+                        } else {
+                            resolve({ erro: 'sem sugestões na página de detalhe' })
+                        }
+                    }, 200)
+                }, 300)
+            }, 300)
+        })
+    })
+
+    await page.close()
+
+    if (resultado.ok) {
+        var pathOk = resultado.href && !resultado.href.includes('fiis/fiis/')
+        var historyOk = resultado.historyBefore === resultado.historyAfterOpen && resultado.historyAfterOpen === resultado.historyAfterClose
+
+        if (pathOk && historyOk) {
+            totalPassou++
+            console.log('   ✅ Detalhe mobile: lupa → busca "MX" → ' + resultado.resultados + ' resultado(s), link: ' + resultado.href)
+            console.log('   ✅ Histórico não poluído (antes=' + resultado.historyBefore + ' abrir=' + resultado.historyAfterOpen + ' fechar=' + resultado.historyAfterClose + ')')
+            console.log('   Status: ✅ PASSOU')
+        } else {
+            totalFalhou++
+            if (!pathOk) console.log('   ❌ Path duplicado no link: ' + resultado.href)
+            if (!historyOk) console.log('   ❌ Histórico poluído (antes=' + resultado.historyBefore + ' abrir=' + resultado.historyAfterOpen + ' fechar=' + resultado.historyAfterClose + ')')
+            console.log('   Status: ❌ FALHOU')
+        }
+    } else {
+        totalFalhou++
+        console.log('   ❌ ' + resultado.erro)
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 5 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 6 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -306,7 +397,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 6 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 7 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -343,7 +434,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 7 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 8 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -407,6 +498,7 @@ async function main() {
 
     await testarBuscaFuncional(browser)
     await testarBuscaMobile(browser)
+    await testarBuscaMobileDetalhe(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
     await testarNavegacao(browser)
