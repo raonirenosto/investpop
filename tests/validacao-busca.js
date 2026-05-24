@@ -519,8 +519,33 @@ async function testarInputBuscaSemZoom(browser) {
     }
 }
 
+async function testarSemItensNavDesnecessarios(browser) {
+    console.log('\n🔍 TESTE 9 — Header sem Ferramentas, Sobre, Contato e engrenagem (#16)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const temFerramentas = html.includes('>Ferramentas<')
+    const temSobre = html.includes('>Sobre<')
+    const temContato = html.includes('>Contato<')
+    const temEngrenagem = html.includes('M10.325 4.317')
+
+    if (!temFerramentas && !temSobre && !temContato && !temEngrenagem) {
+        totalPassou++
+        console.log('   ✅ Header limpo: sem Ferramentas, Sobre, Contato e engrenagem')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        var presentes = []
+        if (temFerramentas) presentes.push('Ferramentas')
+        if (temSobre) presentes.push('Sobre')
+        if (temContato) presentes.push('Contato')
+        if (temEngrenagem) presentes.push('Engrenagem')
+        console.log('   ❌ Ainda presentes no header: ' + presentes.join(', '))
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 9 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 10 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -548,7 +573,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 10 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 11 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -585,7 +610,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 11 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 12 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -653,6 +678,7 @@ async function main() {
     await testarOverlayFechaAoVoltar(browser)
     await testarModalEmBreveNaoAbreAoVoltar(browser)
     await testarInputBuscaSemZoom(browser)
+    await testarSemItensNavDesnecessarios(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
     await testarNavegacao(browser)
