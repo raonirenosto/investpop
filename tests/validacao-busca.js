@@ -28,7 +28,7 @@ const TODAS_PAGINAS = [
 ]
 
 // Pegar 5 páginas de detalhe
-const detalhes = fs.readdirSync(PAGES_DIR).filter(f => /^[A-Z]{4}\d{2}\.html$/.test(f)).slice(0, 5)
+const detalhes = fs.readdirSync(path.join(PAGES_DIR, 'fiis')).filter(f => /^[A-Z]{4}\d{2}\.html$/.test(f)).slice(0, 5).map(f => 'fiis/' + f)
 const PAGINAS = [...TODAS_PAGINAS, ...detalhes]
 
 let totalPassou = 0
@@ -88,7 +88,7 @@ async function testarLinksClicaveis() {
 
     for (const p of paginas) {
         const html = fs.readFileSync(path.join(PAGES_DIR, p), 'utf-8')
-        const links = html.match(/<a href="[A-Z]{4}\d{2}\.html"/g) || []
+        const links = html.match(/<a href="fiis\/[A-Z]{4}\d{2}\.html"/g) || []
         if (links.length > 0) {
             console.log('   ✅ ' + p + ': ' + links.length + ' tickers clicáveis')
         } else {
@@ -99,7 +99,7 @@ async function testarLinksClicaveis() {
 
     // Verificar Maior Alta e Maior Baixa na index
     const indexHtml = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
-    const resumoLinks = indexHtml.match(/font-bold mt-1"><a href="[A-Z]{4}\d{2}\.html"/g) || []
+    const resumoLinks = indexHtml.match(/font-bold mt-1"><a href="fiis\/[A-Z]{4}\d{2}\.html"/g) || []
     if (resumoLinks.length >= 2) {
         console.log('   ✅ Resumo do Mercado: Maior Alta e Maior Baixa clicáveis')
     } else {
@@ -253,11 +253,11 @@ async function testarNavegacao(browser) {
         return dropdown ? dropdown.getAttribute('href') : null
     })
 
-    if (linkHref === 'HGLG11.html') {
-        console.log('   ✅ Busca "HGLG" → link para HGLG11.html')
+    if (linkHref === 'fiis/HGLG11.html') {
+        console.log('   ✅ Busca "HGLG" → link para fiis/HGLG11.html')
     } else {
         totalFalhou++
-        console.log('   ❌ Link esperado HGLG11.html, obteve: ' + linkHref)
+        console.log('   ❌ Link esperado fiis/HGLG11.html, obteve: ' + linkHref)
         console.log('   Status: ❌ FALHOU')
         await page.close()
         return

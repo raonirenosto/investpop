@@ -4,7 +4,7 @@ function linhasTabela(lista, cor) {
     return lista.map((item, i) => `
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">${i + 1}</td>
-                <td class="py-2.5 font-medium"><a href="${item.ticker}.html" class="hover:underline">${item.ticker}</a></td>
+                <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}.html" class="hover:underline">${item.ticker}</a></td>
                 <td class="py-2.5 text-right ${cor} font-medium">${item.variacao}</td>
                 <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
               </tr>`).join("\n")
@@ -12,7 +12,7 @@ function linhasTabela(lista, cor) {
 
 function linhasRanking(lista, cor) {
     return lista.map((item, i) => `
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">${i + 1}</td><td class="py-2.5 font-medium"><a href="${item.ticker}.html" class="hover:underline">${item.ticker}</a></td><td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td></tr>`).join("\n")
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">${i + 1}</td><td class="py-2.5 font-medium"><a href="fiis/${item.ticker}.html" class="hover:underline">${item.ticker}</a></td><td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td></tr>`).join("\n")
 }
 
 function gerarHtml(ifix, altas, quedas, rankings) {
@@ -51,13 +51,13 @@ ${headerHtml()}
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="${maiorAlta.ticker}.html" class="hover:underline">${maiorAlta.ticker}</a></p>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="fiis/${maiorAlta.ticker}.html" class="hover:underline">${maiorAlta.ticker}</a></p>
         <span class="text-xs md:text-sm text-emerald-500 font-medium">${maiorAlta.variacao}</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorAlta.preco}</div>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="${maiorBaixa.ticker}.html" class="hover:underline">${maiorBaixa.ticker}</a></p>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="fiis/${maiorBaixa.ticker}.html" class="hover:underline">${maiorBaixa.ticker}</a></p>
         <span class="text-xs md:text-sm text-red-500 font-medium">${maiorBaixa.variacao}</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorBaixa.preco}</div>
       </div>

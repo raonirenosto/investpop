@@ -376,10 +376,12 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
     // Gerar páginas de detalhe
+    const pastaFiis = path.join(pasta, "fiis")
+    if (!fs.existsSync(pastaFiis)) fs.mkdirSync(pastaFiis)
     for (const det of rankings.detalhes) {
         const cotacao = resultados.find(r => r.ticker === det.ticker)
         if (cotacao) det.preco = parseFloat(cotacao.preco.replace(',', '.')) || 0
-        fs.writeFileSync(path.join(pasta, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes))
+        fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes))
     }
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)

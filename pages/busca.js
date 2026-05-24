@@ -16,7 +16,7 @@
       if (v.length < 2) { dropdown.classList.add('hidden'); return; }
       var results = FIIS_LISTA.filter(function(f) { return f.includes(v); }).slice(0, 8);
       if (!results.length) { dropdown.classList.add('hidden'); return; }
-      dropdown.innerHTML = results.map(function(f) { return '<a href="'+f+'.html" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+f+'</a>'; }).join('');
+      dropdown.innerHTML = results.map(function(f) { return '<a href="'+(window.FIIS_BASE||'fiis/')+f+'.html" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+f+'</a>'; }).join('');
       dropdown.classList.remove('hidden');
     });
     document.addEventListener('click', function(e) { if (!container.contains(e.target)) dropdown.classList.add('hidden'); });
@@ -62,6 +62,6 @@
     var v = this.value.toUpperCase();
     if (v.length < 2) { mobResults.innerHTML = ''; return; }
     var results = FIIS_LISTA.filter(function(f) { return f.includes(v); }).slice(0, 10);
-    mobResults.innerHTML = results.map(function(f) { return '<a href="'+f+'.html" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+f+'</a>'; }).join('');
+    mobResults.innerHTML = results.map(function(f) { return '<a href="'+(window.FIIS_BASE||'fiis/')+f+'.html" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+f+'</a>'; }).join('');
   });
 })();

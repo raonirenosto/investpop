@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KCRE11 — InvestPop</title>
+  <meta name="description" content="KCRE11 - KINEA CREDITAS. Cotação, dividendos e indicadores." />
+  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
+  <link rel="canonical" href="https://investpop.com.br" />
+  <meta property="og:title" content="KCRE11 — InvestPop" />
+  <meta property="og:description" content="KCRE11 - KINEA CREDITAS. Cotação, dividendos e indicadores." />
+  <meta property="og:url" content="https://investpop.com.br" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="KCRE11 — InvestPop" />
+  <meta name="twitter:description" content="KCRE11 - KINEA CREDITAS. Cotação, dividendos e indicadores." />
+  <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { bg: '#07111F', card: '#0B1A2E', 'card-border': '#132743' } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    #modal-breve { display: none; }
+    #modal-breve.show { display: flex; }
+  </style>
+</head>
+<body class="bg-bg min-h-screen text-white">
+
+
+  <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
+    <a href="../index.html" class="flex items-center gap-2">
+      <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm">
+      <a href="#" onclick="emBreve(event)" class="text-emerald-500 font-medium">FIIs</a>
+      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ações</a>
+      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ferramentas</a>
+      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Sobre</a>
+      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Contato</a>
+    </div>
+    <div class="hidden lg:flex items-center gap-3">
+      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
+      </div>
+      <button onclick="emBreve(event)" class="text-gray-400 hover:text-white">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="flex md:hidden items-center gap-4">
+      <button onclick="emBreve(event)" class="text-gray-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+      <button onclick="emBreve(event)" class="text-gray-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
+
+    <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 mb-4">
+      <a href="../index.html" class="hover:text-white">Início</a>
+      <span>›</span>
+      <span>Fundos Imobiliários</span>
+      <span>›</span>
+      <span class="text-gray-300">KCRE11</span>
+    </div>
+
+    <div class="flex items-center justify-between gap-3 mb-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl md:text-3xl font-bold">KCRE11</h1>
+          <span class="text-xs md:text-sm text-gray-400">KINEA CREDITAS</span>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 9,29</p>
+        <div class="flex items-center gap-1 justify-end">
+          <span class="text-xs md:text-sm text-red-500 font-medium">-0,11%</span>
+          <span class="text-[10px] md:text-xs text-gray-500">(↓ R$ 0,01)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Dividend Yield (12M)</span>
+        <p class="text-lg font-bold text-emerald-400 mt-1">12,49%</p>
+        <span class="text-[10px] text-gray-500">Últimos 12 meses</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">P/VP</span>
+        <p class="text-lg font-bold mt-1">0,98</p>
+        <span class="text-[10px] text-gray-500">Val. Patrim. R$ 9,48</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Patrimônio Líquido</span>
+        <p class="text-lg font-bold mt-1">R$ 341,38 mi</p>
+        <span class="text-[10px] text-gray-500">36.000.000 cotas</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Cotistas</span>
+        <p class="text-lg font-bold mt-1">16.101</p>
+        <span class="text-[10px] text-gray-500">Taxa Adm: 1,20% a.a.</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+      <div class="lg:col-span-2 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Sobre o Fundo</h2>
+        <p class="text-sm text-gray-400 leading-relaxed mb-4">O fundo KINEA CREDITAS, de CNPJ 42.502.802/0001-40, é um fundo imobiliário do tipo Fundo de Papel e do segmento Títulos e Valores Mobiliários. O KCRE11 possui atualmente um total de 36.000.000 cotas que estão divididas entre 16.101 cotistas.</p>
+        <div class="grid grid-cols-2 gap-y-2 text-xs">
+          
+          <div><span class="text-gray-500">Segmento</span></div><div class="text-gray-300">Títulos e Valores Mobiliários</div>
+          <div><span class="text-gray-500">Taxa de Administração</span></div><div class="text-gray-300">1,20% a.a.</div>
+          <div><span class="text-gray-500">CNPJ</span></div><div class="text-gray-300">42.502.802/0001-40</div>
+        </div>
+      </div>
+
+      <div class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Rentabilidade</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">No ano (YTD)</span>
+            <span class="text-sm font-medium text-emerald-500">+5,69%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">Consistência</span>
+            <span class="text-sm font-medium text-orange-400">7 meses</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-gray-300 uppercase">Últimos Dividendos</h2>
+          <span class="text-xs text-gray-500">Média: R$ 0,10/mês</span>
+        </div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-gray-500 text-xs">
+              <th class="text-left pb-2 font-medium">Data Com</th>
+              <th class="text-left pb-2 font-medium">Pagamento</th>
+              <th class="text-right pb-2 font-medium">Valor</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-200">
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">30/04/2026</td>
+              <td class="py-2.5">14/05/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,11</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">31/03/2026</td>
+              <td class="py-2.5">14/04/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,10</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">27/02/2026</td>
+              <td class="py-2.5">12/03/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,08</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">30/01/2026</td>
+              <td class="py-2.5">12/02/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,08</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5">30/12/2025</td>
+              <td class="py-2.5">14/01/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,09</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-3 pt-3 border-t border-card-border text-xs text-gray-500">
+          Total 12M: R$ 1,16 por cota • DY 12M: 12,49%
+        </div>
+      </div>
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por mês?</h2>
+        <p class="text-xs text-gray-500 mb-3">Baseado na média mensal de R$ 0,10/cota (cota a R$ 9,29)</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 1,04</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 5,20</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 10,41</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 52,03</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 104,05</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 520,27</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 1040,55</span></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+
+  <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border">
+    <a href="../index.html" class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
+    <div class="flex items-center gap-4 text-gray-400">
+      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128172;</a>
+      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128247;</a>
+      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#9654;</a>
+      <a href="#" onclick="emBreve(event)" class="hover:text-white">&#128038;</a>
+    </div>
+  </footer>
+
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
+    <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-emerald-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      <span class="text-[10px] font-medium">FIIs</span>
+    </a>
+    <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      <span class="text-[10px] font-medium">Ações</span>
+    </a>
+  </nav>
+
+  <div class="lg:hidden h-16"></div>
+
+  <div id="modal-breve" class="fixed inset-0 z-50 items-center justify-center bg-black/60" onclick="fecharModal()">
+    <div class="bg-card border border-card-border rounded-xl p-6 mx-4 max-w-sm text-center" onclick="event.stopPropagation()">
+      <div class="text-3xl mb-3">🚧</div>
+      <h3 class="text-lg font-bold mb-2">Em breve!</h3>
+      <p class="text-sm text-gray-400">Essa funcionalidade ainda está em desenvolvimento.</p>
+      <button onclick="fecharModal()" class="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600">Entendi</button>
+    </div>
+  </div>
+
+  <script>
+    var FIIS_LISTA = ["CACR11","AFHI11","ALZR11","RZAT11","FATN11","AZPL11","BBIG11","BRCR11","BCIA11","BCRI11","BRCO11","BROF11","BTAL11","BTCI11","BPML11","BTHF11","BTLG11","CPTS11","ICRI11","CLIN11","CPSH11","CYCR11","DEVA11","VRTA11","GTWR11","GZIT11","GGRC11","GARE11","HABT11","HCTR11","HGBS11","HGCR11","HGLG11","HGRE11","HGRU11","HTMX11","HSAF11","HSLG11","HSML11","HFOF11","IRIM11","ITRI11","JSAF11","JSRE11","KISU11","KNRI11","KCRE11","KNHF11","KNHY11","KNIP11","KNCR11","KNSC11","KNUQ11","KFOF11","KIVO11","KORE11","LIFE11","LVBI11","MANA11","MCCI11","MCRE11","MXRF11","MFII11","OUJP11","PCIP11","PMLL11","PORD11","PSEC11","PVBI11","RPRI11","RBRL11","RBRP11","RBRR11","RBRX11","RBRY11","RECR11","RBFM11","RCRB11","RBVA11","RZAK11","RZTR11","TRBL11","SPXS11","SNCI11","SNEL11","SNFF11","TEPP11","TGAR11","TVRI11","TOPP11","TRXF11","URPR11","VGHF11","VGIP11","VGIR11","VCJR11","VGRI11","VILG11","VINO11","VISC11","VRTM11","WHGR11","XPCI11","XPIN11","XPLG11","XPML11","XPSF11"];
+    function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
+    function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+
+  </script>
+  <script src="../busca.js"></script>
+
+  <script>
+    var FIIS_LISTA = ["HGRU11","HGRE11","XPLG11","TRXF11","HGLG11","GTWR11","XPML11","TVRI11","JSRE11","BTAL11","BRCO11","KNHF11","MCCI11","BTLG11","SNCI11","XPIN11","KFOF11","SNEL11","HSAF11","MCRE11","VRTA11","PMLL11","RBRX11","ALZR11","VILG11","VISC11","VRTM11","BCIA11","KISU11","TOPP11","HFOF11","RBVA11","GGRC11","ITRI11","FATN11","GARE11","HSLG11","HSML11","LIFE11","MANA11","XPSF11","BTHF11","BPML11","LVBI11","RBRP11","BRCR11","RCRB11","WHGR11","AZPL11","CYCR11","HGBS11","RZTR11","BROF11","CPTS11","TEPP11","ICRI11","HABT11","RZAT11","KCRE11","VGHF11","JSAF11","OUJP11","CPSH11","TRBL11","AFHI11","BTCI11","CLIN11","DEVA11","GZIT11","HGCR11","HTMX11","IRIM11","KNRI11","KORE11","RBFM11","SPXS11","SNFF11","TGAR11","VGIP11","CACR11","BBIG11","BCRI11","KNHY11","KNIP11","KNCR11","KNSC11","KNUQ11","PCIP11","RPRI11","RBRR11","RECR11","RZAK11","VGIR11","VCJR11","VINO11","XPCI11","HCTR11","MXRF11","PORD11","PVBI11","VGRI11","KIVO11","MFII11","PSEC11","RBRL11","RBRY11","URPR11"];
+    var FIIS_BASE = '';
+  </script>
+  <script src="../busca.js"></script>
+
+</body>
+</html>

@@ -36,10 +36,11 @@ function headHtml(titulo, descricao, jsonLd) {
 <body class="bg-bg min-h-screen text-white">`
 }
 
-function headerHtml() {
+function headerHtml(opts) {
+    var base = (opts && opts.basePath) || ''
     return `
   <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-2">
+    <a href="${base}index.html" class="flex items-center gap-2">
       <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
@@ -82,6 +83,7 @@ function headerHtml() {
 }
 
 function footerHtml(opts) {
+    var base = (opts && opts.basePath) || ''
     var fiisLista = []
     try { fiisLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_fiis.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
 
@@ -113,7 +115,7 @@ function footerHtml(opts) {
 
     return `
   <footer class="hidden lg:flex items-center justify-between px-8 py-4 border-t border-card-border">
-    <a href="index.html" class="flex items-center gap-2">
+    <a href="${base}index.html" class="flex items-center gap-2">
       <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
@@ -156,7 +158,7 @@ function footerHtml(opts) {
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
 ${tracking}
   </script>
-  <script src="busca.js"></script>`
+  <script src="${base}busca.js"></script>`
 }
 
 module.exports = { headHtml, headerHtml, footerHtml }

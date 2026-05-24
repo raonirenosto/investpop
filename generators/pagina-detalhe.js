@@ -33,12 +33,12 @@ function gerarPaginaDetalhe(fii, todosFiis) {
 
     return `${headHtml(fii.ticker + " \u2014 InvestPop", fii.ticker + " - " + (fii.nome || 'Fundo Imobili\u00e1rio') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
 
-${headerHtml()}
+${headerHtml({basePath: '../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
 
     <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 mb-4">
-      <a href="index.html" class="hover:text-white">In\u00edcio</a>
+      <a href="../index.html" class="hover:text-white">In\u00edcio</a>
       <span>\u203a</span>
       <span>Fundos Imobili\u00e1rios</span>
       <span>\u203a</span>
@@ -150,12 +150,13 @@ ${linhasDividendos}
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
 
   <script>
     var FIIS_LISTA = ${JSON.stringify(listaBusca)};
+    var FIIS_BASE = '';
   </script>
-  <script src="busca.js"></script>
+  <script src="../busca.js"></script>
 
 </body>
 </html>`
