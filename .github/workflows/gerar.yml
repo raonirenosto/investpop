@@ -29,9 +29,11 @@ jobs:
 
       - name: Preparar deploy
         run: |
-          mkdir -p _site
+          mkdir -p _site/fiis
           cp pages/*.html _site/
-          cp assets/*.js _site/
+          cp pages/fiis/*.html _site/fiis/
+          cp pages/busca.js _site/
+          cp assets/console.js _site/
           cp assets/robots.txt _site/
           cp assets/sitemap.xml _site/
           cp assets/og-image.svg _site/
