@@ -11,3 +11,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.4.1** — Fix tracking (ipapi.co → freeipapi.com), console responsivo, ícones browser corrigidos, filtro bots padrão com gráfico
 - **v0.5.0** — Refatoração em pastas (generators/, data/, assets/, pages/), SEO (robots.txt, sitemap, JSON-LD, og:image), testes com Jest
 - **v0.6.0** — Rankings com dados reais (DY via Investidor 10, Var.Ano YTD, Consistência mfinance+Yahoo), validação cruzada com múltiplas fontes
+- **v0.7.0** — Páginas de detalhe (107 FIIs), busca global, simulador de renda, tooltips educativos, cache local, deploy B3 30min, 15 testes automatizados
