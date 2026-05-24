@@ -1,5 +1,7 @@
 # InvestPop - Contexto do Projeto
 
+<!-- ATUALIZAR QUANDO: mudar fonte de dados, estrutura de pastas, convenções, ou descobrir novo problema de plataforma -->
+
 ## O que é
 Radar de FIIs (Fundos Imobiliários) brasileiro. Site estático gerado por Node.js, deploy via GitHub Pages. Atualiza automaticamente via GitHub Actions.
 

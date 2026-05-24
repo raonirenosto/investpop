@@ -1,5 +1,7 @@
 # Fluxo padrão para Issues - InvestPop
 
+<!-- ATUALIZAR QUANDO: mudar processo de deploy, adicionar nova suite de testes, ou mudar ferramentas (CLI, CI) -->
+
 ## Ao receber um pedido para criar bug ou enhancement:
 1. Criar a issue no GitHub com `gh issue create`
 
