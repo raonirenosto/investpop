@@ -82,6 +82,9 @@ function headerHtml() {
 }
 
 function footerHtml(opts) {
+    var fiisLista = []
+    try { fiisLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_fiis.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
+
     var tracking = '';
     if (!opts || !opts.teste) {
         tracking = `
@@ -148,10 +151,12 @@ function footerHtml(opts) {
   </div>
 
   <script>
+    var FIIS_LISTA = ${JSON.stringify(fiisLista)};
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
 ${tracking}
-  </script>`
+  </script>
+  <script src="busca.js"></script>`
 }
 
 module.exports = { headHtml, headerHtml, footerHtml }

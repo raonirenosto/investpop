@@ -50,16 +50,11 @@
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Contato</a>
     </div>
     <div class="hidden lg:flex items-center gap-3">
-      <div class="relative flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
+      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" id="busca-nav" oninput="buscarNav()" autocomplete="off" />
-        <div id="busca-resultado" class="hidden absolute top-full mt-1 left-0 right-0 bg-card border border-card-border rounded-lg shadow-xl z-50 overflow-hidden">
-          <a href="HCTR11.html" class="flex items-center justify-between px-3 py-2 hover:bg-[#132743] text-sm">
-            <span class="font-medium">HCTR11</span><span class="text-xs text-gray-500">Hectare CE</span>
-          </a>
-        </div>
+        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
       </div>
       <button onclick="emBreve(event)" class="text-gray-400 hover:text-white">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +64,7 @@
       </button>
     </div>
     <div class="flex md:hidden items-center gap-4">
-      <button onclick="abrirBuscaMobile()" class="text-gray-400">
+      <button onclick="emBreve(event)" class="text-gray-400">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
@@ -81,24 +76,6 @@
       </button>
     </div>
   </nav>
-
-  <!-- Busca mobile -->
-  <div id="busca-mobile" class="hidden md:hidden fixed inset-0 z-50 bg-bg/95 px-4 pt-4">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="relative flex-1 flex items-center bg-card border border-card-border rounded-lg px-3 py-2.5 gap-2">
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        <input type="text" id="busca-mobile-input" placeholder="Buscar FII, ticker..." oninput="buscarMobile()" autocomplete="off" class="bg-transparent text-sm text-gray-300 outline-none w-full" autofocus />
-      </div>
-      <button onclick="fecharBuscaMobile()" class="text-gray-400 text-sm">Cancelar</button>
-    </div>
-    <div id="busca-mobile-resultado" class="hidden">
-      <a href="HCTR11.html" class="flex items-center justify-between px-3 py-3 bg-card border border-card-border rounded-lg text-sm">
-        <span class="font-medium">HCTR11</span><span class="text-xs text-gray-500">Hectare CE</span>
-      </a>
-    </div>
-  </div>
 
   <main class="px-4 md:px-8 py-6 md:py-8">
     <h1 class="sr-only">InvestPop — Radar de Fundos Imobiliários em tempo real</h1>
@@ -117,7 +94,7 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">TRBL11</p>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="TRBL11.html" class="hover:underline">TRBL11</a></p>
         <span class="text-xs md:text-sm text-emerald-500 font-medium">+3,14%</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 66,64</div>
       </div>
@@ -163,35 +140,35 @@
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">1</td>
-                <td class="py-2.5 font-medium">TRBL11</td>
+                <td class="py-2.5 font-medium"><a href="TRBL11.html" class="hover:underline">TRBL11</a></td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+3,14%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 66,64</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">2</td>
-                <td class="py-2.5 font-medium">HFOF11</td>
+                <td class="py-2.5 font-medium"><a href="HFOF11.html" class="hover:underline">HFOF11</a></td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+2,36%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 6,50</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">3</td>
-                <td class="py-2.5 font-medium">KORE11</td>
+                <td class="py-2.5 font-medium"><a href="KORE11.html" class="hover:underline">KORE11</a></td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+2,04%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 68,88</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">4</td>
-                <td class="py-2.5 font-medium">RCRB11</td>
+                <td class="py-2.5 font-medium"><a href="RCRB11.html" class="hover:underline">RCRB11</a></td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+2,02%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 142,13</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">JSRE11</td>
+                <td class="py-2.5 font-medium"><a href="JSRE11.html" class="hover:underline">JSRE11</a></td>
                 <td class="py-2.5 text-right text-emerald-500 font-medium">+1,99%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 60,84</td>
               </tr>
@@ -223,33 +200,34 @@
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">1</td>
                 <td class="py-2.5 font-medium"><a href="HCTR11.html" class="hover:underline">HCTR11</a></td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-2,24%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 16,59</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">2</td>
-                <td class="py-2.5 font-medium">SNCI11</td>
+                <td class="py-2.5 font-medium"><a href="SNCI11.html" class="hover:underline">SNCI11</a></td>
                 <td class="py-2.5 text-right text-red-500 font-medium">-2,18%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 85,86</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">3</td>
-                <td class="py-2.5 font-medium">TGAR11</td>
+                <td class="py-2.5 font-medium"><a href="TGAR11.html" class="hover:underline">TGAR11</a></td>
                 <td class="py-2.5 text-right text-red-500 font-medium">-2,10%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 60,51</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">4</td>
-                <td class="py-2.5 font-medium">VINO11</td>
+                <td class="py-2.5 font-medium"><a href="VINO11.html" class="hover:underline">VINO11</a></td>
                 <td class="py-2.5 text-right text-red-500 font-medium">-2,04%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 4,80</td>
               </tr>
 
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">5</td>
-                <td class="py-2.5 font-medium">TOPP11</td>
+                <td class="py-2.5 font-medium"><a href="TOPP11.html" class="hover:underline">TOPP11</a></td>
                 <td class="py-2.5 text-right text-red-500 font-medium">-1,85%</td>
                 <td class="py-2.5 text-right text-gray-400">R$ 63,04</td>
               </tr>
@@ -294,15 +272,15 @@
             </thead>
             <tbody class="text-gray-200">
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">CACR11</td><td class="py-2.5 text-right text-emerald-500 font-medium">39,87%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="CACR11.html" class="hover:underline">CACR11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">39,87%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">MFII11</td><td class="py-2.5 text-right text-emerald-500 font-medium">23,83%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="MFII11.html" class="hover:underline">MFII11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">23,83%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">DEVA11</td><td class="py-2.5 text-right text-emerald-500 font-medium">21,90%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="DEVA11.html" class="hover:underline">DEVA11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">21,90%</td></tr>
 
               <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="HCTR11.html" class="hover:underline">HCTR11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">21,37%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">VGRI11</td><td class="py-2.5 text-right text-emerald-500 font-medium">20,96%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="VGRI11.html" class="hover:underline">VGRI11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">20,96%</td></tr>
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -329,13 +307,13 @@
 
               <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="HCTR11.html" class="hover:underline">HCTR11</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,16</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">DEVA11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,20</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="DEVA11.html" class="hover:underline">DEVA11</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,20</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">URPR11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,26</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="URPR11.html" class="hover:underline">URPR11</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,26</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">CACR11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,38</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="CACR11.html" class="hover:underline">CACR11</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,38</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">GZIT11</td><td class="py-2.5 text-right text-blue-400 font-medium">0,48</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="GZIT11.html" class="hover:underline">GZIT11</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,48</td></tr>
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -360,15 +338,15 @@
             </thead>
             <tbody class="text-gray-200">
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">OUJP11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+9,23%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="OUJP11.html" class="hover:underline">OUJP11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+9,23%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">RZAT11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+8,58%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="RZAT11.html" class="hover:underline">RZAT11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+8,58%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">KCRE11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+5,69%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="KCRE11.html" class="hover:underline">KCRE11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+5,69%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">ICRI11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+5,54%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="ICRI11.html" class="hover:underline">ICRI11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+5,54%</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">MCCI11</td><td class="py-2.5 text-right text-emerald-500 font-medium">+5,06%</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="MCCI11.html" class="hover:underline">MCCI11</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+5,06%</td></tr>
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -393,15 +371,15 @@
             </thead>
             <tbody class="text-gray-200">
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium">HGRU11</td><td class="py-2.5 text-right text-orange-400 font-medium">94 meses</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="HGRU11.html" class="hover:underline">HGRU11</a></td><td class="py-2.5 text-right text-orange-400 font-medium">94 meses</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium">HGRE11</td><td class="py-2.5 text-right text-orange-400 font-medium">73 meses</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="HGRE11.html" class="hover:underline">HGRE11</a></td><td class="py-2.5 text-right text-orange-400 font-medium">73 meses</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium">XPLG11</td><td class="py-2.5 text-right text-orange-400 font-medium">73 meses</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="XPLG11.html" class="hover:underline">XPLG11</a></td><td class="py-2.5 text-right text-orange-400 font-medium">73 meses</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium">TRXF11</td><td class="py-2.5 text-right text-orange-400 font-medium">69 meses</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="TRXF11.html" class="hover:underline">TRXF11</a></td><td class="py-2.5 text-right text-orange-400 font-medium">69 meses</td></tr>
 
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium">HGLG11</td><td class="py-2.5 text-right text-orange-400 font-medium">68 meses</td></tr>
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="HGLG11.html" class="hover:underline">HGLG11</a></td><td class="py-2.5 text-right text-orange-400 font-medium">68 meses</td></tr>
             </tbody>
           </table>
           <div class="mt-3 text-center">
@@ -452,31 +430,12 @@
   </div>
 
   <script>
+    var FIIS_LISTA = ["CACR11","AFHI11","ALZR11","RZAT11","FATN11","AZPL11","BBIG11","BRCR11","BCIA11","BCRI11","BRCO11","BROF11","BTAL11","BTCI11","BPML11","BTHF11","BTLG11","CPTS11","ICRI11","CLIN11","CPSH11","CYCR11","DEVA11","VRTA11","GTWR11","GZIT11","GGRC11","GARE11","HABT11","HCTR11","HGBS11","HGCR11","HGLG11","HGRE11","HGRU11","HTMX11","HSAF11","HSLG11","HSML11","HFOF11","IRIM11","ITRI11","JSAF11","JSRE11","KISU11","KNRI11","KCRE11","KNHF11","KNHY11","KNIP11","KNCR11","KNSC11","KNUQ11","KFOF11","KIVO11","KORE11","LIFE11","LVBI11","MANA11","MCCI11","MCRE11","MXRF11","MFII11","OUJP11","PCIP11","PMLL11","PORD11","PSEC11","PVBI11","RPRI11","RBRL11","RBRP11","RBRR11","RBRX11","RBRY11","RECR11","RBFM11","RCRB11","RBVA11","RZAK11","RZTR11","TRBL11","SPXS11","SNCI11","SNEL11","SNFF11","TEPP11","TGAR11","TVRI11","TOPP11","TRXF11","URPR11","VGHF11","VGIP11","VGIR11","VCJR11","VGRI11","VILG11","VINO11","VISC11","VRTM11","WHGR11","XPCI11","XPIN11","XPLG11","XPML11","XPSF11"];
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
-    function buscarNav() {
-      var v = document.getElementById('busca-nav').value.toUpperCase();
-      var r = document.getElementById('busca-resultado');
-      if (v.length >= 2 && 'HCTR11'.includes(v)) { r.classList.remove('hidden'); }
-      else { r.classList.add('hidden'); }
-    }
-    function abrirBuscaMobile() {
-      document.getElementById('busca-mobile').classList.remove('hidden');
-      setTimeout(function() { document.getElementById('busca-mobile-input').focus(); }, 100);
-    }
-    function fecharBuscaMobile() {
-      document.getElementById('busca-mobile').classList.add('hidden');
-      document.getElementById('busca-mobile-input').value = '';
-      document.getElementById('busca-mobile-resultado').classList.add('hidden');
-    }
-    function buscarMobile() {
-      var v = document.getElementById('busca-mobile-input').value.toUpperCase();
-      var r = document.getElementById('busca-mobile-resultado');
-      if (v.length >= 2 && 'HCTR11'.includes(v)) { r.classList.remove('hidden'); }
-      else { r.classList.add('hidden'); }
-    }
 
   </script>
+  <script src="busca.js"></script>
 
   <!-- Tooltips -->
   <div id="tooltip-dy" class="tooltip-box hidden">

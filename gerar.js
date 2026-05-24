@@ -4,6 +4,7 @@ const path = require("path")
 const https = require("https")
 const { gerarHtml } = require("./generators/pagina-index")
 const { gerarPaginaLista, gerarPaginaRanking } = require("./generators/pagina-lista")
+const { gerarPaginaDetalhe } = require("./generators/pagina-detalhe")
 const { gerarConsole } = require("./generators/pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
@@ -152,7 +153,7 @@ function calcularMesesSemQuebra(rendimentos) {
         const depois = rendimentos[i + 2]
         if (atual.valor >= proximo.valor) { meses++; continue }
         if (proximo.valor > atual.valor && depois.valor <= atual.valor) { meses++; continue }
-        return { meses, quebra: proximo.data }
+        return { meses, quebra: proximo.dataCom || proximo.data }
     }
     return { meses: rendimentos.length, quebra: null }
 }
@@ -203,7 +204,19 @@ async function buscarRankings(tickers) {
             const dy = dyMatch ? parseFloat(dyMatch[1].replace(',', '.')) : 0
             const pvp = pvpMatch ? parseFloat(pvpMatch[1].replace(',', '.')) : null
 
-            // Extrair rendimentos
+            // Extrair dados extras para página de detalhe
+            const articleMatch = html.match(/"articleBody":\s*"([^"]+)"/)
+            const articleBody = articleMatch ? articleMatch[1] : ''
+            const nomeMatch = articleBody.match(/O fundo ([^,]+),/i)
+            const cnpjMatch = articleBody.match(/CNPJ\s*([\d.\/\-]+)/)
+            const tipoMatch = articleBody.match(/tipo\s+([^e]+?)\s+e do segmento/i)
+            const segMatch = articleBody.match(/segmento\s+([^.]+)/i)
+            const cotasMatch = articleBody.match(/([\d.]+)\s*cotas/)
+            const cotistasMatch = html.match(/(\d[\d.]+)\s*cotistas/i)
+            const patrMatch = html.match(/patrim[\u00f4o]nio de R\$\s*([\d,]+)\s*(Bilh[\u00f5o]es|Milh[\u00f5o]es|bi|mi)/i)
+            const taxaMatch = html.match(/taxa de administra[\s\S]{0,100}?([\d,]+\s*%)/i)
+
+            // Extrair rendimentos com datas
             const rendimentos = []
             const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi
             let trMatch
@@ -215,7 +228,7 @@ async function buscarRankings(tickers) {
                     tds.push(tdMatch[1].replace(/<[^>]+>/g, '').trim())
                 }
                 if (tds.length >= 4 && tds[0].toLowerCase().includes('dividendo')) {
-                    rendimentos.push({ data: tds[1], valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
+                    rendimentos.push({ dataCom: tds[1], pagamento: tds[2], valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
                 }
             }
 
@@ -227,12 +240,23 @@ async function buscarRankings(tickers) {
                 pvp,
                 varDia: varDiaBatch[t] || 0,
                 varAno: varAnoBatch[t] || 0,
-                mesesConsistentes: consistencia.meses
+                mesesConsistentes: consistencia.meses,
+                nome: nomeMatch ? nomeMatch[1].trim() : '',
+                cnpj: cnpjMatch ? cnpjMatch[1] : '',
+                tipo: tipoMatch ? tipoMatch[1].trim() : '',
+                segmento: segMatch ? segMatch[1].trim() : '',
+                cotas: cotasMatch ? cotasMatch[1] + ' cotas' : '',
+                cotistas: cotistasMatch ? cotistasMatch[1] : '',
+                patrimonio: patrMatch ? 'R$ ' + patrMatch[1] + ' ' + patrMatch[2].replace('Bilhões', 'bi').replace('Milhões', 'mi') : '',
+                taxaAdm: taxaMatch ? taxaMatch[1] + ' a.a.' : '',
+                descricao: articleBody.replace(/\s+/g, ' ').substring(0, 300),
+                dividendos: rendimentos,
+                preco: 0
             })
 
             if ((i + 1) % 10 === 0) console.log(`  Investidor 10: ${i + 1}/${tickers.length} (${Date.now() - startTime}ms)`)
         } catch (e) {
-            resultados.push({ ticker: t, dy: 0, pvp: null, varDia: varDiaBatch[t] || 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 })
+            resultados.push({ ticker: t, dy: 0, pvp: null, varDia: varDiaBatch[t] || 0, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0, nome: '', cnpj: '', tipo: '', segmento: '', cotas: '', cotistas: '', patrimonio: '', taxaAdm: '', descricao: '', dividendos: [], preco: 0 })
         }
         if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 500))
     }
@@ -253,7 +277,7 @@ async function buscarRankings(tickers) {
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
     console.log(`🏆 Rankings: DY(${allDY.length}) | Baratos(${allBaratos.length}) | Var.Ano(${allVarAno.length}) | Consistentes(${allConsistentes.length}) | Tempo: ${elapsed}s`)
-    return { topDY, topBaratos, topVarAno, topConsistentes, allDY, allBaratos, allVarAno, allConsistentes }
+    return { topDY, topBaratos, topVarAno, topConsistentes, allDY, allBaratos, allVarAno, allConsistentes, detalhes: resultados }
 }
 
 
@@ -306,6 +330,7 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
             fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
             fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
+            fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
             console.log("\n✅ Páginas geradas em pages/ (via cache)")
 
             if (args.includes("--serve")) {
@@ -349,6 +374,16 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
+
+    // Gerar páginas de detalhe
+    for (const det of rankings.detalhes) {
+        const cotacao = resultados.find(r => r.ticker === det.ticker)
+        if (cotacao) det.preco = parseFloat(cotacao.preco.replace(',', '.')) || 0
+        fs.writeFileSync(path.join(pasta, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes))
+    }
+    fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
+    console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
+
     console.log("\n✅ Páginas geradas em pages/")
 
     // Salvar cache full para uso local
