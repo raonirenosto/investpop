@@ -15,3 +15,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.7.1** — Fix busca mobile (cancelar + tap fora), busca tablet retrato, tabs ranking responsivas
 - **v0.7.2** — Favicon SVG personalizado (gráfico verde), footer visível em todas as telas
 - **v0.7.3** — Fix busca mobile completo (tap fora, path 404, sugestões no detalhe, histórico limpo), 8 testes de busca
+- **v0.8.0** — Card "Aparece nos Rankings" nos detalhes, foco automático busca mobile, fix iOS focus, 16 testes automatizados
