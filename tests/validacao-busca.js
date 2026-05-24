@@ -469,8 +469,58 @@ async function testarModalEmBreveNaoAbreAoVoltar(browser) {
     }
 }
 
+async function testarInputBuscaSemZoom(browser) {
+    console.log('\n🔍 TESTE 8 — Input busca mobile sem zoom iOS (#15)')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 414, height: 896 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        // Abrir overlay
+        var btns = document.querySelectorAll('button')
+        var lupaBtn = null
+        btns.forEach(function(b) {
+            if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+        })
+        if (!lupaBtn) return { erro: 'lupa não encontrada' }
+        lupaBtn.click()
+
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var input = document.getElementById('busca-mob-input')
+                if (!input) { resolve({ erro: 'input não encontrado' }); return }
+                var style = window.getComputedStyle(input)
+                var fontSize = parseFloat(style.fontSize)
+                resolve({ fontSize: fontSize })
+            }, 300)
+        })
+    })
+
+    await page.close()
+
+    if (resultado.erro) {
+        totalFalhou++
+        console.log('   ❌ ' + resultado.erro)
+        console.log('   Status: ❌ FALHOU')
+        return
+    }
+
+    // iOS Safari faz zoom em inputs com font-size < 16px
+    if (resultado.fontSize >= 16) {
+        totalPassou++
+        console.log('   ✅ Input busca mobile tem font-size ' + resultado.fontSize + 'px (≥ 16px, sem zoom iOS)')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Input busca mobile tem font-size ' + resultado.fontSize + 'px (< 16px, causa zoom no iOS)')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 8 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 9 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -498,7 +548,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 9 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 10 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -535,7 +585,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 10 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 11 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -602,6 +652,7 @@ async function main() {
     await testarBuscaMobileDetalhe(browser)
     await testarOverlayFechaAoVoltar(browser)
     await testarModalEmBreveNaoAbreAoVoltar(browser)
+    await testarInputBuscaSemZoom(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
     await testarNavegacao(browser)

@@ -48,7 +48,7 @@
   var overlay = document.createElement('div');
   overlay.id = 'busca-mobile-overlay';
   overlay.className = 'hidden fixed inset-0 z-50 bg-[#07111F]/95';
-  overlay.innerHTML = '<div class="px-4 pt-4" id="busca-mob-content"><div class="flex items-center gap-3 mb-4"><div class="flex-1 flex items-center bg-[#0B1A2E] border border-[#132743] rounded-lg px-3 py-2.5 gap-2"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="busca-mob-input" placeholder="Buscar FII, ticker..." autocomplete="off" class="bg-transparent text-sm text-gray-300 outline-none w-full"/></div><button id="busca-mob-cancel" class="text-gray-400 text-sm">Cancelar</button></div><div id="busca-mob-results"></div></div>';
+  overlay.innerHTML = '<div class="px-4 pt-4" id="busca-mob-content"><div class="flex items-center gap-3 mb-4"><div class="flex-1 flex items-center bg-[#0B1A2E] border border-[#132743] rounded-lg px-3 py-2.5 gap-2"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="busca-mob-input" placeholder="Buscar FII, ticker..." autocomplete="off" class="bg-transparent text-base text-gray-300 outline-none w-full"/></div><button id="busca-mob-cancel" class="text-gray-400 text-sm">Cancelar</button></div><div id="busca-mob-results"></div></div>';
   document.body.appendChild(overlay);
 
   var mobInput = document.getElementById('busca-mob-input');
