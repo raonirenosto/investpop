@@ -2,7 +2,7 @@ name: Gerar InvestPop
 
 on:
   schedule:
-    - cron: '*/30 13-20 * * 1-5'  # A cada 30min, 10:00-17:30 BRT (UTC-3)
+    - cron: '0 11-23,0-2 * * *'  # A cada 1h, 08:00-23:00 BRT (UTC-3) - fase de teste
   workflow_dispatch:
 
 permissions:
