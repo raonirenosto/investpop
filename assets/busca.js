@@ -100,4 +100,11 @@
       fecharOverlay();
     }
   });
+
+  // Close overlay on back navigation (bfcache/pageshow) - fix iOS Safari (#13)
+  window.addEventListener('pageshow', function(e) {
+    if (e.persisted) {
+      fecharOverlay();
+    }
+  });
 })();

@@ -368,8 +368,72 @@ async function testarBuscaMobileDetalhe(browser) {
     }
 }
 
+async function testarOverlayFechaAoVoltar(browser) {
+    console.log('\n🔍 TESTE 6 — Overlay fecha ao voltar (pageshow) (#13)')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 414, height: 896 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    // Abrir overlay, navegar para outra página, voltar
+    const resultado = await page.evaluate(() => {
+        // Abrir overlay
+        var btns = document.querySelectorAll('button')
+        var lupaBtn = null
+        btns.forEach(function(b) {
+            if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+        })
+        if (!lupaBtn) return { erro: 'lupa não encontrada' }
+        lupaBtn.click()
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var overlay = document.getElementById('busca-mobile-overlay')
+                if (!overlay || overlay.classList.contains('hidden')) {
+                    resolve({ erro: 'overlay não abriu' })
+                    return
+                }
+                resolve({ overlayAberto: true })
+            }, 300)
+        })
+    })
+
+    if (resultado.erro) {
+        totalFalhou++
+        console.log('   ❌ ' + resultado.erro)
+        console.log('   Status: ❌ FALHOU')
+        await page.close()
+        return
+    }
+
+    // Simular pageshow (como se tivesse voltado do bfcache)
+    const overlayFechado = await page.evaluate(() => {
+        // Disparar evento pageshow como o browser faria ao voltar
+        var event = new PageTransitionEvent('pageshow', { persisted: true })
+        window.dispatchEvent(event)
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var overlay = document.getElementById('busca-mobile-overlay')
+                resolve({ fechou: overlay && overlay.classList.contains('hidden') })
+            }, 200)
+        })
+    })
+
+    await page.close()
+
+    if (overlayFechado.fechou) {
+        totalPassou++
+        console.log('   ✅ Overlay fecha ao receber pageshow (simula voltar)')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Overlay continua aberto após pageshow')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 6 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 7 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -397,7 +461,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 7 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 8 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -434,7 +498,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 8 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 9 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -499,6 +563,7 @@ async function main() {
     await testarBuscaFuncional(browser)
     await testarBuscaMobile(browser)
     await testarBuscaMobileDetalhe(browser)
+    await testarOverlayFechaAoVoltar(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
     await testarNavegacao(browser)
