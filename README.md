@@ -21,3 +21,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.8.3** — Fix zoom iOS no input da busca mobile (font-size 16px), 11 testes de busca
 - **v0.8.4** — Remove itens desnecessários do header (Ferramentas, Sobre, Contato, engrenagem), 12 testes de busca
 - **v0.8.5** — Fix link FIIs (navega para index.html em vez de modal), detalhes regenerados no --cache, 13 testes de busca
+- **v0.9.0** — Abas de filtro temporal no console (Hoje, Esta Semana, Mais Antigo), aba Hoje ativa por padrão, 5 testes enhancements
