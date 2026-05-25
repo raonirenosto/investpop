@@ -514,6 +514,10 @@ async function main() {
             const pasta = "pages"
             if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
 
+            // Popular nomes para busca
+            global.INVESTPOP_NOMES = {}
+            for (const det of rankings.detalhes) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
+
             fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
             fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
             fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
@@ -562,6 +566,8 @@ async function main() {
             const tickersUnicos = [...new Set(acoes)]
             rankingsAcoes.topAltas = altasAcoes.map(r => ({ ticker: r.ticker }))
             rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
+            // Adicionar nomes de ações ao mapa
+            for (const det of (rankingsAcoes.detalhes || [])) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
             for (const t of tickersUnicos) {
                 const det = (rankingsAcoes.detalhes || []).find(r => r.ticker === t) || {}
                 const cotacao = resAcoes.find(r => r.ticker === t)
@@ -606,6 +612,10 @@ async function main() {
 
     const pasta = "pages"
     if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
+
+    // Popular nomes para busca
+    global.INVESTPOP_NOMES = {}
+    for (const det of rankings.detalhes) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
 
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
@@ -657,6 +667,8 @@ async function main() {
     const tickersAcoesUnicos = [...new Set(acoes)]
     rankingsAcoes.topAltas = altasAcoes.map(r => ({ ticker: r.ticker }))
     rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
+    // Adicionar nomes de ações ao mapa
+    for (const det of (rankingsAcoes.detalhes || [])) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
     for (const t of tickersAcoesUnicos) {
         const det = (rankingsAcoes.detalhes || []).find(r => r.ticker === t) || {}
         const cotacao = resAcoes.find(r => r.ticker === t)

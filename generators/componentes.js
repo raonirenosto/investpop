@@ -83,6 +83,8 @@ function footerHtml(opts) {
     var acoesLista = []
     try { acoesLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_acoes.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
     var buscaLista = fiisLista.concat(acoesLista)
+    // Nomes para busca (gerado em runtime se disponível)
+    var nomesMap = global.INVESTPOP_NOMES || {}
 
     var tracking = '';
     if (!opts || !opts.teste) {
@@ -146,6 +148,7 @@ function footerHtml(opts) {
   <script>
     var FIIS_LISTA = ${JSON.stringify(buscaLista)};
     var ACOES_LISTA = ${JSON.stringify(acoesLista)};
+    var NOMES_MAP = ${JSON.stringify(nomesMap)};
     var ACOES_BASE = '${base}acoes/';
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }

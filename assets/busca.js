@@ -5,10 +5,27 @@
   var base = window.FIIS_BASE !== undefined ? window.FIIS_BASE : 'fiis/';
   var acoesBase = window.ACOES_BASE !== undefined ? window.ACOES_BASE : 'acoes/';
   var acoesList = window.ACOES_LISTA || [];
+  var nomesMap = window.NOMES_MAP || {};
 
   function getLink(ticker) {
     if (acoesList.indexOf(ticker) >= 0) return acoesBase + ticker + '.html';
     return base + ticker + '.html';
+  }
+
+  function buscar(termo) {
+    var v = termo.toUpperCase();
+    if (v.length < 2) return [];
+    return FIIS_LISTA.filter(function(f) {
+      if (f.includes(v)) return true;
+      var nome = nomesMap[f];
+      return nome && nome.toUpperCase().includes(v);
+    }).slice(0, 8);
+  }
+
+  function renderItem(f) {
+    var nome = nomesMap[f];
+    var label = nome ? f + ' <span class="text-gray-500 text-xs">' + nome + '</span>' : f;
+    return label;
   }
 
   function fecharOverlay() {
@@ -96,10 +113,10 @@
 
   // Input handler
   mobInput.addEventListener('input', function() {
-    var v = this.value.toUpperCase();
+    var v = this.value;
     if (v.length < 2) { mobResults.innerHTML = ''; return; }
-    var results = FIIS_LISTA.filter(function(f) { return f.includes(v); }).slice(0, 10);
-    mobResults.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+f+'</a>'; }).join('');
+    var results = buscar(v).slice(0, 10);
+    mobResults.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+renderItem(f)+'</a>'; }).join('');
   });
 
   // Close on Escape key
