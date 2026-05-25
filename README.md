@@ -25,3 +25,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.9.1** — Fix abas no gerador/deploy, msg "Nenhum acesso" quando vazio, remove filtro, gráfico cardiograma (line), 9 testes enhancements
 - **v0.9.2** — Fix console quebrado (syntax JS, botão Limpar posicionado, tabela escondida sem dados, console.js no gerar), 12 testes enhancements
 - **v0.9.3** — Remove botão Limpar, troca aba "Esta Semana" por "Ontem" (filtro dinâmico), "Mais Antigo" = tudo antes de ontem, 12 testes enhancements
+- **v0.9.4** — Fix lupa mobile dispara modal "Em breve" no iPhone (#29), fix link FIIs no bottom nav (#17), 14 testes de busca
