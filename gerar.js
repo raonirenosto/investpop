@@ -7,6 +7,7 @@ const { gerarPaginaLista, gerarPaginaRanking } = require("./generators/pagina-li
 const { gerarPaginaDetalhe } = require("./generators/pagina-detalhe")
 const { gerarHtmlAcoes } = require("./generators/pagina-index-acoes")
 const { gerarPaginaListaAcoes, gerarPaginaRankingAcoes } = require("./generators/pagina-lista-acoes")
+const { gerarPaginaDetalheAcao } = require("./generators/pagina-detalhe-acao")
 const { gerarConsole } = require("./generators/pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
@@ -532,7 +533,27 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "acoes-ranking-baratos.html"), gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
             fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
             fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
-            console.log("✅ Páginas de ações geradas")
+
+            // Gerar páginas de detalhe de ações
+            const pastaAcoesCache = path.join(pasta, "acoes")
+            if (!fs.existsSync(pastaAcoesCache)) fs.mkdirSync(pastaAcoesCache)
+            const detalhesAcoes = rankingsAcoes.allDY.map(r => r.ticker).concat(rankingsAcoes.allBaratos.map(r => r.ticker), rankingsAcoes.allVarAno.map(r => r.ticker), rankingsAcoes.allConsistentes.map(r => r.ticker))
+            const tickersUnicos = [...new Set(acoes)]
+            for (const t of tickersUnicos) {
+                const cotacao = resAcoes.find(r => r.ticker === t)
+                const ranking = rankingsAcoes.allDY.find(r => r.ticker === t) || {}
+                const rankBarato = rankingsAcoes.allBaratos.find(r => r.ticker === t)
+                const rankVar = rankingsAcoes.allVarAno.find(r => r.ticker === t)
+                const rankCons = rankingsAcoes.allConsistentes.find(r => r.ticker === t)
+                const dy = ranking.valor ? parseFloat(ranking.valor.replace(',','.')) : 0
+                const pl = rankBarato ? parseFloat(rankBarato.valor.replace(',','.')) : null
+                const varAno = rankVar ? parseFloat(rankVar.valor.replace('+','').replace(',','.')) : 0
+                const mesesConsistentes = rankCons ? parseInt(rankCons.valor) : 0
+                const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
+                const varDia = cotacao ? cotacao.varNum : 0
+                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy, pl, varAno, mesesConsistentes}, tickersUnicos.map(x => ({ticker: x}))))
+            }
+            console.log(`✅ ${tickersUnicos.length} páginas de detalhe de ações geradas`)
 
             console.log("\n✅ Páginas geradas em pages/ (via cache)")
 
@@ -613,7 +634,26 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "acoes-ranking-baratos.html"), gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
     fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
-    console.log("✅ Páginas de ações geradas")
+
+    // Gerar páginas de detalhe de ações
+    const pastaAcoes2 = path.join(pasta, "acoes")
+    if (!fs.existsSync(pastaAcoes2)) fs.mkdirSync(pastaAcoes2)
+    const tickersAcoesUnicos = [...new Set(acoes)]
+    for (const t of tickersAcoesUnicos) {
+        const cotacao = resAcoes.find(r => r.ticker === t)
+        const ranking = rankingsAcoes.allDY.find(r => r.ticker === t) || {}
+        const rankBarato = rankingsAcoes.allBaratos.find(r => r.ticker === t)
+        const rankVar = rankingsAcoes.allVarAno.find(r => r.ticker === t)
+        const rankCons = rankingsAcoes.allConsistentes.find(r => r.ticker === t)
+        const dy = ranking.valor ? parseFloat(ranking.valor.replace(',','.')) : 0
+        const pl = rankBarato ? parseFloat(rankBarato.valor.replace(',','.')) : null
+        const varAno = rankVar ? parseFloat(rankVar.valor.replace('+','').replace(',','.')) : 0
+        const mesesConsistentes = rankCons ? parseInt(rankCons.valor) : 0
+        const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
+        const varDia = cotacao ? cotacao.varNum : 0
+        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy, pl, varAno, mesesConsistentes}, tickersAcoesUnicos.map(x => ({ticker: x}))))
+    }
+    console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 
     console.log("\n✅ Páginas geradas em pages/")
 

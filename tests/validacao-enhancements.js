@@ -493,6 +493,52 @@ async function testarSemHamburguer() {
     }
 }
 
+async function testarDetalheAcoes() {
+    console.log('\n🔍 TESTE 18 — Páginas de detalhe de ações existem (#37)')
+
+    const pastaAcoes = path.join(PAGES_DIR, 'acoes')
+    if (!fs.existsSync(pastaAcoes)) {
+        totalFalhou++
+        console.log('   ❌ Pasta pages/acoes/ não existe')
+        console.log('   Status: ❌ FALHOU')
+        return
+    }
+
+    const arquivos = fs.readdirSync(pastaAcoes).filter(f => f.endsWith('.html'))
+    if (arquivos.length >= 70) {
+        totalPassou++
+        console.log('   ✅ ' + arquivos.length + ' páginas de detalhe de ações geradas')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Apenas ' + arquivos.length + ' páginas (esperado >= 70)')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarBuscaUnificada() {
+    console.log('\n🔍 TESTE 19 — Busca inclui FIIs e ações (#38)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes.html'), 'utf-8')
+    // Deve ter PETR4 ou VALE3 na lista de busca
+    const temAcao = html.includes('PETR4') || html.includes('VALE3')
+    // Deve ter HGLG11 ou MXRF11 na lista de busca
+    const temFii = html.includes('HGLG11') || html.includes('MXRF11')
+
+    const indexHtml = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const indexTemAcao = indexHtml.includes('PETR4') || indexHtml.includes('VALE3')
+
+    if (temAcao && temFii && indexTemAcao) {
+        totalPassou++
+        console.log('   ✅ Busca unificada: ações.html tem FIIs+Ações, index.html tem Ações')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ acoes temAcao=' + temAcao + ' temFii=' + temFii + ' indexTemAcao=' + indexTemAcao)
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
@@ -552,6 +598,8 @@ async function main() {
     await testarPaginaAcoes()
     await testarTooltipsAcoes()
     await testarSemHamburguer()
+    await testarDetalheAcoes()
+    await testarBuscaUnificada()
 
     await browser.close()
 

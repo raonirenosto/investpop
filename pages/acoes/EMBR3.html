@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMBR3 — InvestPop</title>
+  <meta name="description" content="EMBR3 - Cotação e indicadores." />
+  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
+  <link rel="canonical" href="https://investpop.com.br" />
+  <meta property="og:title" content="EMBR3 — InvestPop" />
+  <meta property="og:description" content="EMBR3 - Cotação e indicadores." />
+  <meta property="og:url" content="https://investpop.com.br" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="EMBR3 — InvestPop" />
+  <meta name="twitter:description" content="EMBR3 - Cotação e indicadores." />
+  <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070F1F'/><path d='M6 22l8-8 4 4 8-8' stroke='%2310b981' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='26' cy='10' r='2.5' fill='%2310b981'/></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { bg: '#07111F', card: '#0B1A2E', 'card-border': '#132743' } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    #modal-breve { display: none; }
+    #modal-breve.show { display: flex; }
+  </style>
+</head>
+<body class="bg-bg min-h-screen text-white">
+
+
+  <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
+    <a href="../index.html" class="flex items-center gap-2">
+      <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm">
+      <a href="../index.html" class="text-gray-400 hover:text-white">FIIs</a>
+      <a href="../acoes.html" class="text-emerald-500 font-medium">Ações</a>
+    </div>
+    <div class="hidden md:flex items-center gap-3">
+      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
+      </div>
+    </div>
+    <div class="flex md:hidden items-center">
+      <button class="text-gray-400 busca-mobile-trigger">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
+
+    <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 mb-4">
+      <a href="../acoes.html" class="hover:text-white">Ações</a>
+      <span>›</span>
+      <span class="text-gray-300">EMBR3</span>
+    </div>
+
+    <div class="flex items-center justify-between gap-3 mb-6">
+      <div>
+        <h1 class="text-xl md:text-3xl font-bold">EMBR3</h1>
+      </div>
+      <div class="text-right">
+        <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 0,00</p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,00% ↑</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Dividend Yield (12M)</span>
+        <p class="text-lg font-bold text-emerald-400 mt-1">0,23%</p>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">P/L</span>
+        <p class="text-lg font-bold mt-1">30,13</p>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
+        <p class="text-lg font-bold mt-1 text-emerald-400">-</p>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
+        <span class="text-[10px] text-gray-500 uppercase">Consistência</span>
+        <p class="text-lg font-bold text-orange-400 mt-1">3 meses</p>
+      </div>
+    </div>
+
+  </main>
+
+
+  <footer class="flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-4 border-t border-card-border gap-2">
+    <a href="../index.html" class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
+  </footer>
+
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
+    <a href="../index.html" class="flex flex-col items-center gap-1 text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      <span class="text-[10px] font-medium">FIIs</span>
+    </a>
+    <a href="../acoes.html" class="flex flex-col items-center gap-1 text-emerald-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      <span class="text-[10px] font-medium">Ações</span>
+    </a>
+  </nav>
+
+  <div class="lg:hidden h-16"></div>
+
+  <div id="modal-breve" class="fixed inset-0 z-50 items-center justify-center bg-black/60" onclick="fecharModal()">
+    <div class="bg-card border border-card-border rounded-xl p-6 mx-4 max-w-sm text-center" onclick="event.stopPropagation()">
+      <div class="text-3xl mb-3">🚧</div>
+      <h3 class="text-lg font-bold mb-2">Em breve!</h3>
+      <p class="text-sm text-gray-400">Essa funcionalidade ainda está em desenvolvimento.</p>
+      <button onclick="fecharModal()" class="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600">Entendi</button>
+    </div>
+  </div>
+
+  <script>
+    var FIIS_LISTA = ["CACR11","AFHI11","ALZR11","RZAT11","FATN11","AZPL11","BBIG11","BRCR11","BCIA11","BCRI11","BRCO11","BROF11","BTAL11","BTCI11","BPML11","BTHF11","BTLG11","CPTS11","ICRI11","CLIN11","CPSH11","CYCR11","DEVA11","VRTA11","GTWR11","GZIT11","GGRC11","GARE11","HABT11","HCTR11","HGBS11","HGCR11","HGLG11","HGRE11","HGRU11","HTMX11","HSAF11","HSLG11","HSML11","HFOF11","IRIM11","ITRI11","JSAF11","JSRE11","KISU11","KNRI11","KCRE11","KNHF11","KNHY11","KNIP11","KNCR11","KNSC11","KNUQ11","KFOF11","KIVO11","KORE11","LIFE11","LVBI11","MANA11","MCCI11","MCRE11","MXRF11","MFII11","OUJP11","PCIP11","PMLL11","PORD11","PSEC11","PVBI11","RPRI11","RBRL11","RBRP11","RBRR11","RBRX11","RBRY11","RECR11","RBFM11","RCRB11","RBVA11","RZAK11","RZTR11","TRBL11","SPXS11","SNCI11","SNEL11","SNFF11","TEPP11","TGAR11","TVRI11","TOPP11","TRXF11","URPR11","VGHF11","VGIP11","VGIR11","VCJR11","VGRI11","VILG11","VINO11","VISC11","VRTM11","WHGR11","XPCI11","XPIN11","XPLG11","XPML11","XPSF11","ALOS3","ALPA4","ABEV3","ASAI3","AZUL4","AZZA3","B3SA3","BBAS3","BBDC3","BBDC4","BBSE3","BEEF3","BPAC11","BRAP4","BRFS3","BRKM5","CASH3","CCRO3","CMIN3","CMIG4","COGN3","CPFE3","CPLE6","CRFB3","CSAN3","CSNA3","CXSE3","CYRE3","DXCO3","ELET3","ELET6","EMBR3","ENEV3","ENGI11","EQTL3","GGBR4","GOAU4","HAPV3","HYPE3","IGTI11","IRBR3","ITSA4","ITUB4","JBSS3","KLBN11","LREN3","LWSA3","MGLU3","MRFG3","MRVE3","MULT3","NTCO3","PCAR3","PETR3","PETR4","PETZ3","PRIO3","QUAL3","RADL3","RAIL3","RAIZ4","RDOR3","RENT3","SANB11","SBSP3","SLCE3","SMTO3","SUZB3","TAEE11","TIMS3","TOTS3","UGPA3","USIM5","VALE3","VAMO3","VBBR3","BHIA3","VIVT3","WEGE3","YDUQ3"];
+    var ACOES_LISTA = ["ALOS3","ALPA4","ABEV3","ASAI3","AZUL4","AZZA3","B3SA3","BBAS3","BBDC3","BBDC4","BBSE3","BEEF3","BPAC11","BRAP4","BRFS3","BRKM5","CASH3","CCRO3","CMIN3","CMIG4","COGN3","CPFE3","CPLE6","CRFB3","CSAN3","CSNA3","CXSE3","CYRE3","DXCO3","ELET3","ELET6","EMBR3","ENEV3","ENGI11","EQTL3","GGBR4","GOAU4","HAPV3","HYPE3","IGTI11","IRBR3","ITSA4","ITUB4","JBSS3","KLBN11","LREN3","LWSA3","MGLU3","MRFG3","MRVE3","MULT3","NTCO3","PCAR3","PETR3","PETR4","PETZ3","PRIO3","QUAL3","RADL3","RAIL3","RAIZ4","RDOR3","RENT3","SANB11","SBSP3","SLCE3","SMTO3","SUZB3","TAEE11","TIMS3","TOTS3","UGPA3","USIM5","VALE3","VAMO3","VBBR3","BHIA3","VIVT3","WEGE3","YDUQ3"];
+    function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
+    function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+    window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });
+
+  </script>
+  <script src="../busca.js"></script>
+
+  <script>
+    var FIIS_LISTA = ["ALOS3","ALPA4","ABEV3","ASAI3","AZUL4","AZZA3","B3SA3","BBAS3","BBDC3","BBDC4","BBSE3","BEEF3","BPAC11","BRAP4","BRFS3","BRKM5","CASH3","CCRO3","CMIN3","CMIG4","COGN3","CPFE3","CPLE6","CRFB3","CSAN3","CSNA3","CXSE3","CYRE3","DXCO3","ELET3","ELET6","EMBR3","ENEV3","ENGI11","EQTL3","GGBR4","GOAU4","HAPV3","HYPE3","IGTI11","IRBR3","ITSA4","ITUB4","JBSS3","KLBN11","LREN3","LWSA3","MGLU3","MRFG3","MRVE3","MULT3","NTCO3","PCAR3","PETR3","PETR4","PETZ3","PRIO3","QUAL3","RADL3","RAIL3","RAIZ4","RDOR3","RENT3","SANB11","SBSP3","SLCE3","SMTO3","SUZB3","TAEE11","TIMS3","TOTS3","UGPA3","USIM5","VALE3","VAMO3","VBBR3","BHIA3","VIVT3","WEGE3","YDUQ3"];
+    var FIIS_BASE = '';
+  </script>
+  <script src="../busca.js"></script>
+
+</body>
+</html>

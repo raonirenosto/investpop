@@ -3,6 +3,13 @@
   if (typeof FIIS_LISTA === 'undefined') return;
 
   var base = window.FIIS_BASE !== undefined ? window.FIIS_BASE : 'fiis/';
+  var acoesBase = window.FIIS_BASE !== undefined ? window.FIIS_BASE.replace('fiis','acoes') || 'acoes/' : 'acoes/';
+  var acoesList = window.ACOES_LISTA || [];
+
+  function getLink(ticker) {
+    if (acoesList.indexOf(ticker) >= 0) return acoesBase + ticker + '.html';
+    return base + ticker + '.html';
+  }
 
   function fecharOverlay() {
     overlay.classList.add('hidden');
@@ -24,7 +31,7 @@
       if (v.length < 2) { dropdown.classList.add('hidden'); return; }
       var results = FIIS_LISTA.filter(function(f) { return f.includes(v); }).slice(0, 8);
       if (!results.length) { dropdown.classList.add('hidden'); return; }
-      dropdown.innerHTML = results.map(function(f) { return '<a href="'+base+f+'.html" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+f+'</a>'; }).join('');
+      dropdown.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+f+'</a>'; }).join('');
       dropdown.classList.remove('hidden');
     });
     document.addEventListener('click', function(e) { if (!container.contains(e.target)) dropdown.classList.add('hidden'); });
@@ -92,7 +99,7 @@
     var v = this.value.toUpperCase();
     if (v.length < 2) { mobResults.innerHTML = ''; return; }
     var results = FIIS_LISTA.filter(function(f) { return f.includes(v); }).slice(0, 10);
-    mobResults.innerHTML = results.map(function(f) { return '<a href="'+base+f+'.html" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+f+'</a>'; }).join('');
+    mobResults.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+f+'</a>'; }).join('');
   });
 
   // Close on Escape key

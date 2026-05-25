@@ -80,6 +80,9 @@ function footerHtml(opts) {
     var acoesNavClass = isAcoes ? 'text-emerald-500' : 'text-gray-500'
     var fiisLista = []
     try { fiisLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_fiis.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
+    var acoesLista = []
+    try { acoesLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_acoes.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
+    var buscaLista = fiisLista.concat(acoesLista)
 
     var tracking = '';
     if (!opts || !opts.teste) {
@@ -141,7 +144,8 @@ function footerHtml(opts) {
   </div>
 
   <script>
-    var FIIS_LISTA = ${JSON.stringify(fiisLista)};
+    var FIIS_LISTA = ${JSON.stringify(buscaLista)};
+    var ACOES_LISTA = ${JSON.stringify(acoesLista)};
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
     window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });
