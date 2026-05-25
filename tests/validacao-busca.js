@@ -544,8 +544,56 @@ async function testarSemItensNavDesnecessarios(browser) {
     }
 }
 
+async function testarLupaMobileSemModal(browser) {
+    console.log('\n🔍 TESTE 10 — Lupa mobile não dispara modal "Em breve" (#29)')
+
+    const page = await browser.newPage()
+    await page.setViewport({ width: 414, height: 896 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var btns = document.querySelectorAll('button')
+        var lupaBtn = null
+        btns.forEach(function(b) {
+            if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+        })
+        if (!lupaBtn) return { erro: 'lupa não encontrada' }
+        lupaBtn.click()
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var modal = document.getElementById('modal-breve')
+                var modalVisivel = modal && modal.classList.contains('show')
+                var overlay = document.getElementById('busca-mobile-overlay')
+                var overlayAberto = overlay && !overlay.classList.contains('hidden')
+                resolve({ modalVisivel: modalVisivel, overlayAberto: overlayAberto })
+            }, 300)
+        })
+    })
+
+    await page.close()
+
+    if (resultado.erro) {
+        totalFalhou++
+        console.log('   ❌ ' + resultado.erro)
+        console.log('   Status: ❌ FALHOU')
+        return
+    }
+
+    if (!resultado.modalVisivel && resultado.overlayAberto) {
+        totalPassou++
+        console.log('   ✅ Lupa mobile: overlay aberto, modal NÃO aparece')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        if (resultado.modalVisivel) console.log('   ❌ Modal "Em breve" aparece ao clicar na lupa')
+        if (!resultado.overlayAberto) console.log('   ❌ Overlay de busca não abriu')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarLinkFIIsNavega(browser) {
-    console.log('\n🔍 TESTE 10 — Link "FIIs" navega para index.html (#17)')
+    console.log('\n🔍 TESTE 11 — Link "FIIs" navega para index.html (#17)')
 
     var ok = true
     var paginas = ['index.html', 'fiis/HGLG11.html']
@@ -600,7 +648,7 @@ async function testarLinkFIIsNavega(browser) {
 }
 
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 11 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 12 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -628,7 +676,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 12 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 13 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -665,7 +713,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 13 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 14 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -734,6 +782,7 @@ async function main() {
     await testarModalEmBreveNaoAbreAoVoltar(browser)
     await testarInputBuscaSemZoom(browser)
     await testarSemItensNavDesnecessarios(browser)
+    await testarLupaMobileSemModal(browser)
     await testarLinkFIIsNavega(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
