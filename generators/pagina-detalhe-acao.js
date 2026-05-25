@@ -53,8 +53,6 @@ ${headerHtml({basePath: '../', paginaAcoes: true})}
 ${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../', paginaAcoes:true} : {basePath:'../', paginaAcoes:true})}
 
   <script>
-    var FIIS_LISTA = ${JSON.stringify(listaBusca)};
-    var ACOES_LISTA = ${JSON.stringify(todasAcoes.map(a => a.ticker))};
     var FIIS_BASE = '../fiis/';
     var ACOES_BASE = '';
   </script>

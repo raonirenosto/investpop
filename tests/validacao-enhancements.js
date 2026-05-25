@@ -517,24 +517,41 @@ async function testarDetalheAcoes() {
 }
 
 async function testarBuscaUnificada() {
-    console.log('\n🔍 TESTE 19 — Busca inclui FIIs e ações (#38)')
+    console.log('\n🔍 TESTE 19 — Busca unificada em todas as páginas (#38/#44)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes.html'), 'utf-8')
-    // Deve ter PETR4 ou VALE3 na lista de busca
-    const temAcao = html.includes('PETR4') || html.includes('VALE3')
-    // Deve ter HGLG11 ou MXRF11 na lista de busca
-    const temFii = html.includes('HGLG11') || html.includes('MXRF11')
+    const paginas = [
+        {file: 'index.html', desc: 'index FIIs'},
+        {file: 'acoes.html', desc: 'index Ações'},
+        {file: 'fiis/HGLG11.html', desc: 'detalhe FII'},
+        {file: 'acoes/PETR4.html', desc: 'detalhe Ação'},
+    ]
+    let ok = true
 
-    const indexHtml = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
-    const indexTemAcao = indexHtml.includes('PETR4') || indexHtml.includes('VALE3')
+    for (const p of paginas) {
+        const html = fs.readFileSync(path.join(PAGES_DIR, p.file), 'utf-8')
+        // Deve ter apenas 1 declaracao de FIIS_LISTA
+        const matches = html.match(/var FIIS_LISTA/g) || []
+        if (matches.length > 1) {
+            ok = false
+            console.log('   ❌ ' + p.desc + ': FIIS_LISTA declarado ' + matches.length + ' vezes (sobrescreve)')
+            continue
+        }
+        // Deve conter FIIs e Ações
+        const temFii = html.includes('HGLG11')
+        const temAcao = html.includes('PETR4')
+        const temAcoesLista = html.includes('ACOES_LISTA')
+        if (!temFii || !temAcao || !temAcoesLista) {
+            ok = false
+            console.log('   ❌ ' + p.desc + ': temFii=' + temFii + ' temAcao=' + temAcao + ' temAcoesLista=' + temAcoesLista)
+        }
+    }
 
-    if (temAcao && temFii && indexTemAcao) {
+    if (ok) {
         totalPassou++
-        console.log('   ✅ Busca unificada: ações.html tem FIIs+Ações, index.html tem Ações')
+        console.log('   ✅ Busca unificada: todas as páginas têm FIIs+Ações, sem duplicação')
         console.log('   Status: ✅ PASSOU')
     } else {
         totalFalhou++
-        console.log('   ❌ acoes temAcao=' + temAcao + ' temFii=' + temFii + ' indexTemAcao=' + indexTemAcao)
         console.log('   Status: ❌ FALHOU')
     }
 }
