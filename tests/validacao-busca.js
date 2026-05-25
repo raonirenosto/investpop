@@ -592,8 +592,99 @@ async function testarLupaMobileSemModal(browser) {
     }
 }
 
+async function testarFocoLupaTodas(browser) {
+    console.log('\n🔍 TESTE 11 — Foco no input ao clicar na lupa em todas as páginas (#30)')
+
+    var paginas = [
+        { nome: 'index.html', path: path.join(PAGES_DIR, 'index.html') },
+        { nome: 'ranking-dy.html', path: path.join(PAGES_DIR, 'ranking-dy.html') },
+        { nome: 'fiis/HGLG11.html', path: path.join(PAGES_DIR, 'fiis', 'HGLG11.html') },
+        { nome: 'fiis/MXRF11.html', path: path.join(PAGES_DIR, 'fiis', 'MXRF11.html') },
+    ]
+    var ok = true
+
+    for (var p of paginas) {
+        // Mobile
+        var page = await browser.newPage()
+        await page.setViewport({ width: 414, height: 896 })
+        await page.goto('file://' + p.path, { waitUntil: 'domcontentloaded' })
+        await new Promise(r => setTimeout(r, 500))
+
+        var resultado = await page.evaluate(() => {
+            var btns = document.querySelectorAll('button')
+            var lupaBtn = null
+            btns.forEach(function(b) {
+                if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+            })
+            if (!lupaBtn) return { erro: 'lupa não encontrada' }
+            lupaBtn.click()
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    var input = document.getElementById('busca-mob-input')
+                    var focused = input && document.activeElement === input
+                    resolve({ focused: focused })
+                }, 300)
+            })
+        })
+        await page.close()
+
+        if (resultado.focused) {
+            console.log('   ✅ ' + p.nome + ' (mobile 414px): foco OK')
+        } else {
+            ok = false
+            console.log('   ❌ ' + p.nome + ' (mobile 414px): foco NÃO funcionou - ' + (resultado.erro || ''))
+        }
+
+        // Tablet
+        page = await browser.newPage()
+        await page.setViewport({ width: 768, height: 1024 })
+        await page.goto('file://' + p.path, { waitUntil: 'domcontentloaded' })
+        await new Promise(r => setTimeout(r, 500))
+
+        var inputVisible = await page.evaluate(() => {
+            var input = document.querySelector('nav input[type="text"]')
+            return input && input.offsetHeight > 0
+        })
+        var resTablet
+        if (inputVisible) {
+            await page.click('nav input[type="text"]')
+            resTablet = await page.evaluate(() => {
+                var input = document.querySelector('nav input[type="text"]')
+                return { focused: document.activeElement === input, tipo: 'desktop-input' }
+            })
+        } else {
+            resTablet = await page.evaluate(() => {
+                var btns = document.querySelectorAll('button')
+                var lupaBtn = null
+                btns.forEach(function(b) {
+                    if (b.querySelector('path[d*="M21 21l-6-6"]') && b.offsetHeight > 0) lupaBtn = b
+                })
+                if (!lupaBtn) return { erro: 'nenhum input/lupa visível' }
+                lupaBtn.click()
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        var mobInput = document.getElementById('busca-mob-input')
+                        resolve({ focused: mobInput && document.activeElement === mobInput, tipo: 'mobile-overlay' })
+                    }, 300)
+                })
+            })
+        }
+        await page.close()
+
+        if (resTablet.focused) {
+            console.log('   ✅ ' + p.nome + ' (tablet 768px): foco OK (' + resTablet.tipo + ')')
+        } else {
+            ok = false
+            console.log('   ❌ ' + p.nome + ' (tablet 768px): foco NÃO funcionou - ' + (resTablet.erro || resTablet.tipo))
+        }
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: ✅ PASSOU') }
+    else { totalFalhou++; console.log('   Status: ❌ FALHOU') }
+}
+
 async function testarLinkFIIsNavega(browser) {
-    console.log('\n🔍 TESTE 11 — Link "FIIs" navega para index.html (#17)')
+    console.log('\n🔍 TESTE 12 — Link "FIIs" navega para index.html (#17)')
 
     var ok = true
     var paginas = ['index.html', 'fiis/HGLG11.html']
@@ -648,7 +739,7 @@ async function testarLinkFIIsNavega(browser) {
 }
 
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 12 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 13 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -676,7 +767,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 13 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 14 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -713,7 +804,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 14 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 15 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -783,6 +874,7 @@ async function main() {
     await testarInputBuscaSemZoom(browser)
     await testarSemItensNavDesnecessarios(browser)
     await testarLupaMobileSemModal(browser)
+    await testarFocoLupaTodas(browser)
     await testarLinkFIIsNavega(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)

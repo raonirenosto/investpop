@@ -61,7 +61,8 @@
       e.preventDefault();
       e.stopPropagation();
       overlay.classList.remove('hidden');
-      mobInput.focus();
+      // iOS Safari: focus() must run after render frame when element leaves display:none
+      requestAnimationFrame(function() { mobInput.focus(); });
     });
   }
 
