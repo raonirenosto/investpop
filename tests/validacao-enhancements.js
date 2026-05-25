@@ -10,6 +10,7 @@
  * #19 - Bug: abas no gerador + mensagem vazio
  * #20 - Remover campo de filtro/busca do console
  * #21 - Gráfico estilo cardiograma (line)
+ * #22 - Bug: console quebrado (JS syntax, botão perdido, tabela visível sem dados)
  *
  * Execução: nvm use 20 && node tests/validacao-enhancements.js
  */
@@ -264,6 +265,89 @@ async function testarGraficoLine() {
 }
 
 // ===============================
+// #22 - Bug: console quebrado
+// ===============================
+
+async function testarConsoleSemErroJS(browser) {
+    console.log('\n🔍 TESTE 10 — Console carrega sem erros de JS (#22)')
+
+    const page = await browser.newPage()
+    var erros = []
+    page.on('pageerror', function(e) { erros.push(e.message) })
+    await page.goto('file://' + path.join(PAGES_DIR, 'console.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        return {
+            temSetPeriodo: typeof setPeriodo === 'function',
+            temLimparDados: typeof limparDados === 'function',
+            temAplicarFiltros: typeof aplicarFiltros === 'function'
+        }
+    })
+
+    await page.close()
+
+    if (erros.length === 0 && resultado.temSetPeriodo && resultado.temLimparDados && resultado.temAplicarFiltros) {
+        totalPassou++
+        console.log('   ✅ Console carrega sem erros, funções disponíveis')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Erros: ' + JSON.stringify(erros) + ' Funções: ' + JSON.stringify(resultado))
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarTabelaEscondidaSemDados(browser) {
+    console.log('\n🔍 TESTE 11 — Tabela escondida e msg visível quando sem registros (#22)')
+
+    const page = await browser.newPage()
+    await page.goto('file://' + path.join(PAGES_DIR, 'console.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var tabela = document.getElementById('tabela-console')
+        var msg = document.getElementById('msg-vazio')
+        var tabelaVisivel = tabela && tabela.style.display !== 'none'
+        var msgVisivel = msg && !msg.classList.contains('hidden')
+        return { tabelaVisivel: tabelaVisivel, msgVisivel: msgVisivel }
+    })
+
+    await page.close()
+
+    // Sem dados carregados (fetch falha em file://), tabela deve estar escondida e msg visível
+    if (!resultado.tabelaVisivel && resultado.msgVisivel) {
+        totalPassou++
+        console.log('   ✅ Tabela escondida, mensagem "Nenhum acesso" visível')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ tabelaVisivel=' + resultado.tabelaVisivel + ' msgVisivel=' + resultado.msgVisivel)
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarBotaoLimparPosicionado() {
+    console.log('\n🔍 TESTE 12 — Botão Limpar na mesma linha das abas (#22)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
+    // Botão limpar deve estar no mesmo div que as abas (não em div separado)
+    const abasELimpar = html.includes('data-periodo="antigo"') && html.includes('limparDados()')
+    // Não deve ter div separado só pro botão limpar
+    const semDivSeparado = !html.includes('<div class="flex items-center justify-between mb-4">\n      <button onclick="limparDados()"')
+
+    if (abasELimpar && semDivSeparado) {
+        totalPassou++
+        console.log('   ✅ Botão Limpar posicionado junto às abas')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Botão Limpar mal posicionado')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+// ===============================
 // Main
 // ===============================
 
@@ -278,7 +362,7 @@ async function main() {
     console.log('║  #18 Abas de filtro temporal no console                      ║')
     console.log('║  #19 Bug: gerador com abas + msg vazio                      ║')
     console.log('║  #20 Remover filtro/busca do console                         ║')
-    console.log('║  #21 Gráfico line (cardiograma)                              ║')
+    console.log('║  #22 Bug: console quebrado (JS, botão, tabela)                ║')
     console.log('╚══════════════════════════════════════════════════════════════╝')
 
     await testarCardTops()
@@ -295,6 +379,9 @@ async function main() {
     await testarMensagemVazio()
     await testarSemFiltro()
     await testarGraficoLine()
+    await testarConsoleSemErroJS(browser)
+    await testarTabelaEscondidaSemDados(browser)
+    await testarBotaoLimparPosicionado()
 
     await browser.close()
 

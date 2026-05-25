@@ -34,14 +34,11 @@ ${headerHtml()}
       </div>
     </div>
 
-    <div class="flex gap-2 mb-4">
+    <div class="flex items-center gap-2 mb-4">
       <button data-periodo="hoje" onclick="setPeriodo('hoje')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-emerald-500 bg-emerald-500/20 text-emerald-400">Hoje</button>
       <button data-periodo="semana" onclick="setPeriodo('semana')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Esta Semana</button>
       <button data-periodo="antigo" onclick="setPeriodo('antigo')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Mais Antigo</button>
-    </div>
-
-    <div class="flex items-center justify-between mb-4">
-      <button onclick="limparDados()" class="px-3 py-2 bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-medium rounded-lg hover:bg-red-500/30">&#128465; Limpar</button>
+      <button onclick="limparDados()" class="ml-auto px-3 py-1.5 bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-medium rounded-lg hover:bg-red-500/30">&#128465; Limpar</button>
     </div>
 
     <div class="mb-4">
@@ -52,7 +49,7 @@ ${headerHtml()}
     </div>
 
     <div class="bg-card border border-card-border rounded-xl p-4 overflow-x-auto">
-      <table class="text-xs min-w-[800px] w-full" id="tabela-console">
+      <table class="text-xs min-w-[800px] w-full" id="tabela-console" style="display:none">
         <thead>
           <tr class="text-gray-500">
             <th class="text-left pb-2 font-medium whitespace-nowrap pr-3">Data</th>
@@ -68,7 +65,7 @@ ${headerHtml()}
         </thead>
         <tbody id="tabela-body" class="text-gray-200"></tbody>
       </table>
-      <p id="msg-vazio" class="text-sm text-gray-500 text-center py-8 hidden">Nenhum acesso registrado neste per\u00edodo</p>
+      <p id="msg-vazio" class="text-sm text-gray-500 text-center py-8">Nenhum acesso registrado neste per\u00edodo</p>
     </div>
     <p class="text-xs text-gray-500 mt-3" id="status">Carregando...</p>
 

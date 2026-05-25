@@ -339,6 +339,7 @@ async function main() {
             }
 
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
+            fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
             console.log("\n✅ Páginas geradas em pages/ (via cache)")
 
             if (args.includes("--serve")) {
@@ -392,6 +393,7 @@ async function main() {
         fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings))
     }
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
+    fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
 
     console.log("\n✅ Páginas geradas em pages/")
