@@ -181,7 +181,9 @@ ${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'
 
   <script>
     var FIIS_LISTA = ${JSON.stringify(listaBusca)};
+    var ACOES_LISTA = ${JSON.stringify(require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_acoes.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l))};
     var FIIS_BASE = '';
+    var ACOES_BASE = '../acoes/';
   </script>
   <script src="../busca.js"></script>
 

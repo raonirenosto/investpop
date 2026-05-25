@@ -3,7 +3,7 @@
   if (typeof FIIS_LISTA === 'undefined') return;
 
   var base = window.FIIS_BASE !== undefined ? window.FIIS_BASE : 'fiis/';
-  var acoesBase = window.FIIS_BASE !== undefined ? window.FIIS_BASE.replace('fiis','acoes') || 'acoes/' : 'acoes/';
+  var acoesBase = window.ACOES_BASE !== undefined ? window.ACOES_BASE : 'acoes/';
   var acoesList = window.ACOES_LISTA || [];
 
   function getLink(ticker) {

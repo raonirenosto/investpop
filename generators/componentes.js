@@ -146,6 +146,7 @@ function footerHtml(opts) {
   <script>
     var FIIS_LISTA = ${JSON.stringify(buscaLista)};
     var ACOES_LISTA = ${JSON.stringify(acoesLista)};
+    var ACOES_BASE = '${base}acoes/';
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
     window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });

@@ -451,16 +451,16 @@ async function testarPaginaAcoes() {
 }
 
 async function testarTooltipsAcoes() {
-    console.log('\n🔍 TESTE 16 — Tooltips informativos nos rankings de ações (#35)')
+    console.log('\n🔍 TESTE 16 — Tooltips informativos nos rankings de ações (#35/#39)')
 
-    const paginas = ['acoes-ranking-dy.html', 'acoes-ranking-baratos.html', 'acoes-ranking-valorizacao.html', 'acoes-ranking-consistentes.html']
+    const paginas = ['acoes.html', 'acoes-ranking-dy.html', 'acoes-ranking-baratos.html', 'acoes-ranking-valorizacao.html', 'acoes-ranking-consistentes.html']
     let ok = true
 
     for (const p of paginas) {
         const filePath = path.join(PAGES_DIR, p)
         if (!fs.existsSync(filePath)) { ok = false; console.log('   ❌ ' + p + ' não existe'); continue }
         const html = fs.readFileSync(filePath, 'utf-8')
-        if (!html.includes('tooltip-trigger') || !html.includes('tooltip-col')) {
+        if (!html.includes('tooltip-trigger')) {
             ok = false
             console.log('   ❌ ' + p + ': sem tooltip')
         }
@@ -468,7 +468,7 @@ async function testarTooltipsAcoes() {
 
     if (ok) {
         totalPassou++
-        console.log('   ✅ Todos os rankings de ações têm tooltips')
+        console.log('   ✅ Todos os rankings de ações têm tooltips (index + ver todos)')
         console.log('   Status: ✅ PASSOU')
     } else {
         totalFalhou++

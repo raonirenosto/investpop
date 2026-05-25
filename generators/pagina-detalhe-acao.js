@@ -54,7 +54,9 @@ ${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../', paginaAcoes:t
 
   <script>
     var FIIS_LISTA = ${JSON.stringify(listaBusca)};
-    var FIIS_BASE = '';
+    var ACOES_LISTA = ${JSON.stringify(todasAcoes.map(a => a.ticker))};
+    var FIIS_BASE = '../fiis/';
+    var ACOES_BASE = '';
   </script>
   <script src="../busca.js"></script>
 
