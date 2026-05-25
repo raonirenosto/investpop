@@ -315,6 +315,8 @@ async function main() {
             const todasQuedas = resultados.filter(r => r.varNum < 0).sort((a, b) => a.varNum - b.varNum)
             const altas = todasAltas.slice(0, 5)
             const quedas = todasQuedas.slice(0, 5)
+            rankings.topAltas = altas.map(r => ({ ticker: r.ticker }))
+            rankings.topQuedas = quedas.map(r => ({ ticker: r.ticker }))
 
             console.log(`\n📈 Altas: ${todasAltas.length} | 📉 Quedas: ${todasQuedas.length}`)
 
@@ -370,6 +372,8 @@ async function main() {
     // Rankings
     console.log("\n🏆 Buscando rankings...")
     const rankings = await buscarRankings(fiis)
+    rankings.topAltas = altas.map(r => ({ ticker: r.ticker }))
+    rankings.topQuedas = quedas.map(r => ({ ticker: r.ticker }))
 
     const pasta = "pages"
     if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)

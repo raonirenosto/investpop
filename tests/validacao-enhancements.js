@@ -329,6 +329,52 @@ async function testarTabelaEscondidaSemDados(browser) {
     }
 }
 
+async function testarCardTopsAltasQuedas() {
+    console.log('\n🔍 TESTE 13 — Card tops inclui Top 5 Altas/Quedas do dia (#32)')
+
+    const indexHtml = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+
+    // Extrair primeiro ticker do top altas
+    const altasMatch = indexHtml.match(/panel-altas[\s\S]{0,3000}?<\/table>/)
+    const tickerAlta = altasMatch ? (altasMatch[0].match(/hover:underline">([A-Z0-9]+)<\/a>/) || [])[1] : null
+
+    // Extrair primeiro ticker do top quedas
+    const quedasMatch = indexHtml.match(/panel-quedas[\s\S]{0,3000}?<\/table>/)
+    const tickerQueda = quedasMatch ? (quedasMatch[0].match(/hover:underline">([A-Z0-9]+)<\/a>/) || [])[1] : null
+
+    let ok = true
+
+    if (tickerAlta) {
+        const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', tickerAlta + '.html'), 'utf-8')
+        const temAlta = html.includes('Maior Alta') || html.includes('Maiores Altas')
+        if (temAlta) {
+            console.log('   ✅ ' + tickerAlta + ': aparece como Maior Alta no card')
+        } else {
+            ok = false
+            console.log('   ❌ ' + tickerAlta + ': está no top altas mas NÃO aparece no card')
+        }
+    }
+
+    if (tickerQueda) {
+        const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', tickerQueda + '.html'), 'utf-8')
+        const temQueda = html.includes('Maior Queda') || html.includes('Maiores Quedas')
+        if (temQueda) {
+            console.log('   ✅ ' + tickerQueda + ': aparece como Maior Queda no card')
+        } else {
+            ok = false
+            console.log('   ❌ ' + tickerQueda + ': está no top quedas mas NÃO aparece no card')
+        }
+    }
+
+    if (!tickerAlta && !tickerQueda) {
+        console.log('   ⚠️ Não encontrou tickers de altas/quedas na index')
+        ok = true
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: ✅ PASSOU') }
+    else { totalFalhou++; console.log('   Status: ❌ FALHOU') }
+}
+
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
@@ -383,6 +429,7 @@ async function main() {
     await testarConsoleSemErroJS(browser)
     await testarTabelaEscondidaSemDados(browser)
     await testarBotaoLimparRemovido()
+    await testarCardTopsAltasQuedas()
 
     await browser.close()
 
