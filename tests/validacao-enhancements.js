@@ -375,6 +375,30 @@ async function testarCardTopsAltasQuedas() {
     else { totalFalhou++; console.log('   Status: ❌ FALHOU') }
 }
 
+async function testarSemBotaoVoltar() {
+    console.log('\n🔍 TESTE 14 — Páginas Ver Todos sem botão Voltar (#33)')
+
+    const paginas = ['altas.html', 'quedas.html', 'ranking-dy.html', 'ranking-baratos.html', 'ranking-valorizacao.html', 'ranking-consistentes.html']
+    let ok = true
+
+    for (const p of paginas) {
+        const html = fs.readFileSync(path.join(PAGES_DIR, p), 'utf-8')
+        if (html.includes('&larr; Voltar') || html.includes('← Voltar')) {
+            ok = false
+            console.log('   ❌ ' + p + ': ainda tem botão Voltar')
+        }
+    }
+
+    if (ok) {
+        totalPassou++
+        console.log('   ✅ Nenhuma página Ver Todos tem botão Voltar')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
@@ -430,6 +454,7 @@ async function main() {
     await testarTabelaEscondidaSemDados(browser)
     await testarBotaoLimparRemovido()
     await testarCardTopsAltasQuedas()
+    await testarSemBotaoVoltar()
 
     await browser.close()
 
