@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InvestPop — Radar de Ações em tempo real</title>
+  <meta name="description" content="Acompanhe as Ações do IBOV em tempo real. Veja maiores altas e quedas do dia." />
+  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
+  <link rel="canonical" href="https://investpop.com.br" />
+  <meta property="og:title" content="InvestPop — Radar de Ações em tempo real" />
+  <meta property="og:description" content="Acompanhe as Ações do IBOV em tempo real. Veja maiores altas e quedas do dia." />
+  <meta property="og:url" content="https://investpop.com.br" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="InvestPop — Radar de Ações em tempo real" />
+  <meta name="twitter:description" content="Acompanhe as Ações do IBOV em tempo real. Veja maiores altas e quedas do dia." />
+  <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070F1F'/><path d='M6 22l8-8 4 4 8-8' stroke='%2310b981' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='26' cy='10' r='2.5' fill='%2310b981'/></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { bg: '#07111F', card: '#0B1A2E', 'card-border': '#132743' } } }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    #modal-breve { display: none; }
+    #modal-breve.show { display: flex; }
+  </style>
+</head>
+<body class="bg-bg min-h-screen text-white">
+
+
+  <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2">
+      <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 text-sm">
+      <a href="index.html" class="text-gray-400 hover:text-white">FIIs</a>
+      <a href="acoes.html" class="text-emerald-500 font-medium">Ações</a>
+    </div>
+    <div class="hidden md:flex items-center gap-3">
+      <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
+        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
+      </div>
+    </div>
+    <div class="flex md:hidden items-center gap-4">
+      <button class="text-gray-400 busca-mobile-trigger">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </button>
+      <button onclick="emBreve(event)" class="text-gray-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <main class="px-4 md:px-8 py-6 md:py-8">
+    <h1 class="sr-only">InvestPop — Radar de Ações em tempo real</h1>
+    <div class="flex items-center gap-2 mb-4">
+      <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Resumo do Mercado</h2>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 md:gap-5">
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
+        <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">IBOV Hoje</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1">177.481</p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,72%</span>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
+        <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="acoes/ASAI3.html" class="hover:underline">ASAI3</a></p>
+        <span class="text-xs md:text-sm text-emerald-500 font-medium">+7,70%</span>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 9,09</div>
+      </div>
+      <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
+        <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="acoes/QUAL3.html" class="hover:underline">QUAL3</a></p>
+        <span class="text-xs md:text-sm text-red-500 font-medium">-8,56%</span>
+        <div class="hidden md:block mt-1 text-xs text-gray-400">R$ 1,71</div>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
+          <span class="text-[10px] font-bold">+</span>
+        </div>
+        <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Radar do Dia</h2>
+      </div>
+
+      <div class="flex md:hidden gap-4 mb-4 border-b border-card-border">
+        <button id="tab-altas" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500" onclick="showTab('altas')">Maiores Altas</button>
+        <button id="tab-quedas" class="pb-2 text-sm font-medium text-gray-500" onclick="showTab('quedas')">Maiores Quedas</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div id="panel-altas" class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Maiores Altas do Dia</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-gray-500 text-xs"><th class="text-left pb-2 font-medium">#</th><th class="text-left pb-2 font-medium">Ação</th><th class="text-right pb-2 font-medium">Var. Dia</th><th class="text-right pb-2 font-medium">Preço</th></tr></thead>
+            <tbody class="text-gray-200">
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">1</td>
+                <td class="py-2.5 font-medium"><a href="acoes/ASAI3.html" class="hover:underline">ASAI3</a></td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+7,70%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 9,09</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">2</td>
+                <td class="py-2.5 font-medium"><a href="acoes/CYRE3.html" class="hover:underline">CYRE3</a></td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+6,35%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 22,60</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">3</td>
+                <td class="py-2.5 font-medium"><a href="acoes/RAIZ4.html" class="hover:underline">RAIZ4</a></td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+5,13%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 0,41</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">4</td>
+                <td class="py-2.5 font-medium"><a href="acoes/CASH3.html" class="hover:underline">CASH3</a></td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+4,50%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 4,18</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">5</td>
+                <td class="py-2.5 font-medium"><a href="acoes/B3SA3.html" class="hover:underline">B3SA3</a></td>
+                <td class="py-2.5 text-right text-emerald-500 font-medium">+4,32%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 17,38</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center"><a href="acoes-altas.html" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
+        </div>
+
+        <div id="panel-quedas" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Maiores Quedas do Dia</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-gray-500 text-xs"><th class="text-left pb-2 font-medium">#</th><th class="text-left pb-2 font-medium">Ação</th><th class="text-right pb-2 font-medium">Var. Dia</th><th class="text-right pb-2 font-medium">Preço</th></tr></thead>
+            <tbody class="text-gray-200">
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">1</td>
+                <td class="py-2.5 font-medium"><a href="acoes/QUAL3.html" class="hover:underline">QUAL3</a></td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-8,56%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 1,71</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">2</td>
+                <td class="py-2.5 font-medium"><a href="acoes/PRIO3.html" class="hover:underline">PRIO3</a></td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-5,06%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 64,94</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">3</td>
+                <td class="py-2.5 font-medium"><a href="acoes/USIM5.html" class="hover:underline">USIM5</a></td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-3,96%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 9,94</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">4</td>
+                <td class="py-2.5 font-medium"><a href="acoes/PETR3.html" class="hover:underline">PETR3</a></td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-3,03%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 48,63</td>
+              </tr>
+
+              <tr class="border-t border-card-border">
+                <td class="py-2.5 text-gray-500">5</td>
+                <td class="py-2.5 font-medium"><a href="acoes/PETR4.html" class="hover:underline">PETR4</a></td>
+                <td class="py-2.5 text-right text-red-500 font-medium">-2,88%</td>
+                <td class="py-2.5 text-right text-gray-400">R$ 43,20</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center"><a href="acoes-quedas.html" class="text-red-500 text-xs font-medium hover:underline">Ver todos</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <div class="flex items-center gap-2 mb-4">
+        <svg class="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Rankings</h2>
+      </div>
+
+      <div class="flex md:hidden gap-3 mb-4 border-b border-card-border flex-wrap">
+        <button id="tab-rank-pagam" class="pb-2 text-sm font-medium text-emerald-500 border-b-2 border-emerald-500" onclick="showRankTab('pagam')">Mais Pagam</button>
+        <button id="tab-rank-baratos" class="pb-2 text-sm font-medium text-gray-500" onclick="showRankTab('baratos')">Mais Baratos</button>
+        <button id="tab-rank-valorizacao" class="pb-2 text-sm font-medium text-gray-500" onclick="showRankTab('valorizacao')">Valorização</button>
+        <button id="tab-rank-consistentes" class="pb-2 text-sm font-medium text-gray-500" onclick="showRankTab('consistentes')">Consistentes</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div id="panel-rank-pagam" class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 que Mais Pagam</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-gray-500 text-xs"><th class="text-left pb-2 font-medium">#</th><th class="text-left pb-2 font-medium">Ação</th><th class="text-right pb-2 font-medium">DY (12M)</th></tr></thead>
+            <tbody class="text-gray-200">
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="acoes/BBSE3.html" class="hover:underline">BBSE3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">13,03%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="acoes/CYRE3.html" class="hover:underline">CYRE3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">12,85%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="acoes/RDOR3.html" class="hover:underline">RDOR3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">12,54%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="acoes/AZZA3.html" class="hover:underline">AZZA3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">11,95%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="acoes/BRFS3.html" class="hover:underline">BRFS3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">11,62%</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center"><a href="acoes-ranking-dy.html" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
+        </div>
+
+        <div id="panel-rank-baratos" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Mais Baratos</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-gray-500 text-xs"><th class="text-left pb-2 font-medium">#</th><th class="text-left pb-2 font-medium">Ação</th><th class="text-right pb-2 font-medium">P/L</th></tr></thead>
+            <tbody class="text-gray-200">
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="acoes/RAIZ4.html" class="hover:underline">RAIZ4</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,19</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="acoes/BHIA3.html" class="hover:underline">BHIA3</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,37</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="acoes/PCAR3.html" class="hover:underline">PCAR3</a></td><td class="py-2.5 text-right text-blue-400 font-medium">0,48</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="acoes/BRKM5.html" class="hover:underline">BRKM5</a></td><td class="py-2.5 text-right text-blue-400 font-medium">1,04</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="acoes/CSAN3.html" class="hover:underline">CSAN3</a></td><td class="py-2.5 text-right text-blue-400 font-medium">1,81</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center"><a href="acoes-ranking-baratos.html" class="text-blue-500 text-xs font-medium hover:underline">Ver todos</a></div>
+        </div>
+
+        <div id="panel-rank-valorizacao" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Valorização no Ano</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-gray-500 text-xs"><th class="text-left pb-2 font-medium">#</th><th class="text-left pb-2 font-medium">Ação</th><th class="text-right pb-2 font-medium">Var. Ano</th></tr></thead>
+            <tbody class="text-gray-200">
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="acoes/USIM5.html" class="hover:underline">USIM5</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+67,06%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="acoes/PRIO3.html" class="hover:underline">PRIO3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+56,78%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="acoes/BRKM5.html" class="hover:underline">BRKM5</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+51,08%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="acoes/PETR3.html" class="hover:underline">PETR3</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+49,31%</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="acoes/PETR4.html" class="hover:underline">PETR4</a></td><td class="py-2.5 text-right text-emerald-500 font-medium">+40,14%</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center"><a href="acoes-ranking-valorizacao.html" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
+        </div>
+
+        <div id="panel-rank-consistentes" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <h3 class="text-xs font-semibold text-gray-300 uppercase">Top 5 Pagadores Consistentes</h3>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-gray-500 text-xs"><th class="text-left pb-2 font-medium">#</th><th class="text-left pb-2 font-medium">Ação</th><th class="text-right pb-2 font-medium">Consistência</th></tr></thead>
+            <tbody class="text-gray-200">
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">1</td><td class="py-2.5 font-medium"><a href="acoes/ITUB4.html" class="hover:underline">ITUB4</a></td><td class="py-2.5 text-right text-orange-400 font-medium">80 meses</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">2</td><td class="py-2.5 font-medium"><a href="acoes/CSAN3.html" class="hover:underline">CSAN3</a></td><td class="py-2.5 text-right text-orange-400 font-medium">12 meses</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">3</td><td class="py-2.5 font-medium"><a href="acoes/RADL3.html" class="hover:underline">RADL3</a></td><td class="py-2.5 text-right text-orange-400 font-medium">12 meses</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">4</td><td class="py-2.5 font-medium"><a href="acoes/TIMS3.html" class="hover:underline">TIMS3</a></td><td class="py-2.5 text-right text-orange-400 font-medium">9 meses</td></tr>
+
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">5</td><td class="py-2.5 font-medium"><a href="acoes/CXSE3.html" class="hover:underline">CXSE3</a></td><td class="py-2.5 text-right text-orange-400 font-medium">8 meses</td></tr>
+            </tbody>
+          </table>
+          <div class="mt-3 text-center"><a href="acoes-ranking-consistentes.html" class="text-orange-500 text-xs font-medium hover:underline">Ver todos</a></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <footer class="flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-4 border-t border-card-border gap-2">
+    <a href="index.html" class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span>
+    </a>
+    <span class="text-xs text-gray-500">&copy; 2026 InvestPop. Todos os direitos reservados.</span>
+  </footer>
+
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-gray-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+      <span class="text-[10px] font-medium">FIIs</span>
+    </a>
+    <a href="acoes.html" class="flex flex-col items-center gap-1 text-emerald-500">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      <span class="text-[10px] font-medium">Ações</span>
+    </a>
+  </nav>
+
+  <div class="lg:hidden h-16"></div>
+
+  <div id="modal-breve" class="fixed inset-0 z-50 items-center justify-center bg-black/60" onclick="fecharModal()">
+    <div class="bg-card border border-card-border rounded-xl p-6 mx-4 max-w-sm text-center" onclick="event.stopPropagation()">
+      <div class="text-3xl mb-3">🚧</div>
+      <h3 class="text-lg font-bold mb-2">Em breve!</h3>
+      <p class="text-sm text-gray-400">Essa funcionalidade ainda está em desenvolvimento.</p>
+      <button onclick="fecharModal()" class="mt-4 px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600">Entendi</button>
+    </div>
+  </div>
+
+  <script>
+    var FIIS_LISTA = ["CACR11","AFHI11","ALZR11","RZAT11","FATN11","AZPL11","BBIG11","BRCR11","BCIA11","BCRI11","BRCO11","BROF11","BTAL11","BTCI11","BPML11","BTHF11","BTLG11","CPTS11","ICRI11","CLIN11","CPSH11","CYCR11","DEVA11","VRTA11","GTWR11","GZIT11","GGRC11","GARE11","HABT11","HCTR11","HGBS11","HGCR11","HGLG11","HGRE11","HGRU11","HTMX11","HSAF11","HSLG11","HSML11","HFOF11","IRIM11","ITRI11","JSAF11","JSRE11","KISU11","KNRI11","KCRE11","KNHF11","KNHY11","KNIP11","KNCR11","KNSC11","KNUQ11","KFOF11","KIVO11","KORE11","LIFE11","LVBI11","MANA11","MCCI11","MCRE11","MXRF11","MFII11","OUJP11","PCIP11","PMLL11","PORD11","PSEC11","PVBI11","RPRI11","RBRL11","RBRP11","RBRR11","RBRX11","RBRY11","RECR11","RBFM11","RCRB11","RBVA11","RZAK11","RZTR11","TRBL11","SPXS11","SNCI11","SNEL11","SNFF11","TEPP11","TGAR11","TVRI11","TOPP11","TRXF11","URPR11","VGHF11","VGIP11","VGIR11","VCJR11","VGRI11","VILG11","VINO11","VISC11","VRTM11","WHGR11","XPCI11","XPIN11","XPLG11","XPML11","XPSF11"];
+    function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
+    function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+    window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });
+
+  </script>
+  <script src="busca.js"></script>
+
+  <script>
+    function showTab(tab) {
+      var altas = document.getElementById('panel-altas');
+      var quedas = document.getElementById('panel-quedas');
+      var tabAltas = document.getElementById('tab-altas');
+      var tabQuedas = document.getElementById('tab-quedas');
+      if (tab === 'altas') {
+        altas.classList.remove('hidden'); quedas.classList.add('hidden');
+        tabAltas.classList.add('text-emerald-500','border-b-2','border-emerald-500'); tabAltas.classList.remove('text-gray-500');
+        tabQuedas.classList.remove('text-red-500','border-b-2','border-red-500'); tabQuedas.classList.add('text-gray-500');
+      } else {
+        altas.classList.add('hidden'); quedas.classList.remove('hidden'); quedas.classList.remove('md:block');
+        tabQuedas.classList.add('text-red-500','border-b-2','border-red-500'); tabQuedas.classList.remove('text-gray-500');
+        tabAltas.classList.remove('text-emerald-500','border-b-2','border-emerald-500'); tabAltas.classList.add('text-gray-500');
+      }
+    }
+    function showRankTab(tab) {
+      var tabs = ['pagam','baratos','valorizacao','consistentes'];
+      var colors = {'pagam':'emerald','baratos':'blue','valorizacao':'purple','consistentes':'orange'};
+      tabs.forEach(function(t) {
+        var panel = document.getElementById('panel-rank-'+t);
+        var btn = document.getElementById('tab-rank-'+t);
+        if (t === tab) { panel.classList.remove('hidden'); btn.classList.add('text-'+colors[t]+'-500','border-b-2','border-'+colors[t]+'-500'); btn.classList.remove('text-gray-500'); }
+        else { panel.classList.add('hidden'); panel.classList.remove('md:block'); btn.classList.remove('text-'+colors[t]+'-500','border-b-2','border-'+colors[t]+'-500'); btn.classList.add('text-gray-500'); }
+      });
+    }
+  </script>
+
+</body>
+</html>

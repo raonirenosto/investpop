@@ -5,6 +5,8 @@ const https = require("https")
 const { gerarHtml } = require("./generators/pagina-index")
 const { gerarPaginaLista, gerarPaginaRanking } = require("./generators/pagina-lista")
 const { gerarPaginaDetalhe } = require("./generators/pagina-detalhe")
+const { gerarHtmlAcoes } = require("./generators/pagina-index-acoes")
+const { gerarPaginaListaAcoes, gerarPaginaRankingAcoes } = require("./generators/pagina-lista-acoes")
 const { gerarConsole } = require("./generators/pagina-console")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
@@ -21,6 +23,17 @@ function lerFiis() {
         return []
     }
     return fs.readFileSync("data/lista_fiis.txt", "utf-8")
+        .split(/[\r\n\s,]+/)
+        .map(l => l.trim().toUpperCase())
+        .filter(l => l)
+}
+
+function lerAcoes() {
+    if (!fs.existsSync("data/lista_acoes.txt")) {
+        console.log("⚠️ Arquivo data/lista_acoes.txt não encontrado")
+        return []
+    }
+    return fs.readFileSync("data/lista_acoes.txt", "utf-8")
         .split(/[\r\n\s,]+/)
         .map(l => l.trim().toUpperCase())
         .filter(l => l)
@@ -282,6 +295,161 @@ async function buscarRankings(tickers) {
 
 
 // ===============================
+// 📊 BUSCAR IBOV (Yahoo Finance)
+// ===============================
+
+async function buscarIbov() {
+    try {
+        const r = await axios.get("https://query1.finance.yahoo.com/v8/finance/chart/%5EBVSP?interval=1d&range=1d", {
+            httpsAgent: agentSemSSL,
+            headers: { "User-Agent": "Mozilla/5.0" }
+        })
+        const meta = r.data.chart.result[0].meta
+        const preco = meta.regularMarketPrice
+        const anterior = meta.chartPreviousClose
+        const varNum = ((preco - anterior) / anterior) * 100
+
+        const valor = Math.round(preco).toLocaleString('pt-BR')
+        const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
+
+        console.log(`📊 IBOV: ${valor} | ${variacao}`)
+        return { valor, variacao }
+    } catch (e) {
+        console.log(`❌ Erro ao buscar IBOV: ${e.message}`)
+        return { valor: "-", variacao: "-" }
+    }
+}
+
+// ===============================
+// 📊 BUSCAR AÇÕES (Yahoo Finance - batch)
+// ===============================
+
+async function buscarAcoes(tickers) {
+    const resultados = []
+    const batchSize = 20
+
+    for (let i = 0; i < tickers.length; i += batchSize) {
+        const batch = tickers.slice(i, i + batchSize)
+        const symbols = batch.map(t => t + '.SA').join(',')
+
+        try {
+            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=1d&interval=1d`, {
+                httpsAgent: agentSemSSL,
+                headers: { "User-Agent": "Mozilla/5.0" }
+            })
+
+            for (const ticker of batch) {
+                const dados = r.data[ticker + '.SA']
+                if (dados && dados.close && dados.close.length > 0) {
+                    const precoNum = dados.close[dados.close.length - 1]
+                    const anterior = dados.chartPreviousClose
+                    const varNum = anterior > 0 ? ((precoNum - anterior) / anterior) * 100 : 0
+
+                    const preco = precoNum.toFixed(2).replace(".", ",")
+                    const variacao = (varNum >= 0 ? "+" : "") + varNum.toFixed(2).replace(".", ",") + "%"
+
+                    resultados.push({ ticker, preco, variacao, varNum })
+                } else {
+                    resultados.push({ ticker, preco: "-", variacao: "0,00%", varNum: 0 })
+                }
+            }
+        } catch (e) {
+            for (const ticker of batch) {
+                resultados.push({ ticker, preco: "-", variacao: "0,00%", varNum: 0 })
+            }
+        }
+
+        if (i + batchSize < tickers.length) await new Promise(r => setTimeout(r, 500))
+    }
+
+    return resultados
+}
+
+// ===============================
+// 🏆 BUSCAR RANKINGS AÇÕES (Investidor 10)
+// ===============================
+
+async function buscarRankingsAcoes(tickers) {
+    const resultados = []
+    const startTime = Date.now()
+
+    // Buscar variação YTD via Yahoo Finance (batch)
+    const varAnoBatch = {}
+    for (let i = 0; i < tickers.length; i += 20) {
+        const batch = tickers.slice(i, i + 20)
+        const symbols = batch.map(t => t + '.SA').join(',')
+        try {
+            const rYtd = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=ytd&interval=1mo`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+            for (const t of batch) {
+                const dYtd = rYtd.data[t + '.SA']
+                if (dYtd && dYtd.close && dYtd.close.length > 0 && dYtd.chartPreviousClose > 0) {
+                    varAnoBatch[t] = ((dYtd.close[dYtd.close.length - 1] - dYtd.chartPreviousClose) / dYtd.chartPreviousClose) * 100
+                }
+            }
+        } catch (e) {}
+        if (i + 20 < tickers.length) await new Promise(r => setTimeout(r, 300))
+    }
+    console.log(`  Yahoo batch ações: ${Object.keys(varAnoBatch).length} YTD (${Date.now() - startTime}ms)`)
+
+    // Buscar DY e P/L via Investidor 10
+    for (let i = 0; i < tickers.length; i++) {
+        const t = tickers[i]
+        try {
+            const rPrincipal = await axios.get(`https://investidor10.com.br/acoes/${t.toLowerCase()}/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+            const html = rPrincipal.data
+
+            const dyMatch = html.match(/dividend\s*yield[^\d]*(\d+[,.]\d+)\s*%/i)
+            const plMatch = html.match(/P\/L[^\d]*(\d+[,.]\d+)/i)
+            const dy = dyMatch ? parseFloat(dyMatch[1].replace(',', '.')) : 0
+            const pl = plMatch ? parseFloat(plMatch[1].replace(',', '.')) : null
+
+            // Consistencia simples: buscar dividendos
+            let mesesConsistentes = 0
+            try {
+                const rDivs = await axios.get(`https://investidor10.com.br/acoes/${t.toLowerCase()}/dividendos/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+                const rendimentos = []
+                const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi
+                let trMatch
+                while ((trMatch = trRegex.exec(rDivs.data)) !== null) {
+                    const tds = []
+                    const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi
+                    let tdMatch
+                    while ((tdMatch = tdRegex.exec(trMatch[1])) !== null) {
+                        tds.push(tdMatch[1].replace(/<[^>]+>/g, '').trim())
+                    }
+                    if (tds.length >= 4 && (tds[0].toLowerCase().includes('dividendo') || tds[0].toLowerCase().includes('jcp'))) {
+                        rendimentos.push({ valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
+                    }
+                }
+                const cons = calcularMesesSemQuebra(rendimentos)
+                mesesConsistentes = cons.meses
+            } catch(e) {}
+
+            resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes })
+
+            if ((i + 1) % 10 === 0) console.log(`  Investidor 10 ações: ${i + 1}/${tickers.length} (${Date.now() - startTime}ms)`)
+        } catch (e) {
+            resultados.push({ ticker: t, dy: 0, pl: null, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 })
+        }
+        if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 500))
+    }
+
+    const allDY = resultados.filter(r => r.dy > 0).sort((a, b) => b.dy - a.dy)
+        .map(r => ({ ticker: r.ticker, valor: r.dy.toFixed(2).replace('.', ',') + '%' }))
+    const allBaratos = resultados.filter(r => r.pl && r.pl > 0).sort((a, b) => a.pl - b.pl)
+        .map(r => ({ ticker: r.ticker, valor: r.pl.toFixed(2).replace('.', ',') }))
+    const allVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno)
+        .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
+    const allConsistentes = resultados.sort((a, b) => b.mesesConsistentes - a.mesesConsistentes)
+        .map(r => ({ ticker: r.ticker, valor: r.mesesConsistentes + ' meses' }))
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
+    console.log(`🏆 Rankings ações: DY(${allDY.length}) | Baratos(${allBaratos.length}) | Var.Ano(${allVarAno.length}) | Consistentes(${allConsistentes.length}) | Tempo: ${elapsed}s`)
+    return { topDY: allDY.slice(0, 5), topBaratos: allBaratos.slice(0, 5), topVarAno: allVarAno.slice(0, 5), topConsistentes: allConsistentes.slice(0, 5), allDY, allBaratos, allVarAno, allConsistentes }
+}
+
+
+// ===============================
 // 🚀 MAIN
 // ===============================
 
@@ -342,6 +510,30 @@ async function main() {
 
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
             fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
+
+            // Gerar páginas de ações (via cache)
+            const acoes = lerAcoes()
+            console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
+            const ibovData = await buscarIbov()
+            const resAcoes = await buscarAcoes(acoes)
+            const todasAltasAcoes = resAcoes.filter(r => r.varNum > 0).sort((a, b) => b.varNum - a.varNum)
+            const todasQuedasAcoes = resAcoes.filter(r => r.varNum < 0).sort((a, b) => a.varNum - b.varNum)
+            const altasAcoes = todasAltasAcoes.slice(0, 5)
+            const quedasAcoes = todasQuedasAcoes.slice(0, 5)
+            console.log(`📈 Ações altas: ${todasAltasAcoes.length} | 📉 Quedas: ${todasQuedasAcoes.length}`)
+
+            console.log("\n🏆 Buscando rankings de ações...")
+            const rankingsAcoes = await buscarRankingsAcoes(acoes)
+
+            fs.writeFileSync(path.join(pasta, "acoes.html"), gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
+            fs.writeFileSync(path.join(pasta, "acoes-altas.html"), gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
+            fs.writeFileSync(path.join(pasta, "acoes-quedas.html"), gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
+            fs.writeFileSync(path.join(pasta, "acoes-ranking-dy.html"), gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
+            fs.writeFileSync(path.join(pasta, "acoes-ranking-baratos.html"), gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
+            fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
+            fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
+            console.log("✅ Páginas de ações geradas")
+
             console.log("\n✅ Páginas geradas em pages/ (via cache)")
 
             if (args.includes("--serve")) {
@@ -399,6 +591,29 @@ async function main() {
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
     fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
+
+    // Gerar páginas de ações
+    const acoes = lerAcoes()
+    console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
+    const ibovData = await buscarIbov()
+    const resAcoes = await buscarAcoes(acoes)
+    const todasAltasAcoes = resAcoes.filter(r => r.varNum > 0).sort((a, b) => b.varNum - a.varNum)
+    const todasQuedasAcoes = resAcoes.filter(r => r.varNum < 0).sort((a, b) => a.varNum - b.varNum)
+    const altasAcoes = todasAltasAcoes.slice(0, 5)
+    const quedasAcoes = todasQuedasAcoes.slice(0, 5)
+    console.log(`📈 Ações altas: ${todasAltasAcoes.length} | 📉 Quedas: ${todasQuedasAcoes.length}`)
+
+    console.log("\n🏆 Buscando rankings de ações...")
+    const rankingsAcoes = await buscarRankingsAcoes(acoes)
+
+    fs.writeFileSync(path.join(pasta, "acoes.html"), gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
+    fs.writeFileSync(path.join(pasta, "acoes-altas.html"), gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "acoes-quedas.html"), gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
+    fs.writeFileSync(path.join(pasta, "acoes-ranking-dy.html"), gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "acoes-ranking-baratos.html"), gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
+    fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
+    fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
+    console.log("✅ Páginas de ações geradas")
 
     console.log("\n✅ Páginas geradas em pages/")
 

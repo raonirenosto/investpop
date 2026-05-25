@@ -399,6 +399,57 @@ async function testarSemBotaoVoltar() {
     }
 }
 
+async function testarPaginaAcoes() {
+    console.log('\n🔍 TESTE 15 — Página de ações gerada com dados (#34)')
+
+    const acoes = path.join(PAGES_DIR, 'acoes.html')
+    if (!fs.existsSync(acoes)) {
+        totalFalhou++
+        console.log('   ❌ acoes.html não existe')
+        console.log('   Status: ❌ FALHOU')
+        return
+    }
+
+    const html = fs.readFileSync(acoes, 'utf-8')
+    let ok = true
+
+    const checks = {
+        ibov: html.includes('IBOV Hoje'),
+        altas: html.includes('Maiores Altas do Dia'),
+        quedas: html.includes('Maiores Quedas do Dia'),
+        rankDY: html.includes('Mais Pagam'),
+        rankPL: html.includes('Mais Baratos') && html.includes('P/L'),
+        rankVar: html.includes('Valoriza'),
+        rankCons: html.includes('Consistentes'),
+        navAcoes: html.includes('acoes.html'),
+    }
+
+    const falhas = Object.entries(checks).filter(([k, v]) => !v).map(([k]) => k)
+    if (falhas.length > 0) {
+        ok = false
+        console.log('   ❌ Faltando: ' + falhas.join(', '))
+    }
+
+    // Verificar que tem tickers reais
+    const temTicker = html.match(/hover:underline">([A-Z]{4}\d{1,2})<\/a>/)
+    if (!temTicker) { ok = false; console.log('   ❌ Sem tickers de ações') }
+
+    // Verificar páginas auxiliares
+    const auxiliares = ['acoes-altas.html', 'acoes-quedas.html', 'acoes-ranking-dy.html', 'acoes-ranking-baratos.html', 'acoes-ranking-valorizacao.html', 'acoes-ranking-consistentes.html']
+    for (const a of auxiliares) {
+        if (!fs.existsSync(path.join(PAGES_DIR, a))) { ok = false; console.log('   ❌ ' + a + ' não existe') }
+    }
+
+    if (ok) {
+        totalPassou++
+        console.log('   ✅ Página de ações completa (IBOV, altas/quedas, rankings com P/L, páginas auxiliares)')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
@@ -455,6 +506,7 @@ async function main() {
     await testarBotaoLimparRemovido()
     await testarCardTopsAltasQuedas()
     await testarSemBotaoVoltar()
+    await testarPaginaAcoes()
 
     await browser.close()
 
