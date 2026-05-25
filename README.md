@@ -23,3 +23,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.8.5** — Fix link FIIs (navega para index.html em vez de modal), detalhes regenerados no --cache, 13 testes de busca
 - **v0.9.0** — Abas de filtro temporal no console (Hoje, Esta Semana, Mais Antigo), aba Hoje ativa por padrão, 5 testes enhancements
 - **v0.9.1** — Fix abas no gerador/deploy, msg "Nenhum acesso" quando vazio, remove filtro, gráfico cardiograma (line), 9 testes enhancements
+- **v0.9.2** — Fix console quebrado (syntax JS, botão Limpar posicionado, tabela escondida sem dados, console.js no gerar), 12 testes enhancements
