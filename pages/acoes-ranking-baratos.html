@@ -53,15 +53,10 @@
         <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
       </div>
     </div>
-    <div class="flex md:hidden items-center gap-4">
+    <div class="flex md:hidden items-center">
       <button class="text-gray-400 busca-mobile-trigger">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-      </button>
-      <button onclick="emBreve(event)" class="text-gray-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </div>
@@ -85,7 +80,7 @@
           <tr class="text-gray-500 text-xs">
             <th class="text-left pb-2 font-medium">#</th>
             <th class="text-left pb-2 font-medium">Ação</th>
-            <th class="text-right pb-2 font-medium">P/L</th>
+            <th class="text-right pb-2 font-medium">P/L <span class="tooltip-trigger" data-tooltip="tooltip-col"><svg class="w-4 h-4 inline cursor-pointer" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#475569" stroke="#64748b" stroke-width="1.5"/><path d="M12 16v-4" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1" fill="white"/></svg></span></th>
           </tr>
         </thead>
         <tbody id="tabela-body" class="text-gray-200">
@@ -117,7 +112,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">5</td>
             <td class="py-2.5 font-medium"><a href="acoes/CSAN3.html" class="hover:underline">CSAN3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">1,81</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">1,82</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -135,7 +130,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">8</td>
             <td class="py-2.5 font-medium"><a href="acoes/CSNA3.html" class="hover:underline">CSNA3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">4,44</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">4,47</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -147,7 +142,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">10</td>
             <td class="py-2.5 font-medium"><a href="acoes/MRVE3.html" class="hover:underline">MRVE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">4,62</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">4,63</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -158,20 +153,20 @@
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">12</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CYRE3.html" class="hover:underline">CYRE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">5,06</td>
+            <td class="py-2.5 font-medium"><a href="acoes/AZZA3.html" class="hover:underline">AZZA3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">5,18</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">13</td>
-            <td class="py-2.5 font-medium"><a href="acoes/AZZA3.html" class="hover:underline">AZZA3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">5,13</td>
+            <td class="py-2.5 font-medium"><a href="acoes/PETR4.html" class="hover:underline">PETR4</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">5,18</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">14</td>
-            <td class="py-2.5 font-medium"><a href="acoes/PETR4.html" class="hover:underline">PETR4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">5,19</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CYRE3.html" class="hover:underline">CYRE3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">5,24</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -183,19 +178,19 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">16</td>
             <td class="py-2.5 font-medium"><a href="acoes/PETR3.html" class="hover:underline">PETR3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">5,85</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">5,83</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">17</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CASH3.html" class="hover:underline">CASH3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">6,66</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CMIG4.html" class="hover:underline">CMIG4</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">6,67</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">18</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CMIG4.html" class="hover:underline">CMIG4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">6,67</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CASH3.html" class="hover:underline">CASH3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">6,74</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -219,13 +214,13 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">22</td>
             <td class="py-2.5 font-medium"><a href="acoes/COGN3.html" class="hover:underline">COGN3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">7,74</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">7,80</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">23</td>
             <td class="py-2.5 font-medium"><a href="acoes/SANB11.html" class="hover:underline">SANB11</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">8,03</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">8,02</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -243,13 +238,13 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">26</td>
             <td class="py-2.5 font-medium"><a href="acoes/CPFE3.html" class="hover:underline">CPFE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">8,63</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">8,65</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">27</td>
             <td class="py-2.5 font-medium"><a href="acoes/ITSA4.html" class="hover:underline">ITSA4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">8,64</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">8,65</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -267,31 +262,31 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">30</td>
             <td class="py-2.5 font-medium"><a href="acoes/HYPE3.html" class="hover:underline">HYPE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">9,56</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">9,58</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">31</td>
-            <td class="py-2.5 font-medium"><a href="acoes/BBAS3.html" class="hover:underline">BBAS3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">9,67</td>
+            <td class="py-2.5 font-medium"><a href="acoes/ITUB4.html" class="hover:underline">ITUB4</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">9,69</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">32</td>
-            <td class="py-2.5 font-medium"><a href="acoes/ITUB4.html" class="hover:underline">ITUB4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">9,67</td>
+            <td class="py-2.5 font-medium"><a href="acoes/LWSA3.html" class="hover:underline">LWSA3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">9,77</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">33</td>
-            <td class="py-2.5 font-medium"><a href="acoes/LWSA3.html" class="hover:underline">LWSA3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">9,70</td>
+            <td class="py-2.5 font-medium"><a href="acoes/BBAS3.html" class="hover:underline">BBAS3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">9,80</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">34</td>
             <td class="py-2.5 font-medium"><a href="acoes/LREN3.html" class="hover:underline">LREN3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">10,32</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">10,43</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -309,7 +304,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">37</td>
             <td class="py-2.5 font-medium"><a href="acoes/BRAP4.html" class="hover:underline">BRAP4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">11,57</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">11,63</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -327,25 +322,25 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">40</td>
             <td class="py-2.5 font-medium"><a href="acoes/CXSE3.html" class="hover:underline">CXSE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">12,02</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">12,05</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">41</td>
             <td class="py-2.5 font-medium"><a href="acoes/IRBR3.html" class="hover:underline">IRBR3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">12,29</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">12,28</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">42</td>
             <td class="py-2.5 font-medium"><a href="acoes/BPAC11.html" class="hover:underline">BPAC11</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">12,36</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">12,49</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">43</td>
             <td class="py-2.5 font-medium"><a href="acoes/TIMS3.html" class="hover:underline">TIMS3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">12,46</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">12,49</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -369,7 +364,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">47</td>
             <td class="py-2.5 font-medium"><a href="acoes/ALPA4.html" class="hover:underline">ALPA4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">13,80</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">13,89</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -399,13 +394,13 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">52</td>
             <td class="py-2.5 font-medium"><a href="acoes/ABEV3.html" class="hover:underline">ABEV3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">16,57</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">16,56</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">53</td>
             <td class="py-2.5 font-medium"><a href="acoes/VIVT3.html" class="hover:underline">VIVT3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">17,01</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">17,02</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -417,31 +412,31 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">55</td>
             <td class="py-2.5 font-medium"><a href="acoes/RDOR3.html" class="hover:underline">RDOR3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">17,14</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">17,19</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">56</td>
-            <td class="py-2.5 font-medium"><a href="acoes/B3SA3.html" class="hover:underline">B3SA3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">17,27</td>
+            <td class="py-2.5 font-medium"><a href="acoes/ALOS3.html" class="hover:underline">ALOS3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">17,50</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">57</td>
-            <td class="py-2.5 font-medium"><a href="acoes/ALOS3.html" class="hover:underline">ALOS3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">17,41</td>
+            <td class="py-2.5 font-medium"><a href="acoes/B3SA3.html" class="hover:underline">B3SA3</a></td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">17,70</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">58</td>
             <td class="py-2.5 font-medium"><a href="acoes/TOTS3.html" class="hover:underline">TOTS3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">20,55</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">20,63</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">59</td>
             <td class="py-2.5 font-medium"><a href="acoes/PRIO3.html" class="hover:underline">PRIO3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">22,04</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">21,84</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -465,19 +460,19 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">63</td>
             <td class="py-2.5 font-medium"><a href="acoes/GOAU4.html" class="hover:underline">GOAU4</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">23,86</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">23,89</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">64</td>
             <td class="py-2.5 font-medium"><a href="acoes/SLCE3.html" class="hover:underline">SLCE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">24,86</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">24,92</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">65</td>
             <td class="py-2.5 font-medium"><a href="acoes/RADL3.html" class="hover:underline">RADL3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">24,90</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">24,99</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -489,7 +484,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">67</td>
             <td class="py-2.5 font-medium"><a href="acoes/RAIL3.html" class="hover:underline">RAIL3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">25,79</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">25,89</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -501,7 +496,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">69</td>
             <td class="py-2.5 font-medium"><a href="acoes/WEGE3.html" class="hover:underline">WEGE3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">28,99</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">28,94</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -513,7 +508,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">71</td>
             <td class="py-2.5 font-medium"><a href="acoes/KLBN11.html" class="hover:underline">KLBN11</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">29,96</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">30,03</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -531,7 +526,7 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">74</td>
             <td class="py-2.5 font-medium"><a href="acoes/QUAL3.html" class="hover:underline">QUAL3</a></td>
-            <td class="py-2.5 text-right text-blue-400 font-medium">31,51</td>
+            <td class="py-2.5 text-right text-blue-400 font-medium">32,07</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -561,6 +556,31 @@
       </table>
     </div>
   </main>
+
+<div id="tooltip-col" class="tooltip-box hidden"><div class="flex items-center justify-between mb-2"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center text-[10px] font-bold text-blue-400">P/L</span><span class="font-semibold text-sm text-gray-100">Pre&ccedil;o sobre Lucro</span></div><button onclick="closeTooltip()" class="text-gray-500 hover:text-gray-300 text-lg leading-none">&times;</button></div><p class="text-xs text-gray-400 mb-2">Quantos anos de lucro atual seriam necess&aacute;rios para pagar o pre&ccedil;o da a&ccedil;&atilde;o.</p><p class="text-[10px] text-emerald-400 font-medium mb-1">Como interpretar</p><ul class="text-[11px] text-gray-400 space-y-0.5"><li>&bull; P/L baixo &rarr; pode indicar a&ccedil;&atilde;o barata</li><li>&bull; P/L alto &rarr; mercado espera crescimento</li><li>&bull; Comparar com empresas do mesmo setor</li></ul></div>
+
+  <style>
+    .tooltip-box {
+      position: fixed;
+      z-index: 9999;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 260px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    @media (max-width: 768px) {
+      .tooltip-box {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 16px 16px 0 0;
+        padding: 20px;
+      }
+    }
+  </style>
 
 
   <footer class="flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-4 border-t border-card-border gap-2">
@@ -613,6 +633,35 @@
         tr.style.display = ticker.toUpperCase().includes(termo) ? '' : 'none';
       });
     }
+    (function() {
+      var trigger = document.querySelector('.tooltip-trigger');
+      var tooltip = document.getElementById('tooltip-col');
+      if (!trigger || !tooltip) return;
+      trigger.addEventListener('mouseenter', function(e) {
+        if (window.innerWidth < 768) return;
+        var rect = e.target.getBoundingClientRect();
+        tooltip.style.position = 'fixed';
+        tooltip.style.top = (rect.bottom + 8) + 'px';
+        tooltip.style.left = Math.max(8, Math.min(rect.left - 100, window.innerWidth - 276)) + 'px';
+        tooltip.style.bottom = '';
+        tooltip.classList.remove('hidden');
+      });
+      trigger.addEventListener('mouseleave', function() {
+        if (window.innerWidth < 768) return;
+        tooltip.classList.add('hidden');
+      });
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        if (window.innerWidth < 768) {
+          tooltip.style.position = 'fixed'; tooltip.style.left = '0'; tooltip.style.right = '0'; tooltip.style.bottom = '0'; tooltip.style.top = '';
+        }
+        tooltip.classList.toggle('hidden');
+      });
+      window.closeTooltip = function() { tooltip.classList.add('hidden'); };
+      document.addEventListener('click', function(e) {
+        if (!tooltip.contains(e.target) && !e.target.closest('.tooltip-trigger')) tooltip.classList.add('hidden');
+      });
+    })();
   </script>
 
 </body>

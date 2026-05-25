@@ -450,6 +450,49 @@ async function testarPaginaAcoes() {
     }
 }
 
+async function testarTooltipsAcoes() {
+    console.log('\n🔍 TESTE 16 — Tooltips informativos nos rankings de ações (#35)')
+
+    const paginas = ['acoes-ranking-dy.html', 'acoes-ranking-baratos.html', 'acoes-ranking-valorizacao.html', 'acoes-ranking-consistentes.html']
+    let ok = true
+
+    for (const p of paginas) {
+        const filePath = path.join(PAGES_DIR, p)
+        if (!fs.existsSync(filePath)) { ok = false; console.log('   ❌ ' + p + ' não existe'); continue }
+        const html = fs.readFileSync(filePath, 'utf-8')
+        if (!html.includes('tooltip-trigger') || !html.includes('tooltip-col')) {
+            ok = false
+            console.log('   ❌ ' + p + ': sem tooltip')
+        }
+    }
+
+    if (ok) {
+        totalPassou++
+        console.log('   ✅ Todos os rankings de ações têm tooltips')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarSemHamburguer() {
+    console.log('\n🔍 TESTE 17 — Header mobile sem botão hamburguer (#36)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const temHamburguer = html.includes('M4 6h16M4 12h16M4 18h16')
+
+    if (!temHamburguer) {
+        totalPassou++
+        console.log('   ✅ Botão hamburguer removido do header mobile')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Botão hamburguer ainda presente')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
@@ -507,6 +550,8 @@ async function main() {
     await testarCardTopsAltasQuedas()
     await testarSemBotaoVoltar()
     await testarPaginaAcoes()
+    await testarTooltipsAcoes()
+    await testarSemHamburguer()
 
     await browser.close()
 
