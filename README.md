@@ -33,3 +33,4 @@ https://raonirenosto.github.io/investpop/
 - **v1.0.1** — Tooltips informativos nos rankings de ações (#35), remove botão hamburguer mobile (#36), 17 testes enhancements
 - **v1.0.2** — Fix detalhe ações 404 (#37), busca unificada FIIs+Ações (#38), 80 páginas de detalhe, 19 testes enhancements
 - **v1.0.3** — Fix tooltips na index de ações (#39), fix busca no detalhe de ações (#40), 19 testes enhancements
+- **v1.1.0** — Busca unificada todas as páginas (#44), consistência anual ações (#41), detalhe ações completo (#42), busca por nome (#43), 19 testes enhancements
