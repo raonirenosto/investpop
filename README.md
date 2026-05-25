@@ -26,3 +26,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.9.2** — Fix console quebrado (syntax JS, botão Limpar posicionado, tabela escondida sem dados, console.js no gerar), 12 testes enhancements
 - **v0.9.3** — Remove botão Limpar, troca aba "Esta Semana" por "Ontem" (filtro dinâmico), "Mais Antigo" = tudo antes de ontem, 12 testes enhancements
 - **v0.9.4** — Fix lupa mobile dispara modal "Em breve" no iPhone (#29), fix link FIIs no bottom nav (#17), 14 testes de busca
+- **v0.9.5** — Fix foco busca mobile em páginas de detalhe iOS (#30), teste foco em todas as páginas (mobile+tablet), 15 testes de busca
