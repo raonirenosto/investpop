@@ -6,6 +6,7 @@
  *
  * #6  - Mostrar em quais tops o FII aparece na página de detalhe
  * #11 - Focar automaticamente no campo ao abrir busca mobile
+ * #18 - Abas de filtro temporal no console (Hoje, Esta Semana, Mais Antigo)
  *
  * Execução: nvm use 20 && node tests/validacao-enhancements.js
  */
@@ -127,6 +128,58 @@ async function testarFocoAutomatico(browser) {
 }
 
 // ===============================
+// #18 - Abas de filtro temporal no console
+// ===============================
+
+async function testarAbasTemporalConsole() {
+    console.log('\n🔍 TESTE 4 — Abas de filtro temporal no console (#18)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
+
+    const temAbaHoje = html.includes('aba-hoje') || (html.includes('data-periodo="hoje"'))
+    const temAbaSemana = html.includes('aba-semana') || (html.includes('data-periodo="semana"'))
+    const temAbaAntigo = html.includes('aba-antigo') || (html.includes('data-periodo="antigo"'))
+
+    if (temAbaHoje && temAbaSemana && temAbaAntigo) {
+        totalPassou++
+        console.log('   ✅ Console tem abas: Hoje, Esta Semana, Mais Antigo')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Abas faltando: hoje=' + temAbaHoje + ' semana=' + temAbaSemana + ' antigo=' + temAbaAntigo)
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarAbaHojePadrao(browser) {
+    console.log('\n🔍 TESTE 5 — Aba "Hoje" selecionada por padrão no console (#18)')
+
+    const page = await browser.newPage()
+    await page.goto('file://' + path.join(PAGES_DIR, 'console.html'), { waitUntil: 'domcontentloaded' })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var abaHoje = document.querySelector('[data-periodo="hoje"]')
+        if (!abaHoje) return { encontrou: false }
+        var classes = abaHoje.className
+        var ativo = classes.includes('emerald') || classes.includes('active') || abaHoje.getAttribute('aria-selected') === 'true'
+        return { encontrou: true, ativo: ativo }
+    })
+
+    await page.close()
+
+    if (resultado.encontrou && resultado.ativo) {
+        totalPassou++
+        console.log('   ✅ Aba "Hoje" está ativa por padrão')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Aba "Hoje" não está ativa: encontrou=' + resultado.encontrou + ' ativo=' + (resultado.ativo || false))
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+// ===============================
 // Main
 // ===============================
 
@@ -138,6 +191,7 @@ async function main() {
     console.log('╠══════════════════════════════════════════════════════════════╣')
     console.log('║  #6  Card de tops na página de detalhe                      ║')
     console.log('║  #11 Foco automático na busca mobile                        ║')
+    console.log('║  #18 Abas de filtro temporal no console                      ║')
     console.log('╚══════════════════════════════════════════════════════════════╝')
 
     await testarCardTops()
@@ -148,6 +202,8 @@ async function main() {
     console.log('✅ Browser pronto')
 
     await testarFocoAutomatico(browser)
+    await testarAbasTemporalConsole()
+    await testarAbaHojePadrao(browser)
 
     await browser.close()
 

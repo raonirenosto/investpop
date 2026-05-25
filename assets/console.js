@@ -1,6 +1,7 @@
 var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw5g5LIgPk0xtQ9mxolmrc1yZfMJggyHlkCNbzGRA6OcQABdthqqyLaGWzVFzRv-XOrYA/exec';
 var CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxWt4f-DM6zyWLtpBvA_8CY48e09dGTtnBs65itOeg3LvOhKJW1JEpEkikHiArDJn501UHWx529j7/pub?output=csv';
 var dados = [];
+var periodoAtual = 'hoje';
 
 function getBrowser(ua) {
   if(ua.includes('Edg')) return '<img src="https://cdn.jsdelivr.net/gh/alrra/browser-logos@main/src/edge/edge.svg" style="width:20px;height:20px;max-width:none;display:inline" title="Edge">';
@@ -97,8 +98,45 @@ function isBot(d) {
   return false;
 }
 
+function setPeriodo(p) {
+  periodoAtual = p;
+  document.querySelectorAll('[data-periodo]').forEach(function(btn) {
+    if (btn.getAttribute('data-periodo') === p) {
+      btn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg border border-emerald-500 bg-emerald-500/20 text-emerald-400';
+    } else {
+      btn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white';
+    }
+  });
+  aplicarFiltros();
+}
+
+function filtrarPorPeriodo(lista) {
+  var agora = new Date();
+  var hoje = agora.toLocaleDateString('pt-BR');
+  var inicioSemana = new Date(agora);
+  inicioSemana.setDate(agora.getDate() - agora.getDay());
+  inicioSemana.setHours(0,0,0,0);
+
+  return lista.filter(function(d) {
+    if (!d.data) return false;
+    if (periodoAtual === 'hoje') {
+      return d.data.includes(hoje);
+    } else if (periodoAtual === 'semana') {
+      var partes = d.data.split(',')[0].trim().split('/');
+      if (partes.length < 3) return false;
+      var dataReg = new Date(partes[2], partes[1]-1, partes[0]);
+      return dataReg >= inicioSemana && !d.data.includes(hoje);
+    } else {
+      var partes2 = d.data.split(',')[0].trim().split('/');
+      if (partes2.length < 3) return false;
+      var dataReg2 = new Date(partes2[2], partes2[1]-1, partes2[0]);
+      return dataReg2 < inicioSemana;
+    }
+  });
+}
+
 function aplicarFiltros() {
-  var filtrados = dados;
+  var filtrados = filtrarPorPeriodo(dados);
   if(document.getElementById('filtro-bots').checked) {
     filtrados = filtrados.filter(function(d){ return !isBot(d); });
   }
