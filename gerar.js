@@ -330,6 +330,14 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
             fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
             fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
+
+            // Gerar páginas de detalhe (via cache)
+            const pastaFiisCache = path.join(pasta, "fiis")
+            if (!fs.existsSync(pastaFiisCache)) fs.mkdirSync(pastaFiisCache)
+            for (const det of rankings.detalhes) {
+                fs.writeFileSync(path.join(pastaFiisCache, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings))
+            }
+
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
             console.log("\n✅ Páginas geradas em pages/ (via cache)")
 

@@ -544,8 +544,63 @@ async function testarSemItensNavDesnecessarios(browser) {
     }
 }
 
+async function testarLinkFIIsNavega(browser) {
+    console.log('\n🔍 TESTE 10 — Link "FIIs" navega para index.html (#17)')
+
+    var ok = true
+    var paginas = ['index.html', 'fiis/HGLG11.html']
+
+    for (var p of paginas) {
+        const page = await browser.newPage()
+        await page.goto('file://' + path.join(PAGES_DIR, p), { waitUntil: 'domcontentloaded' })
+        await new Promise(r => setTimeout(r, 500))
+
+        const resultado = await page.evaluate(() => {
+            // Verificar link FIIs no header desktop
+            var headerLinks = document.querySelectorAll('nav .hidden.md\\:flex a')
+            var fiisLink = null
+            headerLinks.forEach(function(a) {
+                if (a.textContent.trim() === 'FIIs') fiisLink = a
+            })
+            var headerOk = fiisLink && fiisLink.getAttribute('href') && fiisLink.getAttribute('href') !== '#' && !fiisLink.getAttribute('onclick')
+            var headerHref = fiisLink ? fiisLink.getAttribute('href') : null
+            var headerOnclick = fiisLink ? fiisLink.getAttribute('onclick') : null
+
+            // Verificar link FIIs no bottom nav mobile
+            var bottomNavLinks = document.querySelectorAll('nav.fixed a, nav[class*="fixed"] a')
+            var fiisBottomLink = null
+            bottomNavLinks.forEach(function(a) {
+                if (a.textContent.includes('FIIs')) fiisBottomLink = a
+            })
+            var bottomOk = fiisBottomLink && fiisBottomLink.getAttribute('href') && fiisBottomLink.getAttribute('href') !== '#' && !fiisBottomLink.getAttribute('onclick')
+            var bottomHref = fiisBottomLink ? fiisBottomLink.getAttribute('href') : null
+            var bottomOnclick = fiisBottomLink ? fiisBottomLink.getAttribute('onclick') : null
+
+            return { headerOk: headerOk, headerHref: headerHref, headerOnclick: headerOnclick, bottomOk: bottomOk, bottomHref: bottomHref, bottomOnclick: bottomOnclick }
+        })
+
+        await page.close()
+
+        if (resultado.headerOk) {
+            console.log('   ✅ ' + p + ' header: FIIs → ' + resultado.headerHref + ' (sem onclick)')
+        } else {
+            ok = false
+            console.log('   ❌ ' + p + ' header: FIIs incorreto (href=' + resultado.headerHref + ', onclick=' + resultado.headerOnclick + ')')
+        }
+        if (resultado.bottomOk) {
+            console.log('   ✅ ' + p + ' bottom nav: FIIs → ' + resultado.bottomHref + ' (sem onclick)')
+        } else {
+            ok = false
+            console.log('   ❌ ' + p + ' bottom nav: FIIs incorreto (href=' + resultado.bottomHref + ', onclick=' + resultado.bottomOnclick + ')')
+        }
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: ✅ PASSOU') }
+    else { totalFalhou++; console.log('   Status: ❌ FALHOU') }
+}
+
 async function testarTabletBusca(browser) {
-    console.log('\n🔍 TESTE 10 — Busca visível no tablet retrato (768px)')
+    console.log('\n🔍 TESTE 11 — Busca visível no tablet retrato (768px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 768, height: 1024 })
@@ -573,7 +628,7 @@ async function testarTabletBusca(browser) {
 }
 
 async function testarTabsRanking(browser) {
-    console.log('\n🔍 TESTE 11 — Tabs de ranking não cortadas no mobile (414px)')
+    console.log('\n🔍 TESTE 12 — Tabs de ranking não cortadas no mobile (414px)')
 
     const page = await browser.newPage()
     await page.setViewport({ width: 414, height: 896 })
@@ -610,7 +665,7 @@ async function testarTabsRanking(browser) {
 }
 
 async function testarNavegacao(browser) {
-    console.log('\n🔍 TESTE 12 — Navegação busca → detalhe')
+    console.log('\n🔍 TESTE 13 — Navegação busca → detalhe')
 
     const page = await browser.newPage()
     await page.goto('file://' + path.join(PAGES_DIR, 'index.html'), { waitUntil: 'domcontentloaded' })
@@ -679,6 +734,7 @@ async function main() {
     await testarModalEmBreveNaoAbreAoVoltar(browser)
     await testarInputBuscaSemZoom(browser)
     await testarSemItensNavDesnecessarios(browser)
+    await testarLinkFIIsNavega(browser)
     await testarTabletBusca(browser)
     await testarTabsRanking(browser)
     await testarNavegacao(browser)

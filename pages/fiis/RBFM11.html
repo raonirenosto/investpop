@@ -42,11 +42,8 @@
       <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
     </a>
     <div class="hidden md:flex items-center gap-6 text-sm">
-      <a href="#" onclick="emBreve(event)" class="text-emerald-500 font-medium">FIIs</a>
+      <a href="../index.html" class="text-emerald-500 font-medium">FIIs</a>
       <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ações</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Ferramentas</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Sobre</a>
-      <a href="#" onclick="emBreve(event)" class="text-gray-400 hover:text-white">Contato</a>
     </div>
     <div class="hidden md:flex items-center gap-3">
       <div class="flex items-center bg-card border border-card-border rounded-md px-3 py-1.5 gap-2">
@@ -55,12 +52,6 @@
         </svg>
         <input type="text" placeholder="Buscar FII, ticker..." class="bg-transparent text-sm text-gray-300 outline-none w-40" />
       </div>
-      <button onclick="emBreve(event)" class="text-gray-400 hover:text-white">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-      </button>
     </div>
     <div class="flex md:hidden items-center gap-4">
       <button onclick="emBreve(event)" class="text-gray-400">
@@ -227,7 +218,7 @@
   </footer>
 
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
-    <a href="#" onclick="emBreve(event)" class="flex flex-col items-center gap-1 text-emerald-500">
+    <a href="../index.html" class="flex flex-col items-center gap-1 text-emerald-500">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
       <span class="text-[10px] font-medium">FIIs</span>
     </a>
@@ -252,6 +243,7 @@
     var FIIS_LISTA = ["CACR11","AFHI11","ALZR11","RZAT11","FATN11","AZPL11","BBIG11","BRCR11","BCIA11","BCRI11","BRCO11","BROF11","BTAL11","BTCI11","BPML11","BTHF11","BTLG11","CPTS11","ICRI11","CLIN11","CPSH11","CYCR11","DEVA11","VRTA11","GTWR11","GZIT11","GGRC11","GARE11","HABT11","HCTR11","HGBS11","HGCR11","HGLG11","HGRE11","HGRU11","HTMX11","HSAF11","HSLG11","HSML11","HFOF11","IRIM11","ITRI11","JSAF11","JSRE11","KISU11","KNRI11","KCRE11","KNHF11","KNHY11","KNIP11","KNCR11","KNSC11","KNUQ11","KFOF11","KIVO11","KORE11","LIFE11","LVBI11","MANA11","MCCI11","MCRE11","MXRF11","MFII11","OUJP11","PCIP11","PMLL11","PORD11","PSEC11","PVBI11","RPRI11","RBRL11","RBRP11","RBRR11","RBRX11","RBRY11","RECR11","RBFM11","RCRB11","RBVA11","RZAK11","RZTR11","TRBL11","SPXS11","SNCI11","SNEL11","SNFF11","TEPP11","TGAR11","TVRI11","TOPP11","TRXF11","URPR11","VGHF11","VGIP11","VGIR11","VCJR11","VGRI11","VILG11","VINO11","VISC11","VRTM11","WHGR11","XPCI11","XPIN11","XPLG11","XPML11","XPSF11"];
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
+    window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });
 
   </script>
   <script src="../busca.js"></script>
