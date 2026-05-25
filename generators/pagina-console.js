@@ -36,9 +36,8 @@ ${headerHtml()}
 
     <div class="flex items-center gap-2 mb-4">
       <button data-periodo="hoje" onclick="setPeriodo('hoje')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-emerald-500 bg-emerald-500/20 text-emerald-400">Hoje</button>
-      <button data-periodo="semana" onclick="setPeriodo('semana')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Esta Semana</button>
+      <button data-periodo="ontem" onclick="setPeriodo('ontem')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Ontem</button>
       <button data-periodo="antigo" onclick="setPeriodo('antigo')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Mais Antigo</button>
-      <button onclick="limparDados()" class="ml-auto px-3 py-1.5 bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-medium rounded-lg hover:bg-red-500/30">&#128465; Limpar</button>
     </div>
 
     <div class="mb-4">

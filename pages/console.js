@@ -122,24 +122,18 @@ function setPeriodo(p) {
 function filtrarPorPeriodo(lista) {
   var agora = new Date();
   var hoje = agora.toLocaleDateString('pt-BR');
-  var inicioSemana = new Date(agora);
-  inicioSemana.setDate(agora.getDate() - agora.getDay());
-  inicioSemana.setHours(0,0,0,0);
+  var ontem = new Date(agora);
+  ontem.setDate(agora.getDate() - 1);
+  var ontemStr = ontem.toLocaleDateString('pt-BR');
 
   return lista.filter(function(d) {
     if (!d.data) return false;
     if (periodoAtual === 'hoje') {
       return d.data.includes(hoje);
-    } else if (periodoAtual === 'semana') {
-      var partes = d.data.split(',')[0].trim().split('/');
-      if (partes.length < 3) return false;
-      var dataReg = new Date(partes[2], partes[1]-1, partes[0]);
-      return dataReg >= inicioSemana && !d.data.includes(hoje);
+    } else if (periodoAtual === 'ontem') {
+      return d.data.includes(ontemStr);
     } else {
-      var partes2 = d.data.split(',')[0].trim().split('/');
-      if (partes2.length < 3) return false;
-      var dataReg2 = new Date(partes2[2], partes2[1]-1, partes2[0]);
-      return dataReg2 < inicioSemana;
+      return !d.data.includes(hoje) && !d.data.includes(ontemStr);
     }
   });
 }

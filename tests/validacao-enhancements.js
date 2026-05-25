@@ -11,6 +11,8 @@
  * #20 - Remover campo de filtro/busca do console
  * #21 - Gráfico estilo cardiograma (line)
  * #22 - Bug: console quebrado (JS syntax, botão perdido, tabela visível sem dados)
+ * #23 - Bug: remover botão Limpar do console
+ * #24 - Trocar "Esta Semana" por "Ontem", ajustar "Mais Antigo"
  *
  * Execução: nvm use 20 && node tests/validacao-enhancements.js
  */
@@ -136,21 +138,21 @@ async function testarFocoAutomatico(browser) {
 // ===============================
 
 async function testarAbasTemporalConsole() {
-    console.log('\n🔍 TESTE 4 — Abas de filtro temporal no console (#18)')
+    console.log('\n🔍 TESTE 4 — Abas de filtro temporal no console (#18/#24)')
 
     const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
 
-    const temAbaHoje = html.includes('aba-hoje') || (html.includes('data-periodo="hoje"'))
-    const temAbaSemana = html.includes('aba-semana') || (html.includes('data-periodo="semana"'))
-    const temAbaAntigo = html.includes('aba-antigo') || (html.includes('data-periodo="antigo"'))
+    const temAbaHoje = html.includes('data-periodo="hoje"')
+    const temAbaOntem = html.includes('data-periodo="ontem"')
+    const temAbaAntigo = html.includes('data-periodo="antigo"')
 
-    if (temAbaHoje && temAbaSemana && temAbaAntigo) {
+    if (temAbaHoje && temAbaOntem && temAbaAntigo) {
         totalPassou++
-        console.log('   ✅ Console tem abas: Hoje, Esta Semana, Mais Antigo')
+        console.log('   ✅ Console tem abas: Hoje, Ontem, Mais Antigo')
         console.log('   Status: ✅ PASSOU')
     } else {
         totalFalhou++
-        console.log('   ❌ Abas faltando: hoje=' + temAbaHoje + ' semana=' + temAbaSemana + ' antigo=' + temAbaAntigo)
+        console.log('   ❌ Abas faltando: hoje=' + temAbaHoje + ' ontem=' + temAbaOntem + ' antigo=' + temAbaAntigo)
         console.log('   Status: ❌ FALHOU')
     }
 }
@@ -191,7 +193,7 @@ async function testarGeradorTemAbas() {
     console.log('\n🔍 TESTE 6 — Gerador pagina-console.js inclui abas temporais (#19)')
 
     const src = fs.readFileSync(path.resolve(__dirname, '../generators/pagina-console.js'), 'utf-8')
-    const temAbas = src.includes('data-periodo="hoje"') && src.includes('data-periodo="semana"') && src.includes('data-periodo="antigo"')
+    const temAbas = src.includes('data-periodo="hoje"') && src.includes('data-periodo="ontem"') && src.includes('data-periodo="antigo"')
 
     if (temAbas) {
         totalPassou++
@@ -327,22 +329,19 @@ async function testarTabelaEscondidaSemDados(browser) {
     }
 }
 
-async function testarBotaoLimparPosicionado() {
-    console.log('\n🔍 TESTE 12 — Botão Limpar na mesma linha das abas (#22)')
+async function testarBotaoLimparRemovido() {
+    console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
     const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
-    // Botão limpar deve estar no mesmo div que as abas (não em div separado)
-    const abasELimpar = html.includes('data-periodo="antigo"') && html.includes('limparDados()')
-    // Não deve ter div separado só pro botão limpar
-    const semDivSeparado = !html.includes('<div class="flex items-center justify-between mb-4">\n      <button onclick="limparDados()"')
+    const temLimpar = html.includes('limparDados()')
 
-    if (abasELimpar && semDivSeparado) {
+    if (!temLimpar) {
         totalPassou++
-        console.log('   ✅ Botão Limpar posicionado junto às abas')
+        console.log('   ✅ Botão Limpar removido do console')
         console.log('   Status: ✅ PASSOU')
     } else {
         totalFalhou++
-        console.log('   ❌ Botão Limpar mal posicionado')
+        console.log('   ❌ Botão Limpar ainda presente no console')
         console.log('   Status: ❌ FALHOU')
     }
 }
@@ -362,6 +361,8 @@ async function main() {
     console.log('║  #18 Abas de filtro temporal no console                      ║')
     console.log('║  #19 Bug: gerador com abas + msg vazio                      ║')
     console.log('║  #20 Remover filtro/busca do console                         ║')
+    console.log('║  #23 Bug: remover botão Limpar                               ║')
+    console.log('║  #24 Trocar "Esta Semana" por "Ontem"                         ║')
     console.log('║  #22 Bug: console quebrado (JS, botão, tabela)                ║')
     console.log('╚══════════════════════════════════════════════════════════════╝')
 
@@ -381,7 +382,7 @@ async function main() {
     await testarGraficoLine()
     await testarConsoleSemErroJS(browser)
     await testarTabelaEscondidaSemDados(browser)
-    await testarBotaoLimparPosicionado()
+    await testarBotaoLimparRemovido()
 
     await browser.close()
 
