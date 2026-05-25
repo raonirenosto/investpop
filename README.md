@@ -30,3 +30,4 @@ https://raonirenosto.github.io/investpop/
 - **v0.9.6** — Card "Aparece nos Rankings" inclui Top 5 Altas/Quedas do dia (#32), 13 testes enhancements
 - **v0.9.7** — Remove botão Voltar das páginas Ver Todos/Rankings (#33), 14 testes enhancements
 - **v1.0.0** — Seção de Ações (IBOV): radar do dia, altas/quedas, rankings (DY, P/L, YTD, consistência), navegação FIIs/Ações, 15 testes enhancements
+- **v1.0.1** — Tooltips informativos nos rankings de ações (#35), remove botão hamburguer mobile (#36), 17 testes enhancements
