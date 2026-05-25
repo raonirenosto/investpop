@@ -392,11 +392,14 @@ async function buscarRankingsAcoes(tickers) {
     }
     console.log(`  Yahoo batch ações: ${Object.keys(varAnoBatch).length} YTD (${Date.now() - startTime}ms)`)
 
-    // Buscar DY e P/L via Investidor 10
+    // Buscar DY, P/L, nome, setor e dividendos via Investidor 10
     for (let i = 0; i < tickers.length; i++) {
         const t = tickers[i]
         try {
-            const rPrincipal = await axios.get(`https://investidor10.com.br/acoes/${t.toLowerCase()}/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+            const [rPrincipal, rDivs] = await Promise.all([
+                axios.get(`https://investidor10.com.br/acoes/${t.toLowerCase()}/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } }),
+                axios.get(`https://investidor10.com.br/acoes/${t.toLowerCase()}/dividendos/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
+            ])
             const html = rPrincipal.data
 
             const dyMatch = html.match(/dividend\s*yield[^\d]*(\d+[,.]\d+)\s*%/i)
@@ -404,33 +407,52 @@ async function buscarRankingsAcoes(tickers) {
             const dy = dyMatch ? parseFloat(dyMatch[1].replace(',', '.')) : 0
             const pl = plMatch ? parseFloat(plMatch[1].replace(',', '.')) : null
 
-            // Consistencia simples: buscar dividendos
-            let mesesConsistentes = 0
-            try {
-                const rDivs = await axios.get(`https://investidor10.com.br/acoes/${t.toLowerCase()}/dividendos/`, { httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" } })
-                const rendimentos = []
-                const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi
-                let trMatch
-                while ((trMatch = trRegex.exec(rDivs.data)) !== null) {
-                    const tds = []
-                    const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi
-                    let tdMatch
-                    while ((tdMatch = tdRegex.exec(trMatch[1])) !== null) {
-                        tds.push(tdMatch[1].replace(/<[^>]+>/g, '').trim())
-                    }
-                    if (tds.length >= 4 && (tds[0].toLowerCase().includes('dividendo') || tds[0].toLowerCase().includes('jcp'))) {
-                        rendimentos.push({ valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
-                    }
-                }
-                const cons = calcularMesesSemQuebra(rendimentos)
-                mesesConsistentes = cons.meses
-            } catch(e) {}
+            // Extrair nome e setor
+            const articleMatch = html.match(/"articleBody":\s*"([^"]+)"/)
+            const articleBody = articleMatch ? articleMatch[1] : ''
+            const nomeMatch = articleBody.match(/A empresa ([^,]+),/i) || articleBody.match(/A ([^,]+),/i)
+            const setorMatch = articleBody.match(/setor[^.]*?([A-Z\u00c0-\u00ff][^.]{3,40})/i)
+            const nome = nomeMatch ? nomeMatch[1].trim() : ''
+            const setor = setorMatch ? setorMatch[1].trim() : ''
 
-            resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes })
+            // Extrair dividendos com datas
+            const rendimentos = []
+            const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi
+            let trMatch
+            while ((trMatch = trRegex.exec(rDivs.data)) !== null) {
+                const tds = []
+                const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi
+                let tdMatch
+                while ((tdMatch = tdRegex.exec(trMatch[1])) !== null) {
+                    tds.push(tdMatch[1].replace(/<[^>]+>/g, '').trim())
+                }
+                if (tds.length >= 4 && (tds[0].toLowerCase().includes('dividendo') || tds[0].toLowerCase().includes('jcp'))) {
+                    rendimentos.push({ tipo: tds[0], dataCom: tds[1], pagamento: tds[2], valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
+                }
+            }
+
+            // Consistência para ações: pagamentos anuais consecutivos sem redução
+            // Agrupa por ano e compara total anual
+            const porAno = {}
+            for (const r of rendimentos) {
+                const anoMatch = r.dataCom && r.dataCom.match(/(\d{4})/)
+                if (anoMatch) {
+                    const ano = anoMatch[1]
+                    porAno[ano] = (porAno[ano] || 0) + r.valor
+                }
+            }
+            const anos = Object.keys(porAno).sort().reverse()
+            let anosConsistentes = 0
+            for (let j = 0; j < anos.length - 1; j++) {
+                if (porAno[anos[j]] >= porAno[anos[j + 1]] * 0.8) anosConsistentes++
+                else break
+            }
+
+            resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes: anosConsistentes, nome, setor, dividendos: rendimentos.slice(0, 10), descricao: articleBody.replace(/\s+/g, ' ').substring(0, 300) })
 
             if ((i + 1) % 10 === 0) console.log(`  Investidor 10 ações: ${i + 1}/${tickers.length} (${Date.now() - startTime}ms)`)
         } catch (e) {
-            resultados.push({ ticker: t, dy: 0, pl: null, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0 })
+            resultados.push({ ticker: t, dy: 0, pl: null, varAno: varAnoBatch[t] || 0, mesesConsistentes: 0, nome: '', setor: '', dividendos: [], descricao: '' })
         }
         if (i < tickers.length - 1) await new Promise(r => setTimeout(r, 500))
     }
@@ -442,11 +464,11 @@ async function buscarRankingsAcoes(tickers) {
     const allVarAno = resultados.filter(r => r.varAno > 0).sort((a, b) => b.varAno - a.varAno)
         .map(r => ({ ticker: r.ticker, valor: '+' + r.varAno.toFixed(2).replace('.', ',') + '%' }))
     const allConsistentes = resultados.sort((a, b) => b.mesesConsistentes - a.mesesConsistentes)
-        .map(r => ({ ticker: r.ticker, valor: r.mesesConsistentes + ' meses' }))
+        .map(r => ({ ticker: r.ticker, valor: r.mesesConsistentes + ' anos' }))
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
     console.log(`🏆 Rankings ações: DY(${allDY.length}) | Baratos(${allBaratos.length}) | Var.Ano(${allVarAno.length}) | Consistentes(${allConsistentes.length}) | Tempo: ${elapsed}s`)
-    return { topDY: allDY.slice(0, 5), topBaratos: allBaratos.slice(0, 5), topVarAno: allVarAno.slice(0, 5), topConsistentes: allConsistentes.slice(0, 5), allDY, allBaratos, allVarAno, allConsistentes }
+    return { topDY: allDY.slice(0, 5), topBaratos: allBaratos.slice(0, 5), topVarAno: allVarAno.slice(0, 5), topConsistentes: allConsistentes.slice(0, 5), allDY, allBaratos, allVarAno, allConsistentes, detalhes: resultados }
 }
 
 
@@ -537,21 +559,15 @@ async function main() {
             // Gerar páginas de detalhe de ações
             const pastaAcoesCache = path.join(pasta, "acoes")
             if (!fs.existsSync(pastaAcoesCache)) fs.mkdirSync(pastaAcoesCache)
-            const detalhesAcoes = rankingsAcoes.allDY.map(r => r.ticker).concat(rankingsAcoes.allBaratos.map(r => r.ticker), rankingsAcoes.allVarAno.map(r => r.ticker), rankingsAcoes.allConsistentes.map(r => r.ticker))
             const tickersUnicos = [...new Set(acoes)]
+            rankingsAcoes.topAltas = altasAcoes.map(r => ({ ticker: r.ticker }))
+            rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
             for (const t of tickersUnicos) {
+                const det = (rankingsAcoes.detalhes || []).find(r => r.ticker === t) || {}
                 const cotacao = resAcoes.find(r => r.ticker === t)
-                const ranking = rankingsAcoes.allDY.find(r => r.ticker === t) || {}
-                const rankBarato = rankingsAcoes.allBaratos.find(r => r.ticker === t)
-                const rankVar = rankingsAcoes.allVarAno.find(r => r.ticker === t)
-                const rankCons = rankingsAcoes.allConsistentes.find(r => r.ticker === t)
-                const dy = ranking.valor ? parseFloat(ranking.valor.replace(',','.')) : 0
-                const pl = rankBarato ? parseFloat(rankBarato.valor.replace(',','.')) : null
-                const varAno = rankVar ? parseFloat(rankVar.valor.replace('+','').replace(',','.')) : 0
-                const mesesConsistentes = rankCons ? parseInt(rankCons.valor) : 0
                 const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
                 const varDia = cotacao ? cotacao.varNum : 0
-                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy, pl, varAno, mesesConsistentes}, tickersUnicos.map(x => ({ticker: x}))))
+                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: det.nome||'', setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes))
             }
             console.log(`✅ ${tickersUnicos.length} páginas de detalhe de ações geradas`)
 
@@ -639,19 +655,14 @@ async function main() {
     const pastaAcoes2 = path.join(pasta, "acoes")
     if (!fs.existsSync(pastaAcoes2)) fs.mkdirSync(pastaAcoes2)
     const tickersAcoesUnicos = [...new Set(acoes)]
+    rankingsAcoes.topAltas = altasAcoes.map(r => ({ ticker: r.ticker }))
+    rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
     for (const t of tickersAcoesUnicos) {
+        const det = (rankingsAcoes.detalhes || []).find(r => r.ticker === t) || {}
         const cotacao = resAcoes.find(r => r.ticker === t)
-        const ranking = rankingsAcoes.allDY.find(r => r.ticker === t) || {}
-        const rankBarato = rankingsAcoes.allBaratos.find(r => r.ticker === t)
-        const rankVar = rankingsAcoes.allVarAno.find(r => r.ticker === t)
-        const rankCons = rankingsAcoes.allConsistentes.find(r => r.ticker === t)
-        const dy = ranking.valor ? parseFloat(ranking.valor.replace(',','.')) : 0
-        const pl = rankBarato ? parseFloat(rankBarato.valor.replace(',','.')) : null
-        const varAno = rankVar ? parseFloat(rankVar.valor.replace('+','').replace(',','.')) : 0
-        const mesesConsistentes = rankCons ? parseInt(rankCons.valor) : 0
         const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
         const varDia = cotacao ? cotacao.varNum : 0
-        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy, pl, varAno, mesesConsistentes}, tickersAcoesUnicos.map(x => ({ticker: x}))))
+        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: det.nome||'', setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes))
     }
     console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 

@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GOAU4 — InvestPop</title>
-  <meta name="description" content="GOAU4 - Cotação e indicadores." />
+  <meta name="description" content="GOAU4 - Gerdau é a ação da Gerdau Açominas. Cotação, dividendos e indicadores." />
   <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
   <link rel="canonical" href="https://investpop.com.br" />
   <meta property="og:title" content="GOAU4 — InvestPop" />
-  <meta property="og:description" content="GOAU4 - Cotação e indicadores." />
+  <meta property="og:description" content="GOAU4 - Gerdau é a ação da Gerdau Açominas. Cotação, dividendos e indicadores." />
   <meta property="og:url" content="https://investpop.com.br" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="GOAU4 — InvestPop" />
-  <meta name="twitter:description" content="GOAU4 - Cotação e indicadores." />
+  <meta name="twitter:description" content="GOAU4 - Gerdau é a ação da Gerdau Açominas. Cotação, dividendos e indicadores." />
   <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070F1F'/><path d='M6 22l8-8 4 4 8-8' stroke='%2310b981' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='26' cy='10' r='2.5' fill='%2310b981'/></svg>" />
@@ -72,11 +72,18 @@
 
     <div class="flex items-center justify-between gap-3 mb-6">
       <div>
-        <h1 class="text-xl md:text-3xl font-bold">GOAU4</h1>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl md:text-3xl font-bold">GOAU4</h1>
+          <span class="text-xs md:text-sm text-gray-400">Gerdau é a ação da Gerdau Açominas</span>
+        </div>
+        <span class="text-xs text-gray-500">de materiais básicos e subsetor de sideru</span>
       </div>
       <div class="text-right">
         <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 10,38</p>
-        <span class="text-xs md:text-sm text-red-500 font-medium">-0,38% ↓</span>
+        <div class="flex items-center gap-1 justify-end">
+          <span class="text-xs md:text-sm text-red-500 font-medium">-0,38%</span>
+          <span class="text-[10px] md:text-xs text-gray-500">↓</span>
+        </div>
       </div>
     </div>
 
@@ -91,14 +98,105 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
-        <p class="text-lg font-bold mt-1 text-emerald-400">+15,33%</p>
+        <p class="text-lg font-bold mt-1 text-emerald-500">+15,33%</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Consistência</span>
-        <p class="text-lg font-bold text-orange-400 mt-1">2 meses</p>
+        <p class="text-lg font-bold text-orange-400 mt-1">-</p>
       </div>
     </div>
 
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+      <div class="lg:col-span-2 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Sobre a Empresa</h2>
+        <p class="text-sm text-gray-400 leading-relaxed">A Gerdau é a ação da Gerdau Açominas, uma subsidiária da Gerdau, uma empresa do setor de materiais básicos e subsetor de siderurgia e metalurgia.</p>
+      </div>
+
+      <div class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Rentabilidade</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">No ano (YTD)</span>
+            <span class="text-sm font-medium text-emerald-500">+15,33%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">Consistência</span>
+            <span class="text-sm font-medium text-orange-400">-</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Últimos Proventos</h2>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-gray-500 text-xs">
+              <th class="text-left pb-2 font-medium">Tipo</th>
+              <th class="text-left pb-2 font-medium">Data Com</th>
+              <th class="text-left pb-2 font-medium">Pagamento</th>
+              <th class="text-right pb-2 font-medium">Valor</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-200">
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">13/05/2026</td>
+              <td class="py-2.5">10/06/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,0800</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">10/03/2026</td>
+              <td class="py-2.5">19/03/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,0500</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">10/11/2025</td>
+              <td class="py-2.5">12/12/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,1900</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">11/08/2025</td>
+              <td class="py-2.5">19/08/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,0800</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">08/05/2025</td>
+              <td class="py-2.5">20/05/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,0800</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por mês?</h2>
+        <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos últimos 12 meses (ação a R$ 10,38)</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 7,87</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 39,34</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 78,68</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 196,69</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 393,38</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 786,77</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 3933,85</span></div>
+        </div>
+      </div>
+
+
+
+    </div>
   </main>
 
 

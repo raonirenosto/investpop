@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BBSE3 — InvestPop</title>
-  <meta name="description" content="BBSE3 - Cotação e indicadores." />
+  <meta name="description" content="BBSE3 - BB Seguridade é uma holding brasileira controlada pelo Banco do Brasil. Cotação, dividendos e indicadores." />
   <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
   <link rel="canonical" href="https://investpop.com.br" />
   <meta property="og:title" content="BBSE3 — InvestPop" />
-  <meta property="og:description" content="BBSE3 - Cotação e indicadores." />
+  <meta property="og:description" content="BBSE3 - BB Seguridade é uma holding brasileira controlada pelo Banco do Brasil. Cotação, dividendos e indicadores." />
   <meta property="og:url" content="https://investpop.com.br" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="BBSE3 — InvestPop" />
-  <meta name="twitter:description" content="BBSE3 - Cotação e indicadores." />
+  <meta name="twitter:description" content="BBSE3 - BB Seguridade é uma holding brasileira controlada pelo Banco do Brasil. Cotação, dividendos e indicadores." />
   <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070F1F'/><path d='M6 22l8-8 4 4 8-8' stroke='%2310b981' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='26' cy='10' r='2.5' fill='%2310b981'/></svg>" />
@@ -72,11 +72,18 @@
 
     <div class="flex items-center justify-between gap-3 mb-6">
       <div>
-        <h1 class="text-xl md:text-3xl font-bold">BBSE3</h1>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl md:text-3xl font-bold">BBSE3</h1>
+          <span class="text-xs md:text-sm text-gray-400">BB Seguridade é uma holding brasileira controlada pelo Banco do Brasil</span>
+        </div>
+        <span class="text-xs text-gray-500">de seguros, previdência privada e capital</span>
       </div>
       <div class="text-right">
         <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 34,62</p>
-        <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,44% ↑</span>
+        <div class="flex items-center gap-1 justify-end">
+          <span class="text-xs md:text-sm text-emerald-500 font-medium">+0,44%</span>
+          <span class="text-[10px] md:text-xs text-gray-500">↑</span>
+        </div>
       </div>
     </div>
 
@@ -91,14 +98,114 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
-        <p class="text-lg font-bold mt-1 text-emerald-400">-</p>
+        <p class="text-lg font-bold mt-1 text-red-500">-4,23%</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Consistência</span>
-        <p class="text-lg font-bold text-orange-400 mt-1">5 meses</p>
+        <p class="text-lg font-bold text-orange-400 mt-1">-</p>
       </div>
     </div>
 
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+      <div class="lg:col-span-2 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Sobre a Empresa</h2>
+        <p class="text-sm text-gray-400 leading-relaxed">A BB Seguridade é uma holding brasileira controlada pelo Banco do Brasil, que atua no subsetor de seguros, previdência privada e capitalização. </p>
+      </div>
+
+      <div class="bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Rentabilidade</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">No ano (YTD)</span>
+            <span class="text-sm font-medium text-red-500">-4,23%</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">Consistência</span>
+            <span class="text-sm font-medium text-orange-400">-</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Últimos Proventos</h2>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-gray-500 text-xs">
+              <th class="text-left pb-2 font-medium">Tipo</th>
+              <th class="text-left pb-2 font-medium">Data Com</th>
+              <th class="text-left pb-2 font-medium">Pagamento</th>
+              <th class="text-right pb-2 font-medium">Valor</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-200">
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">12/02/2026</td>
+              <td class="py-2.5">02/03/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 2,5500</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">14/08/2025</td>
+              <td class="py-2.5">26/08/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 1,9421</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">20/02/2025</td>
+              <td class="py-2.5">06/03/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 2,2723</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">16/08/2024</td>
+              <td class="py-2.5">30/08/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 1,3909</td>
+            </tr>
+
+            <tr class="border-t border-card-border">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">08/02/2024</td>
+              <td class="py-2.5">22/02/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 1,2419</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por mês?</h2>
+        <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos últimos 12 meses (ação a R$ 34,62)</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 36,87</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 184,37</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 368,74</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 921,84</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 1843,68</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 3687,36</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 18436,79</span></div>
+        </div>
+      </div>
+
+
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Aparece nos Rankings</h2>
+        <div class="flex flex-wrap gap-3">
+          <a href="../acoes-ranking-dy.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">
+            <span class="text-xs font-bold text-emerald-400">#1</span>
+            <span class="text-sm text-gray-300">Mais Pagam</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
   </main>
 
 
