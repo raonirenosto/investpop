@@ -34,13 +34,13 @@ ${headerHtml()}
       </div>
     </div>
 
+    <div class="flex gap-2 mb-4">
+      <button data-periodo="hoje" onclick="setPeriodo('hoje')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-emerald-500 bg-emerald-500/20 text-emerald-400">Hoje</button>
+      <button data-periodo="semana" onclick="setPeriodo('semana')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Esta Semana</button>
+      <button data-periodo="antigo" onclick="setPeriodo('antigo')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-card-border text-gray-400 hover:text-white">Mais Antigo</button>
+    </div>
+
     <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center bg-card border border-card-border rounded-lg px-3 py-2 gap-2 flex-1 mr-3">
-        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        <input type="text" id="busca" placeholder="Filtrar por IP, dispositivo, idioma..." oninput="filtrar()" class="bg-transparent text-sm text-gray-300 outline-none w-full" />
-      </div>
       <button onclick="limparDados()" class="px-3 py-2 bg-red-500/20 border border-red-500/40 text-red-400 text-xs font-medium rounded-lg hover:bg-red-500/30">&#128465; Limpar</button>
     </div>
 
@@ -52,7 +52,7 @@ ${headerHtml()}
     </div>
 
     <div class="bg-card border border-card-border rounded-xl p-4 overflow-x-auto">
-      <table class="text-xs min-w-[800px] w-full">
+      <table class="text-xs min-w-[800px] w-full" id="tabela-console">
         <thead>
           <tr class="text-gray-500">
             <th class="text-left pb-2 font-medium whitespace-nowrap pr-3">Data</th>
@@ -68,11 +68,12 @@ ${headerHtml()}
         </thead>
         <tbody id="tabela-body" class="text-gray-200"></tbody>
       </table>
+      <p id="msg-vazio" class="text-sm text-gray-500 text-center py-8 hidden">Nenhum acesso registrado neste per\u00edodo</p>
     </div>
     <p class="text-xs text-gray-500 mt-3" id="status">Carregando...</p>
 
     <div class="bg-card border border-card-border rounded-xl p-4 mt-6">
-      <h2 class="text-sm font-semibold text-gray-300 mb-4">Acessos por dia (&#250;ltimos 14 dias)</h2>
+      <h2 class="text-sm font-semibold text-gray-300 mb-4">Acessos por dia (\u00faltimos 14 dias)</h2>
       <canvas id="grafico" height="100"></canvas>
     </div>
   </main>

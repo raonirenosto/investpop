@@ -73,6 +73,15 @@ function parseCSV(csv) {
 }
 
 function renderizar(lista) {
+  var tabela = document.getElementById('tabela-console');
+  var msgVazio = document.getElementById('msg-vazio');
+  if (lista.length === 0) {
+    if (tabela) tabela.style.display = 'none';
+    if (msgVazio) msgVazio.classList.remove('hidden');
+  } else {
+    if (tabela) tabela.style.display = '';
+    if (msgVazio) msgVazio.classList.add('hidden');
+  }
   document.getElementById('tabela-body').innerHTML = lista.map(function(d) {
     var nav = getBrowser(d.navegador);
     var os = getOS(d.os, d.navegador);
@@ -140,10 +149,6 @@ function aplicarFiltros() {
   if(document.getElementById('filtro-bots').checked) {
     filtrados = filtrados.filter(function(d){ return !isBot(d); });
   }
-  var t = document.getElementById('busca').value.toLowerCase();
-  if(t) {
-    filtrados = filtrados.filter(function(d){ return Object.values(d).join(' ').toLowerCase().includes(t); });
-  }
   renderizar(filtrados);
   atualizarContadores(filtrados);
   renderGrafico(filtrados);
@@ -160,8 +165,6 @@ function atualizarContadores(lista) {
 function filtrar() {
   aplicarFiltros();
 }
-
-function limparDados() {
   if(!confirm('Tem certeza que deseja limpar todos os dados?')) return;
   fetch(SCRIPT_URL+'?action=clear',{mode:'no-cors'}).then(function() {
     alert('Dados limpos! Recarregue a página.');
@@ -184,14 +187,19 @@ function renderGrafico(lista) {
   if(graficoInstance) graficoInstance.destroy();
   var ctx = document.getElementById('grafico').getContext('2d');
   graficoInstance = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: labels,
       datasets: [{
         label: 'Acessos',
         data: values,
-        backgroundColor: '#10B981',
-        borderRadius: 4
+        borderColor: '#10B981',
+        backgroundColor: 'rgba(16,185,129,0.1)',
+        borderWidth: 2,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#10B981',
+        fill: true
       }]
     },
     options: {

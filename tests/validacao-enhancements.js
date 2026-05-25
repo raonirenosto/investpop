@@ -7,6 +7,9 @@
  * #6  - Mostrar em quais tops o FII aparece na página de detalhe
  * #11 - Focar automaticamente no campo ao abrir busca mobile
  * #18 - Abas de filtro temporal no console (Hoje, Esta Semana, Mais Antigo)
+ * #19 - Bug: abas no gerador + mensagem vazio
+ * #20 - Remover campo de filtro/busca do console
+ * #21 - Gráfico estilo cardiograma (line)
  *
  * Execução: nvm use 20 && node tests/validacao-enhancements.js
  */
@@ -180,6 +183,87 @@ async function testarAbaHojePadrao(browser) {
 }
 
 // ===============================
+// #19 - Bug: gerador deve ter abas + mensagem quando sem registros
+// ===============================
+
+async function testarGeradorTemAbas() {
+    console.log('\n🔍 TESTE 6 — Gerador pagina-console.js inclui abas temporais (#19)')
+
+    const src = fs.readFileSync(path.resolve(__dirname, '../generators/pagina-console.js'), 'utf-8')
+    const temAbas = src.includes('data-periodo="hoje"') && src.includes('data-periodo="semana"') && src.includes('data-periodo="antigo"')
+
+    if (temAbas) {
+        totalPassou++
+        console.log('   ✅ Gerador inclui abas temporais')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Gerador NÃO inclui abas temporais')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+async function testarMensagemVazio() {
+    console.log('\n🔍 TESTE 7 — Mensagem quando não há registros no período (#19)')
+
+    const js = fs.readFileSync(path.resolve(__dirname, '../assets/console.js'), 'utf-8')
+    const temMsgVazio = js.includes('Nenhum acesso registrado') || js.includes('nenhum-registro') || js.includes('msg-vazio')
+
+    if (temMsgVazio) {
+        totalPassou++
+        console.log('   ✅ console.js tem mensagem para lista vazia')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ console.js NÃO tem mensagem para lista vazia')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+// ===============================
+// #20 - Remover campo de filtro/busca do console
+// ===============================
+
+async function testarSemFiltro() {
+    console.log('\n🔍 TESTE 8 — Console sem campo de filtro/busca (#20)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
+    const temFiltro = html.includes('id="busca"') && html.includes('Filtrar por IP')
+
+    if (!temFiltro) {
+        totalPassou++
+        console.log('   ✅ Campo de filtro removido do console')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Campo de filtro ainda presente no console')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+// ===============================
+// #21 - Gráfico estilo cardiograma (line)
+// ===============================
+
+async function testarGraficoLine() {
+    console.log('\n🔍 TESTE 9 — Gráfico tipo line (cardiograma) no console (#21)')
+
+    const js = fs.readFileSync(path.resolve(__dirname, '../assets/console.js'), 'utf-8')
+    const temLine = js.includes("type: 'line'") || js.includes('type:"line"')
+    const semBar = !js.includes("type: 'bar'") && !js.includes('type:"bar"')
+
+    if (temLine && semBar) {
+        totalPassou++
+        console.log('   ✅ Gráfico é tipo line (cardiograma)')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Gráfico não é line: temLine=' + temLine + ' semBar=' + semBar)
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
+// ===============================
 // Main
 // ===============================
 
@@ -192,6 +276,9 @@ async function main() {
     console.log('║  #6  Card de tops na página de detalhe                      ║')
     console.log('║  #11 Foco automático na busca mobile                        ║')
     console.log('║  #18 Abas de filtro temporal no console                      ║')
+    console.log('║  #19 Bug: gerador com abas + msg vazio                      ║')
+    console.log('║  #20 Remover filtro/busca do console                         ║')
+    console.log('║  #21 Gráfico line (cardiograma)                              ║')
     console.log('╚══════════════════════════════════════════════════════════════╝')
 
     await testarCardTops()
@@ -204,6 +291,10 @@ async function main() {
     await testarFocoAutomatico(browser)
     await testarAbasTemporalConsole()
     await testarAbaHojePadrao(browser)
+    await testarGeradorTemAbas()
+    await testarMensagemVazio()
+    await testarSemFiltro()
+    await testarGraficoLine()
 
     await browser.close()
 
