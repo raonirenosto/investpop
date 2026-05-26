@@ -12,13 +12,17 @@
     return base + ticker + '.html';
   }
 
+  function normalizar(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+  }
+
   function buscar(termo) {
-    var v = termo.toUpperCase();
+    var v = normalizar(termo);
     if (v.length < 2) return [];
     return FIIS_LISTA.filter(function(f) {
       if (f.includes(v)) return true;
       var nome = nomesMap[f];
-      return nome && nome.toUpperCase().includes(v);
+      return nome && normalizar(nome).includes(v);
     }).slice(0, 8);
   }
 
