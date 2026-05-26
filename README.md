@@ -27,7 +27,8 @@ https://raonirenosto.github.io/investpop/
 - **v0.9.3** — Remove botão Limpar, troca aba "Esta Semana" por "Ontem" (filtro dinâmico), "Mais Antigo" = tudo antes de ontem, 12 testes enhancements
 - **v0.9.4** — Fix lupa mobile dispara modal "Em breve" no iPhone (#29), fix link FIIs no bottom nav (#17), 14 testes de busca
 - **v0.9.5** — Fix foco busca mobile em páginas de detalhe iOS (#30), teste foco em todas as páginas (mobile+tablet), 15 testes de busca
-- **v0.9.6** — Card "Aparece nos Rankings" inclui Top 5 Altas/Quedas do dia (#32), 13 testes enhancements
+- **v0.9.8** — Fix nome da empresa em ações via ibov_acoes.csv (#46), busca com nomes corretos, 20 testes enhancements
+- **v0.9.8** — Card "Aparece nos Rankings" inclui Top 5 Altas/Quedas do dia (#32), 13 testes enhancements
 - **v0.9.7** — Remove botão Voltar das páginas Ver Todos/Rankings (#33), 14 testes enhancements
 - **v1.0.0** — Seção de Ações (IBOV): radar do dia, altas/quedas, rankings (DY, P/L, YTD, consistência), navegação FIIs/Ações, 15 testes enhancements
 - **v1.0.1** — Tooltips informativos nos rankings de ações (#35), remove botão hamburguer mobile (#36), 17 testes enhancements
