@@ -61,7 +61,7 @@ ${headerHtml({basePath: '../', paginaAcoes: true})}
           <h1 class="text-xl md:text-3xl font-bold">${acao.ticker}</h1>
           <span class="text-xs md:text-sm text-gray-400">${acao.nome || ''}</span>
         </div>
-        ${acao.setor ? '<span class="text-xs text-gray-500">' + acao.setor + '</span>' : ''}
+
       </div>
       <div class="text-right">
         <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ ${acao.preco.toFixed(2).replace('.', ',')}</p>
@@ -92,11 +92,7 @@ ${headerHtml({basePath: '../', paginaAcoes: true})}
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-${acao.descricao ? `
-      <div class="lg:col-span-2 bg-card border border-card-border rounded-xl p-4 md:p-5">
-        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Sobre a Empresa</h2>
-        <p class="text-sm text-gray-400 leading-relaxed">${acao.descricao}</p>
-      </div>` : ''}
+
 
       <div class="bg-card border border-card-border rounded-xl p-4 md:p-5">
         <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Rentabilidade</h2>

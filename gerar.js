@@ -566,6 +566,17 @@ async function main() {
             console.log("\n🏆 Buscando rankings de ações...")
             const rankingsAcoes = await buscarRankingsAcoes(acoes)
 
+            // Adicionar nomes de ações ao mapa ANTES de gerar páginas (CSV tem prioridade)
+            const nomesCSVPre = lerNomesAcoes()
+            for (const det of (rankingsAcoes.detalhes || [])) {
+                const n = nomesCSVPre[det.ticker] || det.nome
+                if (n) global.INVESTPOP_NOMES[det.ticker] = n
+            }
+            for (const [ticker, nome] of Object.entries(nomesCSVPre)) {
+                if (!global.INVESTPOP_NOMES[ticker]) global.INVESTPOP_NOMES[ticker] = nome
+            }
+
+
             fs.writeFileSync(path.join(pasta, "acoes.html"), gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
             fs.writeFileSync(path.join(pasta, "acoes-altas.html"), gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
             fs.writeFileSync(path.join(pasta, "acoes-quedas.html"), gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
@@ -671,6 +682,17 @@ async function main() {
 
     console.log("\n🏆 Buscando rankings de ações...")
     const rankingsAcoes = await buscarRankingsAcoes(acoes)
+
+    // Adicionar nomes de ações ao mapa ANTES de gerar páginas (CSV tem prioridade)
+    const nomesCSVPre2 = lerNomesAcoes()
+    for (const det of (rankingsAcoes.detalhes || [])) {
+        const n = nomesCSVPre2[det.ticker] || det.nome
+        if (n) global.INVESTPOP_NOMES[det.ticker] = n
+    }
+    for (const [ticker, nome] of Object.entries(nomesCSVPre2)) {
+        if (!global.INVESTPOP_NOMES[ticker]) global.INVESTPOP_NOMES[ticker] = nome
+    }
+
 
     fs.writeFileSync(path.join(pasta, "acoes.html"), gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
     fs.writeFileSync(path.join(pasta, "acoes-altas.html"), gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))

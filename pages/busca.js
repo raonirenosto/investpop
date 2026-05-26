@@ -44,11 +44,9 @@
     dropdown.className = 'hidden absolute top-full mt-1 left-0 right-0 bg-[#0B1A2E] border border-[#132743] rounded-lg shadow-xl z-50 overflow-hidden max-h-60 overflow-y-auto';
     container.appendChild(dropdown);
     navInput.addEventListener('input', function() {
-      var v = this.value.toUpperCase();
-      if (v.length < 2) { dropdown.classList.add('hidden'); return; }
-      var results = FIIS_LISTA.filter(function(f) { return f.includes(v); }).slice(0, 8);
+      var results = buscar(this.value);
       if (!results.length) { dropdown.classList.add('hidden'); return; }
-      dropdown.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+f+'</a>'; }).join('');
+      dropdown.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+renderItem(f)+'</a>'; }).join('');
       dropdown.classList.remove('hidden');
     });
     document.addEventListener('click', function(e) { if (!container.contains(e.target)) dropdown.classList.add('hidden'); });

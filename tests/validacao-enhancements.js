@@ -627,6 +627,94 @@ async function testarNomeEmpresaAcoes() {
 // Main
 // ===============================
 
+async function testarSemSetorIrrelevante() {
+    console.log('\n\ud83d\udd0d TESTE 21 \u2014 P\u00e1ginas de a\u00e7\u00f5es sem informa\u00e7\u00f5es irrelevantes do setor (#46)')
+
+    const acoesDir = path.join(PAGES_DIR, 'acoes')
+    if (!fs.existsSync(acoesDir)) {
+        totalFalhou++
+        console.log('   \u274c pages/acoes/ n\u00e3o existe')
+        console.log('   Status: \u274c FALHOU')
+        return
+    }
+
+    let ok = true
+    const amostra = ['ASAI3', 'PETR4', 'ITUB4', 'VALE3', 'BBAS3']
+    for (const ticker of amostra) {
+        const filePath = path.join(acoesDir, ticker + '.html')
+        if (!fs.existsSync(filePath)) continue
+        const html = fs.readFileSync(filePath, 'utf-8')
+        // N\u00e3o deve ter texto de setor/subsetor cortado
+        const temSetorIrrelevante = html.includes('subsetor de') || html.includes('setor de consumo') || html.includes('setor de utilidade')
+        if (!temSetorIrrelevante) {
+            console.log('   \u2705 ' + ticker + ': sem informa\u00e7\u00f5es irrelevantes de setor')
+        } else {
+            ok = false
+            console.log('   \u274c ' + ticker + ': cont\u00e9m texto irrelevante de setor')
+        }
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
+
+async function testarBuscaMostraNomeEmpresa() {
+    console.log('\n\ud83d\udd0d TESTE 22 \u2014 Busca na lupa mostra ticker + nome da empresa (#46)')
+
+    const buscaPath = path.join(PAGES_DIR, 'busca.js')
+    if (!fs.existsSync(buscaPath)) {
+        totalFalhou++
+        console.log('   \u274c pages/busca.js n\u00e3o encontrado')
+        console.log('   Status: \u274c FALHOU')
+        return
+    }
+
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-gpu', '--allow-file-access-from-files'] })
+    const page = await browser.newPage()
+    await page.goto('file://' + path.join(PAGES_DIR, 'acoes', 'VALE3.html'), { waitUntil: 'domcontentloaded', timeout: 10000 })
+    await new Promise(r => setTimeout(r, 500))
+
+    const resultado = await page.evaluate(() => {
+        var input = document.querySelector('nav input[type="text"]')
+        if (!input) return { erro: 'input n\u00e3o encontrado' }
+        input.value = 'PETRO'
+        input.dispatchEvent(new Event('input'))
+        return new Promise(resolve => {
+            setTimeout(() => {
+                var dropdown = input.parentElement.querySelector('[class*="absolute"]')
+                if (!dropdown || dropdown.classList.contains('hidden')) {
+                    resolve({ erro: 'dropdown n\u00e3o apareceu' })
+                    return
+                }
+                var links = dropdown.querySelectorAll('a')
+                var textos = Array.from(links).map(a => a.textContent.trim())
+                // Deve conter nome da empresa (n\u00e3o s\u00f3 ticker)
+                var temNome = textos.some(t => t.includes('PETROBRAS') || t.includes('Petrobras'))
+                resolve({ ok: temNome, textos: textos.slice(0, 3) })
+            }, 300)
+        })
+    })
+
+    await browser.close()
+
+    if (resultado.erro) {
+        totalFalhou++
+        console.log('   \u274c ' + resultado.erro)
+        console.log('   Status: \u274c FALHOU')
+        return
+    }
+
+    if (resultado.ok) {
+        totalPassou++
+        console.log('   \u2705 Busca "PETRO" mostra nome da empresa: ' + resultado.textos.join(', '))
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   \u274c Busca "PETRO" n\u00e3o mostra nome da empresa. Resultados: ' + resultado.textos.join(', '))
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -668,6 +756,8 @@ async function main() {
     await testarDetalheAcoes()
     await testarBuscaUnificada()
     await testarNomeEmpresaAcoes()
+    await testarSemSetorIrrelevante()
+    await testarBuscaMostraNomeEmpresa()
 
     await browser.close()
 
