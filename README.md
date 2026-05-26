@@ -36,3 +36,4 @@ https://raonirenosto.github.io/investpop/
 - **v1.0.3** — Fix tooltips na index de ações (#39), fix busca no detalhe de ações (#40), 19 testes enhancements
 - **v1.1.0** — Busca unificada todas as páginas (#44), consistência anual ações (#41), detalhe ações completo (#42), busca por nome (#43), 19 testes enhancements
 - **v1.2.0** — Simulador anual ações (#47), consistência por anos pagos (#48), remove consistência de Rentabilidade (#49), card rankings posição real (#50/#52), nome empresa na busca (#51), fix foco iOS (#53), transição fade-in (#54), 22 testes enhancements
+- **v1.3.0** — Sincronização IBOV via API B3 (#60), histórico de mudanças (#61), console como hub admin (#62), remove lista_acoes.txt, 79 ações atualizadas, 22 testes enhancements
