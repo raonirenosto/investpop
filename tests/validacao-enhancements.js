@@ -573,6 +573,56 @@ async function testarBotaoLimparRemovido() {
     }
 }
 
+async function testarNomeEmpresaAcoes() {
+    console.log('\n🔍 TESTE 20 — Nome da empresa correto nas páginas de ações (#46)')
+
+    const csvPath = path.resolve(__dirname, '../data/ibov_acoes.csv')
+    if (!fs.existsSync(csvPath)) {
+        totalFalhou++
+        console.log('   ❌ data/ibov_acoes.csv não encontrado')
+        console.log('   Status: ❌ FALHOU')
+        return
+    }
+    const linhas = fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim())
+    const mapa = {}
+    for (const l of linhas) {
+        const [codigo, acao] = l.split(',')
+        if (codigo && acao) mapa[codigo.trim()] = acao.trim()
+    }
+
+    const acoesDir = path.join(PAGES_DIR, 'acoes')
+    if (!fs.existsSync(acoesDir)) {
+        totalFalhou++
+        console.log('   ❌ pages/acoes/ não existe')
+        console.log('   Status: ❌ FALHOU')
+        return
+    }
+
+    let ok = true
+    const amostra = ['ASAI3', 'VALE3', 'PETR4', 'ITUB4', 'BBAS3']
+    for (const ticker of amostra) {
+        const filePath = path.join(acoesDir, ticker + '.html')
+        if (!fs.existsSync(filePath)) continue
+        const html = fs.readFileSync(filePath, 'utf-8')
+        const nomeEsperado = mapa[ticker]
+        if (!nomeEsperado) continue
+        // Verificar que o nome aparece ao lado do ticker (no span text-gray-400)
+        const temNome = html.includes(nomeEsperado)
+        if (temNome) {
+            console.log('   ✅ ' + ticker + ': "' + nomeEsperado + '" encontrado')
+        } else {
+            ok = false
+            // Mostrar o que está no lugar
+            const match = html.match(new RegExp(ticker + '</h1>\\s*<span[^>]*>([^<]+)</span>'))
+            const atual = match ? match[1].trim() : '?'
+            console.log('   ❌ ' + ticker + ': esperado "' + nomeEsperado + '", encontrado "' + atual + '"')
+        }
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: ✅ PASSOU') }
+    else { totalFalhou++; console.log('   Status: ❌ FALHOU') }
+}
+
 // ===============================
 // Main
 // ===============================
@@ -617,6 +667,7 @@ async function main() {
     await testarSemHamburguer()
     await testarDetalheAcoes()
     await testarBuscaUnificada()
+    await testarNomeEmpresaAcoes()
 
     await browser.close()
 

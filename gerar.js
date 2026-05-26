@@ -40,6 +40,18 @@ function lerAcoes() {
         .filter(l => l)
 }
 
+function lerNomesAcoes() {
+    const csvPath = path.resolve(__dirname, 'data/ibov_acoes.csv')
+    const mapa = {}
+    if (!fs.existsSync(csvPath)) return mapa
+    const linhas = fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim())
+    for (const l of linhas) {
+        const [codigo, ...resto] = l.split(',')
+        if (codigo && resto.length) mapa[codigo.trim().toUpperCase()] = resto.join(',').trim()
+    }
+    return mapa
+}
+
 // ===============================
 // 🌐 BUSCAR IFIX (Yahoo Finance)
 // ===============================
@@ -392,6 +404,9 @@ async function buscarRankingsAcoes(tickers) {
     }
     console.log(`  Yahoo batch ações: ${Object.keys(varAnoBatch).length} YTD (${Date.now() - startTime}ms)`)
 
+    // Carregar nomes do CSV (fonte primária)
+    const nomesCSV = lerNomesAcoes()
+
     // Buscar DY, P/L, nome, setor e dividendos via Investidor 10
     for (let i = 0; i < tickers.length; i++) {
         const t = tickers[i]
@@ -410,9 +425,8 @@ async function buscarRankingsAcoes(tickers) {
             // Extrair nome e setor
             const articleMatch = html.match(/"articleBody":\s*"([^"]+)"/)
             const articleBody = articleMatch ? articleMatch[1] : ''
-            const nomeMatch = articleBody.match(/A empresa ([^,]+),/i) || articleBody.match(/A ([^,]+),/i)
             const setorMatch = articleBody.match(/setor[^.]*?([A-Z\u00c0-\u00ff][^.]{3,40})/i)
-            const nome = nomeMatch ? nomeMatch[1].trim() : ''
+            const nome = nomesCSV[t] || ''
             const setor = setorMatch ? setorMatch[1].trim() : ''
 
             // Extrair dividendos com datas
@@ -566,14 +580,19 @@ async function main() {
             const tickersUnicos = [...new Set(acoes)]
             rankingsAcoes.topAltas = altasAcoes.map(r => ({ ticker: r.ticker }))
             rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
-            // Adicionar nomes de ações ao mapa
-            for (const det of (rankingsAcoes.detalhes || [])) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
+            // Adicionar nomes de ações ao mapa (CSV tem prioridade)
+            const nomesCSVCache = lerNomesAcoes()
+            for (const det of (rankingsAcoes.detalhes || [])) {
+                const n = nomesCSVCache[det.ticker] || det.nome
+                if (n) global.INVESTPOP_NOMES[det.ticker] = n
+            }
             for (const t of tickersUnicos) {
                 const det = (rankingsAcoes.detalhes || []).find(r => r.ticker === t) || {}
                 const cotacao = resAcoes.find(r => r.ticker === t)
                 const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
                 const varDia = cotacao ? cotacao.varNum : 0
-                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: det.nome||'', setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes))
+                const nomeAcao = nomesCSVCache[t] || det.nome || ''
+                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes))
             }
             console.log(`✅ ${tickersUnicos.length} páginas de detalhe de ações geradas`)
 
@@ -667,14 +686,19 @@ async function main() {
     const tickersAcoesUnicos = [...new Set(acoes)]
     rankingsAcoes.topAltas = altasAcoes.map(r => ({ ticker: r.ticker }))
     rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
-    // Adicionar nomes de ações ao mapa
-    for (const det of (rankingsAcoes.detalhes || [])) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
+    // Adicionar nomes de ações ao mapa (CSV tem prioridade)
+    const nomesCSVFull = lerNomesAcoes()
+    for (const det of (rankingsAcoes.detalhes || [])) {
+        const n = nomesCSVFull[det.ticker] || det.nome
+        if (n) global.INVESTPOP_NOMES[det.ticker] = n
+    }
     for (const t of tickersAcoesUnicos) {
         const det = (rankingsAcoes.detalhes || []).find(r => r.ticker === t) || {}
         const cotacao = resAcoes.find(r => r.ticker === t)
         const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
         const varDia = cotacao ? cotacao.varNum : 0
-        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: det.nome||'', setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes))
+        const nomeAcao = nomesCSVFull[t] || det.nome || ''
+        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes))
     }
     console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 
