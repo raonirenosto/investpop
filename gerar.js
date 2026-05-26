@@ -9,6 +9,8 @@ const { gerarHtmlAcoes } = require("./generators/pagina-index-acoes")
 const { gerarPaginaListaAcoes, gerarPaginaRankingAcoes } = require("./generators/pagina-lista-acoes")
 const { gerarPaginaDetalheAcao } = require("./generators/pagina-detalhe-acao")
 const { gerarConsole } = require("./generators/pagina-console")
+const { gerarPaginaAcessos } = require("./generators/pagina-acessos")
+const { gerarPaginaIbovHistorico } = require("./generators/pagina-ibov-historico")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
 const CACHE_FILE = path.resolve(__dirname, "data/cache_fiis.csv")
@@ -30,14 +32,57 @@ function lerFiis() {
 }
 
 function lerAcoes() {
-    if (!fs.existsSync("data/lista_acoes.txt")) {
-        console.log("⚠️ Arquivo data/lista_acoes.txt não encontrado")
+    const csvPath = path.resolve(__dirname, 'data/ibov_acoes.csv')
+    if (!fs.existsSync(csvPath)) {
+        console.log("⚠️ Arquivo data/ibov_acoes.csv não encontrado")
         return []
     }
-    return fs.readFileSync("data/lista_acoes.txt", "utf-8")
-        .split(/[\r\n\s,]+/)
-        .map(l => l.trim().toUpperCase())
-        .filter(l => l)
+    return fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim()).map(l => l.split(',')[0].trim().toUpperCase())
+}
+
+async function sincronizarIBOV() {
+    try {
+        const r = await axios.get('https://sistemaswebb3-listados.b3.com.br/indexProxy/indexCall/GetPortfolioDay/eyJsYW5ndWFnZSI6InB0LWJyIiwicGFnZU51bWJlciI6MSwicGFnZVNpemUiOjEyMCwiaW5kZXgiOiJJQk9WIiwic2VnbWVudCI6IjEifQ==', {
+            httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" }
+        })
+        const apiList = r.data.results.map(x => ({ cod: x.cod.trim().toUpperCase(), nome: x.asset.trim() }))
+
+        // Ler CSV atual
+        const csvPath = path.resolve(__dirname, 'data/ibov_acoes.csv')
+        const csvAtual = fs.existsSync(csvPath) ? fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim()).map(l => { const [c, ...r] = l.split(','); return { cod: c.trim().toUpperCase(), nome: r.join(',').trim() } }) : []
+        const csvCods = csvAtual.map(x => x.cod)
+        const apiCods = apiList.map(x => x.cod)
+
+        const adicionadas = apiList.filter(x => !csvCods.includes(x.cod))
+        const removidas = csvAtual.filter(x => !apiCods.includes(x.cod))
+
+        if (adicionadas.length === 0 && removidas.length === 0) {
+            console.log(`✅ IBOV sincronizado (${apiList.length} ações, sem mudanças)`)
+            return
+        }
+
+        // Atualizar CSV principal
+        let novoCSV = 'codigo,acao\n'
+        for (const a of apiList) novoCSV += a.cod + ',' + a.nome + '\n'
+        fs.writeFileSync(csvPath, novoCSV)
+
+        // Registrar histórico
+        const histPath = path.resolve(__dirname, 'data/ibov_historico.csv')
+        const agora = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+        const data = agora.split(',')[0].trim()
+        const horario = agora.split(',')[1] ? agora.split(',')[1].trim() : ''
+        let hist = ''
+        if (!fs.existsSync(histPath)) hist = 'data,horario,ticker,nome,tipo\n'
+        for (const a of adicionadas) hist += `${data},${horario},${a.cod},${a.nome},ADICIONADA\n`
+        for (const r of removidas) hist += `${data},${horario},${r.cod},${r.nome},REMOVIDA\n`
+        fs.appendFileSync(histPath, hist)
+
+        console.log(`🔄 IBOV atualizado: +${adicionadas.length} adicionadas, -${removidas.length} removidas`)
+        if (adicionadas.length) console.log(`   Adicionadas: ${adicionadas.map(x => x.cod).join(', ')}`)
+        if (removidas.length) console.log(`   Removidas: ${removidas.map(x => x.cod).join(', ')}`)
+    } catch (e) {
+        console.log(`⚠️ Erro ao sincronizar IBOV: ${e.message} (usando CSV local)`)
+    }
 }
 
 function lerNomesAcoes() {
@@ -541,6 +586,8 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
             fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
             fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
+            fs.writeFileSync(path.join(pasta, "acessos.html"), gerarPaginaAcessos())
+            fs.writeFileSync(path.join(pasta, "ibov-historico.html"), gerarPaginaIbovHistorico())
             fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
             // Gerar páginas de detalhe (via cache)
@@ -554,6 +601,7 @@ async function main() {
             fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
 
             // Gerar páginas de ações (via cache)
+            await sincronizarIBOV()
             const acoes = lerAcoes()
             console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
             const ibovData = await buscarIbov()
@@ -658,6 +706,8 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
     fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
+    fs.writeFileSync(path.join(pasta, "acessos.html"), gerarPaginaAcessos())
+    fs.writeFileSync(path.join(pasta, "ibov-historico.html"), gerarPaginaIbovHistorico())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
     // Gerar páginas de detalhe
@@ -673,6 +723,7 @@ async function main() {
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
 
     // Gerar páginas de ações
+    await sincronizarIBOV()
     const acoes = lerAcoes()
     console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
     const ibovData = await buscarIbov()

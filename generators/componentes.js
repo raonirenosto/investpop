@@ -83,7 +83,7 @@ function footerHtml(opts) {
     var fiisLista = []
     try { fiisLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_fiis.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
     var acoesLista = []
-    try { acoesLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/lista_acoes.txt'), 'utf-8').split(/[\r\n\s,]+/).map(l => l.trim().toUpperCase()).filter(l => l) } catch(e) {}
+    try { acoesLista = require('fs').readFileSync(require('path').resolve(__dirname, '../data/ibov_acoes.csv'), 'utf-8').split('\n').slice(1).filter(l => l.trim()).map(l => l.split(',')[0].trim().toUpperCase()) } catch(e) {}
     var buscaLista = fiisLista.concat(acoesLista)
     // Nomes para busca (gerado em runtime se disponível)
     var nomesMap = global.INVESTPOP_NOMES || {}

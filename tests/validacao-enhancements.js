@@ -120,7 +120,7 @@ async function testarFocoAutomatico(browser) {
 async function testarAbasTemporalConsole() {
     console.log('\n🔍 TESTE 4 — Abas de filtro temporal no console (#18/#24)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos.html'), 'utf-8')
 
     const temAbaHoje = html.includes('data-periodo="hoje"')
     const temAbaOntem = html.includes('data-periodo="ontem"')
@@ -141,7 +141,7 @@ async function testarAbaHojePadrao(browser) {
     console.log('\n🔍 TESTE 5 — Aba "Hoje" selecionada por padrão no console (#18)')
 
     const page = await browser.newPage()
-    await page.goto('file://' + path.join(PAGES_DIR, 'console.html'), { waitUntil: 'domcontentloaded' })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acessos.html'), { waitUntil: 'domcontentloaded' })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -172,7 +172,7 @@ async function testarAbaHojePadrao(browser) {
 async function testarGeradorTemAbas() {
     console.log('\n🔍 TESTE 6 — Gerador pagina-console.js inclui abas temporais (#19)')
 
-    const src = fs.readFileSync(path.resolve(__dirname, '../generators/pagina-console.js'), 'utf-8')
+    const src = fs.readFileSync(path.resolve(__dirname, '../generators/pagina-acessos.js'), 'utf-8')
     const temAbas = src.includes('data-periodo="hoje"') && src.includes('data-periodo="ontem"') && src.includes('data-periodo="antigo"')
 
     if (temAbas) {
@@ -210,7 +210,7 @@ async function testarMensagemVazio() {
 async function testarSemFiltro() {
     console.log('\n🔍 TESTE 8 — Console sem campo de filtro/busca (#20)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos.html'), 'utf-8')
     const temFiltro = html.includes('id="busca"') && html.includes('Filtrar por IP')
 
     if (!temFiltro) {
@@ -256,7 +256,7 @@ async function testarConsoleSemErroJS(browser) {
     const page = await browser.newPage()
     var erros = []
     page.on('pageerror', function(e) { erros.push(e.message) })
-    await page.goto('file://' + path.join(PAGES_DIR, 'console.html'), { waitUntil: 'domcontentloaded' })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acessos.html'), { waitUntil: 'domcontentloaded' })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -284,7 +284,7 @@ async function testarTabelaEscondidaSemDados(browser) {
     console.log('\n🔍 TESTE 11 — Tabela escondida e msg visível quando sem registros (#22)')
 
     const page = await browser.newPage()
-    await page.goto('file://' + path.join(PAGES_DIR, 'console.html'), { waitUntil: 'domcontentloaded' })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acessos.html'), { waitUntil: 'domcontentloaded' })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -539,7 +539,7 @@ async function testarBuscaUnificada() {
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'console.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos.html'), 'utf-8')
     const temLimpar = html.includes('limparDados()')
 
     if (!temLimpar) {
