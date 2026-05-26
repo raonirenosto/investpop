@@ -29,6 +29,8 @@
     body { font-family: 'Inter', sans-serif; }
     #modal-breve { display: none; }
     #modal-breve.show { display: flex; }
+    main { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body class="bg-bg min-h-screen text-white">
@@ -79,9 +81,9 @@
 
       </div>
       <div class="text-right">
-        <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 3,80</p>
+        <p class="text-xl md:text-3xl font-bold whitespace-nowrap">R$ 3,81</p>
         <div class="flex items-center gap-1 justify-end">
-          <span class="text-xs md:text-sm text-red-500 font-medium">-0,78%</span>
+          <span class="text-xs md:text-sm text-red-500 font-medium">-0,52%</span>
           <span class="text-[10px] md:text-xs text-gray-500">↓</span>
         </div>
       </div>
@@ -98,7 +100,7 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
-        <p class="text-lg font-bold mt-1 text-red-500">-34,03%</p>
+        <p class="text-lg font-bold mt-1 text-red-500">-33,85%</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Consistência</span>
@@ -114,7 +116,7 @@
         <div class="space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-xs text-gray-500">No ano (YTD)</span>
-            <span class="text-sm font-medium text-red-500">-34,03%</span>
+            <span class="text-sm font-medium text-red-500">-33,85%</span>
           </div>
         </div>
       </div>
@@ -174,15 +176,15 @@
 
       <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
         <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por ano?</h2>
-        <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos últimos 12 meses (ação a R$ 3,80)</p>
+        <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos últimos 12 meses (ação a R$ 3,81)</p>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 765,51</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 3827,55</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 7655,11</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 19137,77</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 38275,53</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 76551,06</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 382755,32</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 763,50</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 3817,51</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 7635,01</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 19087,54</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 38175,07</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 76350,14</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ 381750,71</span></div>
         </div>
       </div>
 

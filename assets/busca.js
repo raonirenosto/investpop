@@ -83,8 +83,8 @@
       e.preventDefault();
       e.stopPropagation();
       overlay.classList.remove('hidden');
-      // iOS Safari: focus() must run after render frame when element leaves display:none
-      requestAnimationFrame(function() { mobInput.focus(); });
+      // iOS Safari: focus() MUST be called synchronously in the user gesture handler
+      mobInput.focus();
     });
   }
 

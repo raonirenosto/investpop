@@ -31,6 +31,8 @@ function headHtml(titulo, descricao, jsonLd) {
     body { font-family: 'Inter', sans-serif; }
     #modal-breve { display: none; }
     #modal-breve.show { display: flex; }
+    main { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   </style>${ldScript}
 </head>
 <body class="bg-bg min-h-screen text-white">`

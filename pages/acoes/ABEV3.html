@@ -29,6 +29,8 @@
     body { font-family: 'Inter', sans-serif; }
     #modal-breve { display: none; }
     #modal-breve.show { display: flex; }
+    main { animation: fadeIn 0.3s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body class="bg-bg min-h-screen text-white">
@@ -98,7 +100,7 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
-        <p class="text-lg font-bold mt-1 text-emerald-500">+19,05%</p>
+        <p class="text-lg font-bold mt-1 text-emerald-500">+18,98%</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Consistência</span>
@@ -114,7 +116,7 @@
         <div class="space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-xs text-gray-500">No ano (YTD)</span>
-            <span class="text-sm font-medium text-emerald-500">+19,05%</span>
+            <span class="text-sm font-medium text-emerald-500">+18,98%</span>
           </div>
         </div>
       </div>
@@ -191,7 +193,7 @@
         <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Aparece nos Rankings</h2>
         <div class="flex flex-wrap gap-3">
           <a href="../acoes-altas.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">
-            <span class="text-xs font-bold text-emerald-400">#4</span>
+            <span class="text-xs font-bold text-emerald-400">#5</span>
             <span class="text-sm text-gray-300">Top 5 Maiores Altas do Dia</span>
           </a>
           <a href="../acoes-ranking-dy.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">
