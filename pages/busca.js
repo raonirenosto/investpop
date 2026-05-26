@@ -32,6 +32,9 @@
     overlay.classList.add('hidden');
     mobInput.value = '';
     mobResults.innerHTML = '';
+    // Move input back to body offscreen for next open
+    mobInput.style.cssText = 'position:fixed;top:-9999px;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(mobInput);
   }
 
   // Desktop: attach to nav input
@@ -57,7 +60,6 @@
   document.querySelectorAll('button').forEach(function(b) {
     if (searchBtn) return;
     if (!b.querySelector('path[d*="M21 21l-6-6"]')) return;
-    // Accept if parent has md:hidden or if button is visible at mobile width
     var parent = b.parentElement;
     if (parent && parent.className) {
       if (parent.className.indexOf('md:hidden') !== -1 || parent.className.indexOf('lg:hidden') !== -1) {
@@ -66,24 +68,41 @@
     }
   });
 
-  // Create overlay
+  // Create mobile input ALWAYS in DOM (iOS Safari fix - input must never be display:none)
+  var mobInput = document.createElement('input');
+  mobInput.type = 'text';
+  mobInput.id = 'busca-mob-input';
+  mobInput.placeholder = 'Buscar ticker, empresa...';
+  mobInput.autocomplete = 'off';
+  mobInput.className = 'bg-transparent text-base text-gray-300 outline-none w-full';
+  mobInput.style.cssText = 'position:fixed;top:-9999px;left:0;opacity:0;pointer-events:none;';
+  document.body.appendChild(mobInput);
+
+  // Create overlay (without the input - input lives outside)
   var overlay = document.createElement('div');
   overlay.id = 'busca-mobile-overlay';
   overlay.className = 'hidden fixed inset-0 z-50 bg-[#07111F]/95';
-  overlay.innerHTML = '<div class="px-4 pt-4" id="busca-mob-content"><div class="flex items-center gap-3 mb-4"><div class="flex-1 flex items-center bg-[#0B1A2E] border border-[#132743] rounded-lg px-3 py-2.5 gap-2"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><input type="text" id="busca-mob-input" placeholder="Buscar FII, ticker..." autocomplete="off" class="bg-transparent text-base text-gray-300 outline-none w-full"/></div><button id="busca-mob-cancel" class="text-gray-400 text-sm">Cancelar</button></div><div id="busca-mob-results"></div></div>';
+  overlay.innerHTML = '<div class="px-4 pt-4" id="busca-mob-content"><div class="flex items-center gap-3 mb-4"><div class="flex-1 flex items-center bg-[#0B1A2E] border border-[#132743] rounded-lg px-3 py-2.5 gap-2"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg><span id="busca-mob-input-slot"></span></div><button id="busca-mob-cancel" class="text-gray-400 text-sm">Cancelar</button></div><div id="busca-mob-results"></div></div>';
   document.body.appendChild(overlay);
 
-  var mobInput = document.getElementById('busca-mob-input');
   var mobResults = document.getElementById('busca-mob-results');
   var mobContent = document.getElementById('busca-mob-content');
+  var inputSlot = document.getElementById('busca-mob-input-slot');
 
-  // Open overlay
+  // Open overlay - iOS fix: focus() FIRST (input is in DOM), then show overlay and move input
   if (searchBtn) {
     searchBtn.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
+      // Step 1: make input visible and focusable (still offscreen)
+      mobInput.style.cssText = '';
+      mobInput.className = 'bg-transparent text-base text-gray-300 outline-none w-full';
+      // Step 2: focus the input (iOS opens keyboard because input is in DOM)
+      mobInput.focus();
+      // Step 3: show overlay and move input into slot
       overlay.classList.remove('hidden');
-      // iOS Safari: focus() MUST be called synchronously in the user gesture handler
+      inputSlot.appendChild(mobInput);
+      // Step 4: re-focus after move (for non-iOS browsers that lose focus on DOM move)
       mobInput.focus();
     });
   }

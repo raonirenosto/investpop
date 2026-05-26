@@ -151,7 +151,8 @@ function footerHtml(opts) {
     var FIIS_LISTA = ${JSON.stringify(buscaLista)};
     var ACOES_LISTA = ${JSON.stringify(acoesLista)};
     var NOMES_MAP = ${JSON.stringify(nomesMap)};
-    var ACOES_BASE = '${base}acoes/';
+    var FIIS_BASE = '${opts && opts.fiisBase !== undefined ? opts.fiisBase : base + "fiis/"}';
+    var ACOES_BASE = '${opts && opts.acoesBase !== undefined ? opts.acoesBase : base + "acoes/"}';
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
     window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });

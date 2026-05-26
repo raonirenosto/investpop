@@ -177,13 +177,7 @@ ${tops.map(t => `          <a href="${t.link}" class="flex items-center gap-2 bg
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
-
-  <script>
-    var FIIS_BASE = '';
-    var ACOES_BASE = '../acoes/';
-  </script>
-  <script src="../busca.js"></script>
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../', fiisBase:'', acoesBase:'../acoes/'} : {basePath:'../', fiisBase:'', acoesBase:'../acoes/'})}
 
 </body>
 </html>`
