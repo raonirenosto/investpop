@@ -35,12 +35,11 @@ function gerarPaginaDetalheAcao(acao, todasAcoes, rankings) {
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ ${d.valor ? d.valor.toFixed(4).replace('.', ',') : '-'}</td>
             </tr>`).join('\n')
 
-    // Simulador
+    // Simulador anual
     const totalAnual = (acao.dividendos || []).slice(0, 20).reduce((s, d) => s + (d.valor || 0), 0)
-    const mediaMensal = totalAnual / 12
-    const simular = (valor) => {
-        if (acao.preco <= 0 || mediaMensal <= 0) return '-'
-        return ((valor / acao.preco) * mediaMensal).toFixed(2).replace('.', ',')
+    const simularAnual = (valor) => {
+        if (acao.preco <= 0 || totalAnual <= 0) return '-'
+        return ((valor / acao.preco) * totalAnual).toFixed(2).replace('.', ',')
     }
 
     return `${headHtml(acao.ticker + " \u2014 InvestPop", acao.ticker + " - " + (acao.nome || 'A\u00e7\u00e3o') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
@@ -101,10 +100,6 @@ ${headerHtml({basePath: '../', paginaAcoes: true})}
             <span class="text-xs text-gray-500">No ano (YTD)</span>
             <span class="text-sm font-medium ${corYtd}">${ytdFmt}</span>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-500">Consist\u00eancia</span>
-            <span class="text-sm font-medium text-orange-400">${acao.mesesConsistentes > 0 ? acao.mesesConsistentes + ' anos' : '-'}</span>
-          </div>
         </div>
       </div>
 
@@ -126,18 +121,18 @@ ${linhasDividendos}
         </table>
       </div>` : ''}
 
-${mediaMensal > 0 ? `
+${totalAnual > 0 ? `
       <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
-        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por m\u00eas?</h2>
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por ano?</h2>
         <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos \u00faltimos 12 meses (a\u00e7\u00e3o a R$ ${acao.preco.toFixed(2).replace('.', ',')})</p>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(1000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(5000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(10000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(25000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(50000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(100000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simular(500000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(1000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(5000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(10000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(25000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(50000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(100000)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(500000)}</span></div>
         </div>
       </div>` : ''}
 

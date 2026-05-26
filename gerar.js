@@ -445,8 +445,7 @@ async function buscarRankingsAcoes(tickers) {
                 }
             }
 
-            // Consistência para ações: pagamentos anuais consecutivos sem redução
-            // Agrupa por ano e compara total anual
+            // Consistência para ações: anos seguidos que pagou dividendos
             const porAno = {}
             for (const r of rendimentos) {
                 const anoMatch = r.dataCom && r.dataCom.match(/(\d{4})/)
@@ -457,8 +456,8 @@ async function buscarRankingsAcoes(tickers) {
             }
             const anos = Object.keys(porAno).sort().reverse()
             let anosConsistentes = 0
-            for (let j = 0; j < anos.length - 1; j++) {
-                if (porAno[anos[j]] >= porAno[anos[j + 1]] * 0.8) anosConsistentes++
+            for (let j = 0; j < anos.length; j++) {
+                if (porAno[anos[j]] > 0) anosConsistentes++
                 else break
             }
 
