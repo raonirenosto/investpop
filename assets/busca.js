@@ -24,8 +24,8 @@
 
   function renderItem(f) {
     var nome = nomesMap[f];
-    var label = nome ? f + ' <span class="text-gray-500 text-xs">' + nome + '</span>' : f;
-    return label;
+    if (!nome) return '<span class="font-bold">' + f + '</span>';
+    return '<span class="font-bold">' + f + '</span> <span class="text-gray-500 font-normal text-xs truncate">' + nome + '</span>';
   }
 
   function fecharOverlay() {
@@ -46,7 +46,7 @@
     navInput.addEventListener('input', function() {
       var results = buscar(this.value);
       if (!results.length) { dropdown.classList.add('hidden'); return; }
-      dropdown.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-2 hover:bg-[#132743] text-sm font-medium">'+renderItem(f)+'</a>'; }).join('');
+      dropdown.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="flex items-center gap-2 px-3 py-2 hover:bg-[#132743] text-sm overflow-hidden">'+renderItem(f)+'</a>'; }).join('');
       dropdown.classList.remove('hidden');
     });
     document.addEventListener('click', function(e) { if (!container.contains(e.target)) dropdown.classList.add('hidden'); });
@@ -114,7 +114,7 @@
     var v = this.value;
     if (v.length < 2) { mobResults.innerHTML = ''; return; }
     var results = buscar(v).slice(0, 10);
-    mobResults.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="block px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm font-medium">'+renderItem(f)+'</a>'; }).join('');
+    mobResults.innerHTML = results.map(function(f) { return '<a href="'+getLink(f)+'" class="flex items-center gap-2 px-3 py-3 mb-2 bg-[#0B1A2E] border border-[#132743] rounded-lg text-sm overflow-hidden">'+renderItem(f)+'</a>'; }).join('');
   });
 
   // Close on Escape key

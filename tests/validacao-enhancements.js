@@ -51,41 +51,21 @@ async function testarCardTops() {
 }
 
 async function testarCardTopsMultiplos() {
-    console.log('\n🔍 TESTE 2 — FII que não aparece em nenhum top não mostra card (#6)')
+    console.log('\n🔍 TESTE 2 — Card mostra posição real mesmo fora do Top 5 (#52)')
 
-    // Pegar um FII que provavelmente não está em nenhum top 5
-    const arquivos = fs.readdirSync(path.join(PAGES_DIR, 'fiis')).filter(f => f.endsWith('.html'))
-    // Ler a index pra saber quais estão nos tops
-    const indexHtml = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    // PETR4 provavelmente não está no top 5 de tudo, mas deve mostrar posição real
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'PETR4.html'), 'utf-8')
+    const temCard = html.includes('Aparece nos Rankings')
+    // Deve ter posição > 5 (ex: #15, #19)
+    const temPosGrande = html.match(/#\d{2,}/) !== null
 
-    let fiiForaDoTop = null
-    for (const arq of arquivos) {
-        const ticker = arq.replace('.html', '')
-        // Verificar se aparece nas tabelas de ranking da index (top 5)
-        const regex = new RegExp('hover:underline">' + ticker + '</a></td><td class="py-2.5 text-right')
-        if (!regex.test(indexHtml)) {
-            fiiForaDoTop = ticker
-            break
-        }
-    }
-
-    if (!fiiForaDoTop) {
-        console.log('   ⚠️ Não encontrou FII fora dos tops, pulando')
+    if (temCard && temPosGrande) {
         totalPassou++
-        console.log('   Status: ✅ PASSOU')
-        return
-    }
-
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', fiiForaDoTop + '.html'), 'utf-8')
-    const temCardTops = html.includes('Aparece nos Rankings') || html.includes('Rankings que participa')
-
-    if (!temCardTops) {
-        totalPassou++
-        console.log('   ✅ ' + fiiForaDoTop + ': sem card de tops (correto, não está em nenhum top 5)')
+        console.log('   ✅ PETR4: card mostra posição real fora do Top 5')
         console.log('   Status: ✅ PASSOU')
     } else {
         totalFalhou++
-        console.log('   ❌ ' + fiiForaDoTop + ': card de tops presente mas não deveria')
+        console.log('   ❌ PETR4: temCard=' + temCard + ' temPosGrande=' + temPosGrande)
         console.log('   Status: ❌ FALHOU')
     }
 }

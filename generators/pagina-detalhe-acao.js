@@ -11,19 +11,19 @@ function gerarPaginaDetalheAcao(acao, todasAcoes, rankings) {
     // Tops
     const tops = []
     const r = rankings || {}
-    const posTop = (lista, ticker) => { const idx = (lista || []).findIndex(x => x.ticker === ticker); return idx >= 0 && idx < 5 ? idx + 1 : -1 }
-    const posAlta = posTop(r.topAltas, acao.ticker)
-    const posQueda = posTop(r.topQuedas, acao.ticker)
-    const posDY = posTop(r.allDY, acao.ticker)
-    const posPL = posTop(r.allBaratos, acao.ticker)
-    const posYTD = posTop(r.allVarAno, acao.ticker)
-    const posCons = posTop(r.allConsistentes, acao.ticker)
-    if (posAlta > 0) tops.push({ nome: 'Maior Alta do Dia', pos: posAlta, cor: 'text-emerald-400', link: '../acoes-altas.html' })
-    if (posQueda > 0) tops.push({ nome: 'Maior Queda do Dia', pos: posQueda, cor: 'text-red-400', link: '../acoes-quedas.html' })
-    if (posDY > 0) tops.push({ nome: 'Mais Pagam', pos: posDY, cor: 'text-emerald-400', link: '../acoes-ranking-dy.html' })
-    if (posPL > 0) tops.push({ nome: 'Mais Baratos', pos: posPL, cor: 'text-blue-400', link: '../acoes-ranking-baratos.html' })
-    if (posYTD > 0) tops.push({ nome: 'Maior Valoriza\u00e7\u00e3o', pos: posYTD, cor: 'text-purple-400', link: '../acoes-ranking-valorizacao.html' })
-    if (posCons > 0) tops.push({ nome: 'Mais Consistentes', pos: posCons, cor: 'text-orange-400', link: '../acoes-ranking-consistentes.html' })
+    const posAll = (lista, ticker) => { const idx = (lista || []).findIndex(x => x.ticker === ticker); return idx >= 0 ? idx + 1 : -1 }
+    const posAlta = posAll(r.topAltas, acao.ticker)
+    const posQueda = posAll(r.topQuedas, acao.ticker)
+    const posDY = posAll(r.allDY, acao.ticker)
+    const posPL = posAll(r.allBaratos, acao.ticker)
+    const posYTD = posAll(r.allVarAno, acao.ticker)
+    const posCons = posAll(r.allConsistentes, acao.ticker)
+    if (posAlta > 0) tops.push({ nome: posAlta <= 5 ? 'Top 5 Maiores Altas do Dia' : 'Maiores Altas do Dia', pos: posAlta, cor: posAlta <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../acoes-altas.html' })
+    if (posQueda > 0) tops.push({ nome: posQueda <= 5 ? 'Top 5 Maiores Quedas do Dia' : 'Maiores Quedas do Dia', pos: posQueda, cor: posQueda <= 5 ? 'text-red-400' : 'text-gray-400', link: '../acoes-quedas.html' })
+    if (posDY > 0) tops.push({ nome: posDY <= 5 ? 'Top 5 Que Mais Pagam' : 'Que Mais Pagam (DY)', pos: posDY, cor: posDY <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../acoes-ranking-dy.html' })
+    if (posPL > 0) tops.push({ nome: posPL <= 5 ? 'Top 5 Mais Baratos' : 'Mais Baratos (P/L)', pos: posPL, cor: posPL <= 5 ? 'text-blue-400' : 'text-gray-400', link: '../acoes-ranking-baratos.html' })
+    if (posYTD > 0) tops.push({ nome: posYTD <= 5 ? 'Top 5 Maior Valoriza\u00e7\u00e3o' : 'Maior Valoriza\u00e7\u00e3o (YTD)', pos: posYTD, cor: posYTD <= 5 ? 'text-purple-400' : 'text-gray-400', link: '../acoes-ranking-valorizacao.html' })
+    if (posCons > 0) tops.push({ nome: posCons <= 5 ? 'Top 5 Mais Consistentes' : 'Mais Consistentes', pos: posCons, cor: posCons <= 5 ? 'text-orange-400' : 'text-gray-400', link: '../acoes-ranking-consistentes.html' })
 
     // Dividendos
     const divs = (acao.dividendos || []).slice(0, 5)

@@ -12,19 +12,19 @@ function gerarPaginaDetalhe(fii, todosFiis, rankings) {
     // Verificar em quais tops o FII aparece
     const tops = []
     const r = rankings || {}
-    const posTop = (lista, ticker) => { const idx = (lista || []).findIndex(x => x.ticker === ticker); return idx >= 0 && idx < 5 ? idx + 1 : -1 }
-    const posDY = posTop(r.allDY, fii.ticker)
-    const posPVP = posTop(r.allBaratos, fii.ticker)
-    const posYTD = posTop(r.allVarAno, fii.ticker)
-    const posCons = posTop(r.allConsistentes, fii.ticker)
-    const posAlta = posTop(r.topAltas, fii.ticker)
-    const posQueda = posTop(r.topQuedas, fii.ticker)
-    if (posAlta > 0) tops.push({ nome: 'Maior Alta do Dia', pos: posAlta, cor: 'text-emerald-400', link: '../altas.html' })
-    if (posQueda > 0) tops.push({ nome: 'Maior Queda do Dia', pos: posQueda, cor: 'text-red-400', link: '../quedas.html' })
-    if (posDY > 0) tops.push({ nome: 'Mais Pagam', pos: posDY, cor: 'text-emerald-400', link: '../ranking-dy.html' })
-    if (posPVP > 0) tops.push({ nome: 'Mais Baratos', pos: posPVP, cor: 'text-blue-400', link: '../ranking-baratos.html' })
-    if (posYTD > 0) tops.push({ nome: 'Maior Valoriza\u00e7\u00e3o', pos: posYTD, cor: 'text-purple-400', link: '../ranking-valorizacao.html' })
-    if (posCons > 0) tops.push({ nome: 'Mais Consistentes', pos: posCons, cor: 'text-orange-400', link: '../ranking-consistentes.html' })
+    const posAll = (lista, ticker) => { const idx = (lista || []).findIndex(x => x.ticker === ticker); return idx >= 0 ? idx + 1 : -1 }
+    const posDY = posAll(r.allDY, fii.ticker)
+    const posPVP = posAll(r.allBaratos, fii.ticker)
+    const posYTD = posAll(r.allVarAno, fii.ticker)
+    const posCons = posAll(r.allConsistentes, fii.ticker)
+    const posAlta = posAll(r.topAltas, fii.ticker)
+    const posQueda = posAll(r.topQuedas, fii.ticker)
+    if (posAlta > 0) tops.push({ nome: posAlta <= 5 ? 'Top 5 Maiores Altas do Dia' : 'Maiores Altas do Dia', pos: posAlta, cor: posAlta <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../altas.html' })
+    if (posQueda > 0) tops.push({ nome: posQueda <= 5 ? 'Top 5 Maiores Quedas do Dia' : 'Maiores Quedas do Dia', pos: posQueda, cor: posQueda <= 5 ? 'text-red-400' : 'text-gray-400', link: '../quedas.html' })
+    if (posDY > 0) tops.push({ nome: posDY <= 5 ? 'Top 5 Que Mais Pagam' : 'Que Mais Pagam (DY)', pos: posDY, cor: posDY <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../ranking-dy.html' })
+    if (posPVP > 0) tops.push({ nome: posPVP <= 5 ? 'Top 5 Mais Baratos' : 'Mais Baratos (P/VP)', pos: posPVP, cor: posPVP <= 5 ? 'text-blue-400' : 'text-gray-400', link: '../ranking-baratos.html' })
+    if (posYTD > 0) tops.push({ nome: posYTD <= 5 ? 'Top 5 Maior Valoriza\u00e7\u00e3o' : 'Maior Valoriza\u00e7\u00e3o (YTD)', pos: posYTD, cor: posYTD <= 5 ? 'text-purple-400' : 'text-gray-400', link: '../ranking-valorizacao.html' })
+    if (posCons > 0) tops.push({ nome: posCons <= 5 ? 'Top 5 Mais Consistentes' : 'Mais Consistentes', pos: posCons, cor: posCons <= 5 ? 'text-orange-400' : 'text-gray-400', link: '../ranking-consistentes.html' })
 
     const mediaMensal = fii.dividendos && fii.dividendos.length > 0
         ? fii.dividendos.slice(0, 12).reduce((s, d) => s + d.valor, 0) / Math.min(fii.dividendos.length, 12)

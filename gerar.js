@@ -527,9 +527,11 @@ async function main() {
             const pasta = "pages"
             if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
 
-            // Popular nomes para busca
+            // Popular nomes para busca (FIIs + Ações CSV)
             global.INVESTPOP_NOMES = {}
             for (const det of rankings.detalhes) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
+            const nomesCSV = lerNomesAcoes()
+            for (const [ticker, nome] of Object.entries(nomesCSV)) { global.INVESTPOP_NOMES[ticker] = nome }
 
             fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
             fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
@@ -642,9 +644,11 @@ async function main() {
     const pasta = "pages"
     if (!fs.existsSync(pasta)) fs.mkdirSync(pasta)
 
-    // Popular nomes para busca
+    // Popular nomes para busca (FIIs + Ações CSV)
     global.INVESTPOP_NOMES = {}
     for (const det of rankings.detalhes) { if (det.nome) global.INVESTPOP_NOMES[det.ticker] = det.nome }
+    const nomesCSVOnline = lerNomesAcoes()
+    for (const [ticker, nome] of Object.entries(nomesCSVOnline)) { global.INVESTPOP_NOMES[ticker] = nome }
 
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
     fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
