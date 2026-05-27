@@ -20,6 +20,11 @@ ${headerHtml()}
         <h2 class="text-sm font-bold text-gray-200 mb-1">IBOV - Composi\u00e7\u00e3o</h2>
         <p class="text-xs text-gray-500">Lista atual de a\u00e7\u00f5es do IBOV e hist\u00f3rico de adi\u00e7\u00f5es/remo\u00e7\u00f5es</p>
       </a>
+      <a href="ifix-historico.html" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
+        <p class="text-2xl mb-2">&#127970;</p>
+        <h2 class="text-sm font-bold text-gray-200 mb-1">IFIX - Composi\u00e7\u00e3o</h2>
+        <p class="text-xs text-gray-500">Lista atual de FIIs do IFIX e hist\u00f3rico de adi\u00e7\u00f5es/remo\u00e7\u00f5es</p>
+      </a>
     </div>
   </main>
 

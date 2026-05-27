@@ -11,6 +11,7 @@ const { gerarPaginaDetalheAcao } = require("./generators/pagina-detalhe-acao")
 const { gerarConsole } = require("./generators/pagina-console")
 const { gerarPaginaAcessos } = require("./generators/pagina-acessos")
 const { gerarPaginaIbovHistorico } = require("./generators/pagina-ibov-historico")
+const { gerarPaginaIfixHistorico } = require("./generators/pagina-ifix-historico")
 
 const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
 const CACHE_FILE = path.resolve(__dirname, "data/cache_fiis.csv")
@@ -21,14 +22,59 @@ const CACHE_FULL = path.resolve(__dirname, "data/cache_full.json")
 // ===============================
 
 function lerFiis() {
+    const csvPath = path.resolve(__dirname, 'data/ifix_fiis.csv')
+    if (fs.existsSync(csvPath)) {
+        return fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim()).map(l => l.split(',')[0].trim().toUpperCase())
+    }
     if (!fs.existsSync("data/lista_fiis.txt")) {
-        console.log("⚠️ Arquivo data/lista_fiis.txt não encontrado")
+        console.log("⚠️ Nenhuma fonte de FIIs encontrada")
         return []
     }
     return fs.readFileSync("data/lista_fiis.txt", "utf-8")
         .split(/[\r\n\s,]+/)
         .map(l => l.trim().toUpperCase())
         .filter(l => l)
+}
+
+async function sincronizarIFIX() {
+    try {
+        const payload = Buffer.from(JSON.stringify({language:'pt-br',pageNumber:1,pageSize:200,index:'IFIX',segment:'1'})).toString('base64')
+        const r = await axios.get('https://sistemaswebb3-listados.b3.com.br/indexProxy/indexCall/GetPortfolioDay/' + payload, {
+            httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" }
+        })
+        const apiList = r.data.results.map(x => ({ cod: x.cod.trim().toUpperCase(), nome: x.asset.trim() }))
+
+        const csvPath = path.resolve(__dirname, 'data/ifix_fiis.csv')
+        const csvAtual = fs.existsSync(csvPath) ? fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim()).map(l => { const [c, ...r] = l.split(','); return { cod: c.trim().toUpperCase(), nome: r.join(',').trim() } }) : []
+        const csvCods = csvAtual.map(x => x.cod)
+        const apiCods = apiList.map(x => x.cod)
+
+        const adicionadas = apiList.filter(x => !csvCods.includes(x.cod))
+        const removidas = csvAtual.filter(x => !apiCods.includes(x.cod))
+
+        if (adicionadas.length === 0 && removidas.length === 0) {
+            console.log(`✅ IFIX sincronizado (${apiList.length} FIIs, sem mudanças)`)
+            return
+        }
+
+        let novoCSV = 'codigo,fundo\n'
+        for (const a of apiList) novoCSV += a.cod + ',' + a.nome + '\n'
+        fs.writeFileSync(csvPath, novoCSV)
+
+        const histPath = path.resolve(__dirname, 'data/ifix_historico.csv')
+        const agora = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+        const data = agora.split(',')[0].trim()
+        const horario = agora.split(',')[1] ? agora.split(',')[1].trim() : ''
+        let hist = ''
+        if (!fs.existsSync(histPath)) hist = 'data,horario,ticker,nome,tipo\n'
+        for (const a of adicionadas) hist += `${data},${horario},${a.cod},${a.nome},ADICIONADA\n`
+        for (const r of removidas) hist += `${data},${horario},${r.cod},${r.nome},REMOVIDA\n`
+        fs.appendFileSync(histPath, hist)
+
+        console.log(`🔄 IFIX atualizado: +${adicionadas.length} adicionadas, -${removidas.length} removidas`)
+    } catch (e) {
+        console.log(`⚠️ Erro ao sincronizar IFIX: ${e.message} (usando CSV local)`)
+    }
 }
 
 function lerAcoes() {
@@ -557,6 +603,7 @@ async function buscarRankingsAcoes(tickers) {
 async function main() {
     console.log("🚀 InvestPop — Gerando página...\n")
 
+    await sincronizarIFIX()
     const fiis = lerFiis()
     const args = process.argv.slice(2)
     const limitFlag = args.find(a => a.startsWith("--limit="))
@@ -608,6 +655,7 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
             fs.writeFileSync(path.join(pasta, "acessos.html"), gerarPaginaAcessos())
             fs.writeFileSync(path.join(pasta, "ibov-historico.html"), gerarPaginaIbovHistorico())
+            fs.writeFileSync(path.join(pasta, "ifix-historico.html"), gerarPaginaIfixHistorico())
             fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
             // Gerar páginas de detalhe (via cache)
@@ -743,6 +791,7 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
     fs.writeFileSync(path.join(pasta, "acessos.html"), gerarPaginaAcessos())
     fs.writeFileSync(path.join(pasta, "ibov-historico.html"), gerarPaginaIbovHistorico())
+            fs.writeFileSync(path.join(pasta, "ifix-historico.html"), gerarPaginaIfixHistorico())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
     // Gerar páginas de detalhe
