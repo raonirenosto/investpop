@@ -497,7 +497,7 @@ async function buscarRankingsAcoes(tickers) {
                 while ((tdMatch = tdRegex.exec(trMatch[1])) !== null) {
                     tds.push(tdMatch[1].replace(/<[^>]+>/g, '').trim())
                 }
-                if (tds.length >= 4 && (tds[0].toLowerCase().includes('dividendo') || tds[0].toLowerCase().includes('jcp'))) {
+                if (tds.length >= 4 && (tds[0].toLowerCase().includes('dividendo') || tds[0].toLowerCase().includes('jscp') || tds[0].toLowerCase().includes('jcp'))) {
                     rendimentos.push({ tipo: tds[0], dataCom: tds[1], pagamento: tds[2], valor: parseFloat(tds[3].replace(/\./g, '').replace(',', '.')) })
                 }
             }
