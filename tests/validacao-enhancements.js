@@ -695,6 +695,36 @@ async function testarBuscaMostraNomeEmpresa() {
     }
 }
 
+async function testarDescricaoEmpresaAcoes() {
+    console.log('\n\ud83d\udd0d TESTE 24 \u2014 Descri\u00e7\u00e3o curta nas p\u00e1ginas de detalhe de a\u00e7\u00f5es (#67)')
+
+    const acoesDir = path.join(PAGES_DIR, 'acoes')
+    if (!fs.existsSync(acoesDir)) {
+        totalFalhou++
+        console.log('   \u274c pages/acoes/ n\u00e3o existe')
+        console.log('   Status: \u274c FALHOU')
+        return
+    }
+
+    let ok = true
+    const amostra = ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'ASAI3']
+    for (const ticker of amostra) {
+        const filePath = path.join(acoesDir, ticker + '.html')
+        if (!fs.existsSync(filePath)) continue
+        const html = fs.readFileSync(filePath, 'utf-8')
+        const temDescricao = html.includes('Sobre a Empresa') && html.match(/leading-relaxed[^>]*>[^<]{30,}/)
+        if (temDescricao) {
+            console.log('   \u2705 ' + ticker + ': tem descri\u00e7\u00e3o')
+        } else {
+            ok = false
+            console.log('   \u274c ' + ticker + ': sem descri\u00e7\u00e3o da empresa')
+        }
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
+
 async function testarFiltroBots() {
     console.log('\n\ud83d\udd0d TESTE 23 \u2014 Filtro de bots detecta padr\u00f5es comuns (#66)')
 
@@ -807,6 +837,7 @@ async function main() {
     await testarNomeEmpresaAcoes()
     await testarSemSetorIrrelevante()
     await testarBuscaMostraNomeEmpresa()
+    await testarDescricaoEmpresaAcoes()
     await testarFiltroBots()
 
     await browser.close()

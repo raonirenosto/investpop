@@ -97,6 +97,18 @@ function lerNomesAcoes() {
     return mapa
 }
 
+function lerDescricoesAcoes() {
+    const csvPath = path.resolve(__dirname, 'data/descricoes_acoes.csv')
+    const mapa = {}
+    if (!fs.existsSync(csvPath)) return mapa
+    const linhas = fs.readFileSync(csvPath, 'utf-8').split('\n').slice(1).filter(l => l.trim())
+    for (const l of linhas) {
+        const [codigo, ...resto] = l.split(',')
+        if (codigo && resto.length) mapa[codigo.trim().toUpperCase()] = resto.join(',').trim()
+    }
+    return mapa
+}
+
 // ===============================
 // 🌐 BUSCAR IFIX (Yahoo Finance)
 // ===============================
@@ -642,6 +654,7 @@ async function main() {
             rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
             // Adicionar nomes de ações ao mapa (CSV tem prioridade)
             const nomesCSVCache = lerNomesAcoes()
+            const descCSVCache = lerDescricoesAcoes()
             for (const det of (rankingsAcoes.detalhes || [])) {
                 const n = nomesCSVCache[det.ticker] || det.nome
                 if (n) global.INVESTPOP_NOMES[det.ticker] = n
@@ -652,7 +665,7 @@ async function main() {
                 const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
                 const varDia = cotacao ? cotacao.varNum : 0
                 const nomeAcao = nomesCSVCache[t] || det.nome || ''
-                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes))
+                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVCache[t]||det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes))
             }
             console.log(`✅ ${tickersUnicos.length} páginas de detalhe de ações geradas`)
 
@@ -764,6 +777,7 @@ async function main() {
     rankingsAcoes.topQuedas = quedasAcoes.map(r => ({ ticker: r.ticker }))
     // Adicionar nomes de ações ao mapa (CSV tem prioridade)
     const nomesCSVFull = lerNomesAcoes()
+    const descCSVFull = lerDescricoesAcoes()
     for (const det of (rankingsAcoes.detalhes || [])) {
         const n = nomesCSVFull[det.ticker] || det.nome
         if (n) global.INVESTPOP_NOMES[det.ticker] = n
@@ -774,7 +788,7 @@ async function main() {
         const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
         const varDia = cotacao ? cotacao.varNum : 0
         const nomeAcao = nomesCSVFull[t] || det.nome || ''
-        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes))
+        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVFull[t]||det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes))
     }
     console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 
