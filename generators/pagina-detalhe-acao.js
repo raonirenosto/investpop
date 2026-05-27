@@ -130,13 +130,13 @@ ${totalAnual > 0 ? `
         <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por ano?</h2>
         <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos \u00faltimos 12 meses (a\u00e7\u00e3o a R$ ${acao.preco.toFixed(2).replace('.', ',')})</p>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(100)}</span></div>
+          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(500)}</span></div>
           <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 1.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(1000)}</span></div>
           <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 5.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(5000)}</span></div>
           <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 10.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(10000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 25.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(25000)}</span></div>
           <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 50.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(50000)}</span></div>
           <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 100.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(100000)}</span></div>
-          <div class="text-center py-2"><span class="text-xs text-gray-500 block">R$ 500.000</span><span class="text-sm font-bold text-emerald-400 mt-1 block">R$ ${simularAnual(500000)}</span></div>
         </div>
       </div>` : ''}
 
