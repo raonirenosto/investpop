@@ -123,7 +123,11 @@ ${divs.length > 0 ? `
 ${linhasDividendos}
           </tbody>
         </table>
-      </div>` : ''}
+      </div>` : `
+      <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">\u00daltimos Proventos</h2>
+        <p class="text-sm text-gray-500 text-center py-4">Esta a\u00e7\u00e3o n\u00e3o possui hist\u00f3rico de dividendos</p>
+      </div>`}
 
 ${totalAnual > 0 ? `
       <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
