@@ -101,8 +101,10 @@ function renderizar(lista) {
 }
 
 function isBot(d) {
-  if(d.resolucao && d.resolucao.trim() === '800x600') return true;
-  if(d.navegador && (d.navegador.includes('bot') || d.navegador.includes('Bot') || d.navegador.includes('crawler') || d.navegador.includes('spider'))) return true;
+  if(d.resolucao && (d.resolucao.trim() === '800x600' || d.resolucao.trim() === '0x0')) return true;
+  var ua = (d.navegador || '').toLowerCase();
+  var botPatterns = ['bot','crawler','spider','headlesschrome','python','go-http','curl','wget','scrapy','phantom','selenium','puppeteer','playwright','facebookexternalhit','twitterbot','linkedinbot','slackbot','telegrambot','whatsapp','semrush','ahrefs','petalbot','yandex','baidu','bytespider','gptbot','chatgpt','claudebot','anthropic','applebot','duckduckbot','ia_archiver','archive.org'];
+  for(var i=0;i<botPatterns.length;i++){if(ua.includes(botPatterns[i]))return true;}
   if(d.cidade && (d.cidade.includes('Boardman') || d.cidade.includes('Ashburn') || d.cidade.includes('Dublin'))) return true;
   return false;
 }

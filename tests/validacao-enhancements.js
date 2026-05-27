@@ -695,6 +695,75 @@ async function testarBuscaMostraNomeEmpresa() {
     }
 }
 
+async function testarFiltroBots() {
+    console.log('\n\ud83d\udd0d TESTE 23 \u2014 Filtro de bots detecta padr\u00f5es comuns (#66)')
+
+    const consoleJs = fs.readFileSync(path.join(PAGES_DIR, 'console.js'), 'utf-8')
+
+    // Extrair a fun\u00e7\u00e3o isBot
+    const isBotMatch = consoleJs.match(/function isBot\(d\)\s*\{([\s\S]*?)\n\}/)
+    if (!isBotMatch) {
+        totalFalhou++
+        console.log('   \u274c fun\u00e7\u00e3o isBot n\u00e3o encontrada em console.js')
+        console.log('   Status: \u274c FALHOU')
+        return
+    }
+
+    // Criar fun\u00e7\u00e3o isBot local para testar
+    const isBotFn = new Function('d', isBotMatch[1])
+
+    const bots = [
+        { navegador: 'Mozilla/5.0 (compatible; Googlebot/2.1)', cidade: 'Mountain View', resolucao: '0x0' },
+        { navegador: 'Mozilla/5.0 (compatible; bingbot/2.0)', cidade: 'Ashburn', resolucao: '1024x768' },
+        { navegador: 'Mozilla/5.0 (compatible; AhrefsBot/7.0)', cidade: 'Dublin', resolucao: '800x600' },
+        { navegador: 'Mozilla/5.0 (Linux; Android) AppleWebKit HeadlessChrome/120.0', cidade: 'S\u00e3o Paulo', resolucao: '1920x1080' },
+        { navegador: 'Mozilla/5.0 (compatible; SemrushBot/7)', cidade: 'Dallas', resolucao: '1024x768' },
+        { navegador: 'Mozilla/5.0 (compatible; PetalBot)', cidade: 'Beijing', resolucao: '1024x768' },
+        { navegador: 'python-requests/2.28.0', cidade: 'New York', resolucao: '0x0' },
+        { navegador: 'Go-http-client/1.1', cidade: 'Frankfurt', resolucao: '0x0' },
+        { navegador: 'Mozilla/5.0 (compatible; YandexBot/3.0)', cidade: 'Moscow', resolucao: '1024x768' },
+        { navegador: 'curl/7.88.1', cidade: 'London', resolucao: '0x0' },
+        { navegador: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/91.0 Safari/537.36', cidade: 'Boardman', resolucao: '800x600', dispositivo: 'Desktop' },
+        { navegador: 'facebookexternalhit/1.1', cidade: 'Menlo Park', resolucao: '0x0' },
+        { navegador: 'Twitterbot/1.0', cidade: 'San Francisco', resolucao: '0x0' },
+        { navegador: 'LinkedInBot/1.0', cidade: 'Sunnyvale', resolucao: '0x0' },
+    ]
+
+    const humanos = [
+        { navegador: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1', cidade: 'S\u00e3o Paulo', resolucao: '390x844', dispositivo: 'Mobile' },
+        { navegador: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', cidade: 'Rio de Janeiro', resolucao: '1920x1080', dispositivo: 'Desktop' },
+        { navegador: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', cidade: 'Belo Horizonte', resolucao: '1440x900', dispositivo: 'Desktop' },
+    ]
+
+    let ok = true
+    let falhasBots = []
+    let falhasHumanos = []
+
+    for (const b of bots) {
+        if (!isBotFn(b)) {
+            ok = false
+            falhasBots.push(b.navegador.substring(0, 40))
+        }
+    }
+    for (const h of humanos) {
+        if (isBotFn(h)) {
+            ok = false
+            falhasHumanos.push(h.navegador.substring(0, 40))
+        }
+    }
+
+    if (ok) {
+        totalPassou++
+        console.log('   \u2705 Filtro detecta ' + bots.length + ' bots e permite ' + humanos.length + ' humanos')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        if (falhasBots.length) console.log('   \u274c Bots n\u00e3o detectados: ' + falhasBots.join(', '))
+        if (falhasHumanos.length) console.log('   \u274c Humanos bloqueados: ' + falhasHumanos.join(', '))
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -738,6 +807,7 @@ async function main() {
     await testarNomeEmpresaAcoes()
     await testarSemSetorIrrelevante()
     await testarBuscaMostraNomeEmpresa()
+    await testarFiltroBots()
 
     await browser.close()
 
