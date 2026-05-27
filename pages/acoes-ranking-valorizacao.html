@@ -31,9 +31,13 @@
     #modal-breve.show { display: flex; }
     main { animation: fadeIn 0.3s ease-in; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    #nav-loader { display:none; position:fixed; inset:0; z-index:9999; background:#07111F; align-items:center; justify-content:center; flex-direction:column; gap:8px; }
+    #nav-loader.active { display:flex; animation: loaderIn 0.15s ease-out; }
+    @keyframes loaderIn { from { opacity:0; } to { opacity:1; } }
   </style>
 </head>
 <body class="bg-bg min-h-screen text-white">
+  <div id="nav-loader"><svg class="w-8 h-8 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span></div>
 
 
   <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
@@ -90,55 +94,55 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">1</td>
             <td class="py-2.5 font-medium"><a href="acoes/USIM5.html" class="hover:underline">USIM5</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+72,10%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+72,77%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">2</td>
             <td class="py-2.5 font-medium"><a href="acoes/PRIO3.html" class="hover:underline">PRIO3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+51,50%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+52,25%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">3</td>
             <td class="py-2.5 font-medium"><a href="acoes/PETR3.html" class="hover:underline">PETR3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+47,96%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+47,90%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">4</td>
             <td class="py-2.5 font-medium"><a href="acoes/BRKM5.html" class="hover:underline">BRKM5</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+45,37%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+42,84%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">5</td>
             <td class="py-2.5 font-medium"><a href="acoes/PETR4.html" class="hover:underline">PETR4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+38,90%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+38,97%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">6</td>
             <td class="py-2.5 font-medium"><a href="acoes/NATU3.html" class="hover:underline">NATU3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+35,03%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+34,36%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">7</td>
             <td class="py-2.5 font-medium"><a href="acoes/UGPA3.html" class="hover:underline">UGPA3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+31,44%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+31,24%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">8</td>
             <td class="py-2.5 font-medium"><a href="acoes/ASAI3.html" class="hover:underline">ASAI3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+27,34%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+27,20%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">9</td>
             <td class="py-2.5 font-medium"><a href="acoes/ENEV3.html" class="hover:underline">ENEV3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+24,28%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+23,93%</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -150,67 +154,67 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">11</td>
             <td class="py-2.5 font-medium"><a href="acoes/ABEV3.html" class="hover:underline">ABEV3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+20,49%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+20,20%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">12</td>
             <td class="py-2.5 font-medium"><a href="acoes/B3SA3.html" class="hover:underline">B3SA3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+19,80%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+19,44%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">13</td>
             <td class="py-2.5 font-medium"><a href="acoes/BRAV3.html" class="hover:underline">BRAV3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+18,41%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+18,71%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">14</td>
             <td class="py-2.5 font-medium"><a href="acoes/BRAP4.html" class="hover:underline">BRAP4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+16,98%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+17,04%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">15</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CSMG3.html" class="hover:underline">CSMG3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+16,85%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/GGBR4.html" class="hover:underline">GGBR4</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+16,67%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">16</td>
-            <td class="py-2.5 font-medium"><a href="acoes/GGBR4.html" class="hover:underline">GGBR4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+16,09%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CSMG3.html" class="hover:underline">CSMG3</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+15,89%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">17</td>
             <td class="py-2.5 font-medium"><a href="acoes/VALE3.html" class="hover:underline">VALE3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+15,79%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+15,74%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">18</td>
             <td class="py-2.5 font-medium"><a href="acoes/GOAU4.html" class="hover:underline">GOAU4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+13,89%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+14,22%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">19</td>
-            <td class="py-2.5 font-medium"><a href="acoes/ITSA4.html" class="hover:underline">ITSA4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+12,24%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CPLE3.html" class="hover:underline">CPLE3</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+12,16%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">20</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CPLE3.html" class="hover:underline">CPLE3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+12,23%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/ITSA4.html" class="hover:underline">ITSA4</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+11,99%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">21</td>
             <td class="py-2.5 font-medium"><a href="acoes/SLCE3.html" class="hover:underline">SLCE3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+12,01%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+11,52%</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -222,115 +226,115 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">23</td>
             <td class="py-2.5 font-medium"><a href="acoes/AXIA6.html" class="hover:underline">AXIA6</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+10,70%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+10,42%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">24</td>
             <td class="py-2.5 font-medium"><a href="acoes/MULT3.html" class="hover:underline">MULT3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+9,69%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+9,47%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">25</td>
             <td class="py-2.5 font-medium"><a href="acoes/SBSP3.html" class="hover:underline">SBSP3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+7,94%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+7,30%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">26</td>
             <td class="py-2.5 font-medium"><a href="acoes/FLRY3.html" class="hover:underline">FLRY3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+7,07%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+6,40%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">27</td>
             <td class="py-2.5 font-medium"><a href="acoes/TIMS3.html" class="hover:underline">TIMS3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+5,72%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+5,62%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">28</td>
             <td class="py-2.5 font-medium"><a href="acoes/CXSE3.html" class="hover:underline">CXSE3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+5,29%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+5,11%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">29</td>
-            <td class="py-2.5 font-medium"><a href="acoes/AURE3.html" class="hover:underline">AURE3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+5,14%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/BPAC11.html" class="hover:underline">BPAC11</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,94%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">30</td>
-            <td class="py-2.5 font-medium"><a href="acoes/BPAC11.html" class="hover:underline">BPAC11</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,77%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/EGIE3.html" class="hover:underline">EGIE3</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,49%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">31</td>
             <td class="py-2.5 font-medium"><a href="acoes/POMO4.html" class="hover:underline">POMO4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,69%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,36%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">32</td>
-            <td class="py-2.5 font-medium"><a href="acoes/RECV3.html" class="hover:underline">RECV3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,33%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/AURE3.html" class="hover:underline">AURE3</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,30%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">33</td>
-            <td class="py-2.5 font-medium"><a href="acoes/EGIE3.html" class="hover:underline">EGIE3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,27%</td>
+            <td class="py-2.5 font-medium"><a href="acoes/RECV3.html" class="hover:underline">RECV3</a></td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+3,98%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">34</td>
             <td class="py-2.5 font-medium"><a href="acoes/AXIA3.html" class="hover:underline">AXIA3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+4,21%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+3,95%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">35</td>
             <td class="py-2.5 font-medium"><a href="acoes/ITUB4.html" class="hover:underline">ITUB4</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+3,08%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,91%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">36</td>
             <td class="py-2.5 font-medium"><a href="acoes/VIVT3.html" class="hover:underline">VIVT3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,63%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,54%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">37</td>
             <td class="py-2.5 font-medium"><a href="acoes/ENGI11.html" class="hover:underline">ENGI11</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,59%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,42%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">38</td>
             <td class="py-2.5 font-medium"><a href="acoes/IGTI11.html" class="hover:underline">IGTI11</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,42%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+2,19%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">39</td>
             <td class="py-2.5 font-medium"><a href="acoes/ALOS3.html" class="hover:underline">ALOS3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+0,70%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+0,53%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">40</td>
             <td class="py-2.5 font-medium"><a href="acoes/BBDC3.html" class="hover:underline">BBDC3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+0,51%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+0,32%</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">41</td>
             <td class="py-2.5 font-medium"><a href="acoes/PSSA3.html" class="hover:underline">PSSA3</a></td>
-            <td class="py-2.5 text-right text-emerald-500 font-medium">+0,43%</td>
+            <td class="py-2.5 text-right text-emerald-500 font-medium">+0,14%</td>
           </tr>
         </tbody>
       </table>
@@ -403,7 +407,19 @@
     var ACOES_BASE = 'acoes/';
     function emBreve(e) { e.preventDefault(); document.getElementById('modal-breve').classList.add('show'); }
     function fecharModal() { document.getElementById('modal-breve').classList.remove('show'); }
-    window.addEventListener('pageshow', function(e) { if (e.persisted) fecharModal(); });
+    window.addEventListener('pageshow', function(e) { if (e.persisted) { fecharModal(); document.getElementById('nav-loader').classList.remove('active'); } });
+    // Transição com logo entre páginas
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      var href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('javascript') || link.target === '_blank' || e.ctrlKey || e.metaKey) return;
+      if (href.includes('.html')) {
+        e.preventDefault();
+        document.getElementById('nav-loader').classList.add('active');
+        setTimeout(function() { window.location.href = href; }, 150);
+      }
+    });
 
   </script>
   <script src="busca.js"></script>
