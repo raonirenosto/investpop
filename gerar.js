@@ -505,7 +505,7 @@ async function buscarRankingsAcoes(tickers) {
             // Consistência para ações: anos seguidos que pagou dividendos
             const porAno = {}
             for (const r of rendimentos) {
-                const anoMatch = r.dataCom && r.dataCom.match(/(\d{4})/)
+                const anoMatch = (r.dataCom && r.dataCom.match(/(\d{4})/)) || (r.pagamento && r.pagamento.match(/(\d{4})/))
                 if (anoMatch) {
                     const ano = anoMatch[1]
                     porAno[ano] = (porAno[ano] || 0) + r.valor
@@ -513,9 +513,17 @@ async function buscarRankingsAcoes(tickers) {
             }
             const anos = Object.keys(porAno).sort().reverse()
             let anosConsistentes = 0
-            for (let j = 0; j < anos.length; j++) {
-                if (porAno[anos[j]] > 0) anosConsistentes++
-                else break
+            const anoVigente = new Date().getFullYear().toString()
+            // Comecar do ano vigente ou do ano mais recente com pagamento
+            const anoInicio = anos[0] && parseInt(anos[0]) >= parseInt(anoVigente) - 1 ? anos[0] : null
+            if (!anoInicio || !porAno[anoInicio] || porAno[anoInicio] <= 0) {
+                anosConsistentes = 0
+            } else {
+                for (let j = 0; j < anos.length; j++) {
+                    if (parseInt(anos[j]) > parseInt(anoVigente)) continue
+                    if (porAno[anos[j]] > 0) anosConsistentes++
+                    else break
+                }
             }
 
             resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes: anosConsistentes, nome, setor, dividendos: rendimentos.slice(0, 10), descricao: articleBody.replace(/\s+/g, ' ').substring(0, 300) })
