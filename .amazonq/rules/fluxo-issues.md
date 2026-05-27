@@ -28,11 +28,14 @@
 - `git add -A`
 - Commit com mensagem descritiva + `closes #N`
 - Mencionar qual teste cobre a issue
-- `git push`
+- `git push origin main`
+- **VERIFICAR** que subiu: `git log origin/main -1 --oneline` deve mostrar o commit recém feito
+- Se não subiu, repetir `git push origin main` até confirmar
 
 ### Passo 5 — Gerar nova versão
 - Atualizar `README.md` com a nova versão (vX.Y.Z)
-- `git add README.md && git commit -m "docs: vX.Y.Z" && git tag vX.Y.Z && git push && git push --tags`
+- `git add README.md && git commit -m "docs: vX.Y.Z" && git tag vX.Y.Z && git push origin main && git push --tags`
+- **VERIFICAR** que subiu: `git log origin/main -1 --oneline`
 
 ### Passo 6 — Deploy
 - `gh workflow run gerar.yml`
