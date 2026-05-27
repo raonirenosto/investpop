@@ -37,7 +37,7 @@ jobs:
           cp pages/busca.js _site/
           cp assets/console.js _site/
           cp assets/robots.txt _site/
-          cp assets/sitemap.xml _site/
+          cp pages/sitemap.xml _site/
           cp assets/og-image.svg _site/
           echo "investpop.com.br" > _site/CNAME
 

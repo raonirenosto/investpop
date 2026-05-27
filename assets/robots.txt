@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /console.html
+Disallow: /acessos.html
+Disallow: /ibov-historico.html
 Disallow: /ghost.html
 
 Sitemap: https://investpop.com.br/sitemap.xml

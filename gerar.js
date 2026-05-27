@@ -620,6 +620,20 @@ async function main() {
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
             fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
 
+            // Gerar sitemap dinâmico
+            const sitemapUrls = ['index.html','acoes.html','altas.html','quedas.html','acoes-altas.html','acoes-quedas.html','ranking-dy.html','ranking-baratos.html','ranking-valorizacao.html','ranking-consistentes.html','acoes-ranking-dy.html','acoes-ranking-baratos.html','acoes-ranking-valorizacao.html','acoes-ranking-consistentes.html']
+            const fiisFiles = fs.readdirSync(path.join(pasta,'fiis')).filter(f=>f.endsWith('.html')).map(f=>'fiis/'+f)
+            const acoesFiles = fs.existsSync(path.join(pasta,'acoes')) ? fs.readdirSync(path.join(pasta,'acoes')).filter(f=>f.endsWith('.html')).map(f=>'acoes/'+f) : []
+            const allUrls = sitemapUrls.concat(fiisFiles, acoesFiles)
+            let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            for (const u of allUrls) {
+                const prio = u === 'index.html' || u === 'acoes.html' ? '1.0' : u.includes('/') ? '0.6' : '0.8'
+                sitemap += `  <url><loc>https://investpop.com.br/${u === 'index.html' ? '' : u}</loc><changefreq>hourly</changefreq><priority>${prio}</priority></url>\n`
+            }
+            sitemap += '</urlset>'
+            fs.writeFileSync(path.join(pasta, 'sitemap.xml'), sitemap)
+            console.log(`📍 Sitemap gerado: ${allUrls.length} URLs`)
+
             // Gerar páginas de ações (via cache)
             await sincronizarIBOV()
             const acoes = lerAcoes()

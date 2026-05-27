@@ -7,7 +7,7 @@ function headHtml(titulo, descricao, jsonLd) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${titulo}</title>
   <meta name="description" content="${descricao}" />
-  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, investimentos, radar FIIs, cotação FIIs, maiores altas, maiores quedas" />
+  <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, IBOV, ações, investimentos, radar FIIs, cotação, dividendos, maiores altas, maiores quedas, dividend yield, P/L, P/VP" />
   <link rel="canonical" href="https://investpop.com.br" />
   <meta property="og:title" content="${titulo}" />
   <meta property="og:description" content="${descricao}" />
