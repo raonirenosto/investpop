@@ -34,10 +34,14 @@
     #nav-loader { display:none; position:fixed; inset:0; z-index:9999; background:#07111F; align-items:center; justify-content:center; flex-direction:column; gap:8px; }
     #nav-loader.active { display:flex; animation: loaderIn 0.15s ease-out; }
     @keyframes loaderIn { from { opacity:0; } to { opacity:1; } }
+    #nav-loader .logo-line { stroke-dasharray: 60; stroke-dashoffset: 60; animation: drawLine 0.6s ease-out forwards; }
+    #nav-loader .logo-dot { opacity:0; animation: dotPop 0.2s ease-out 0.5s forwards; }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes dotPop { to { opacity:1; } }
   </style>
 </head>
 <body class="bg-bg min-h-screen text-white">
-  <div id="nav-loader"><svg class="w-8 h-8 text-emerald-500" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span class="text-sm font-bold">Invest<span class="text-emerald-500">Pop</span></span></div>
+  <div id="nav-loader"><svg class="w-10 h-10" viewBox="0 0 24 24" fill="none"><path class="logo-line" d="M3 17l6-6 4 4 8-8" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="logo-dot" cx="21" cy="7" r="2" fill="#10b981"/></svg><span class="text-sm font-bold mt-1">Invest<span class="text-emerald-500">Pop</span></span></div>
 
 
   <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
@@ -95,148 +99,148 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">1</td>
             <td class="py-2.5 font-medium"><a href="acoes/CSAN3.html" class="hover:underline">CSAN3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-4,67%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 4,08</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-5,14%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 4,06</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">2</td>
             <td class="py-2.5 font-medium"><a href="acoes/CSMG3.html" class="hover:underline">CSMG3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-4,43%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 50,90</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-4,21%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 51,02</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">3</td>
-            <td class="py-2.5 font-medium"><a href="acoes/NATU3.html" class="hover:underline">NATU3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-3,75%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 10,01</td>
+            <td class="py-2.5 font-medium"><a href="acoes/BRKM5.html" class="hover:underline">BRKM5</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-3,85%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 11,23</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">4</td>
-            <td class="py-2.5 font-medium"><a href="acoes/BRKM5.html" class="hover:underline">BRKM5</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-3,51%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 11,27</td>
+            <td class="py-2.5 font-medium"><a href="acoes/NATU3.html" class="hover:underline">NATU3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-3,85%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 10,00</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">5</td>
             <td class="py-2.5 font-medium"><a href="acoes/MRVE3.html" class="hover:underline">MRVE3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-3,25%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 5,95</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-3,09%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 5,96</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">6</td>
             <td class="py-2.5 font-medium"><a href="acoes/VBBR3.html" class="hover:underline">VBBR3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-3,07%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 30,89</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-2,89%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 30,95</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">7</td>
             <td class="py-2.5 font-medium"><a href="acoes/PRIO3.html" class="hover:underline">PRIO3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-2,56%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 63,09</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-2,70%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 63,00</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">8</td>
             <td class="py-2.5 font-medium"><a href="acoes/SMFT3.html" class="hover:underline">SMFT3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-2,20%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 18,64</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-2,15%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 18,65</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">9</td>
-            <td class="py-2.5 font-medium"><a href="acoes/B3SA3.html" class="hover:underline">B3SA3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-2,13%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 16,58</td>
+            <td class="py-2.5 font-medium"><a href="acoes/RENT3.html" class="hover:underline">RENT3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-2,08%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 42,79</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">10</td>
-            <td class="py-2.5 font-medium"><a href="acoes/RENT3.html" class="hover:underline">RENT3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-2,04%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 42,81</td>
+            <td class="py-2.5 font-medium"><a href="acoes/B3SA3.html" class="hover:underline">B3SA3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-2,01%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 16,60</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">11</td>
-            <td class="py-2.5 font-medium"><a href="acoes/RDOR3.html" class="hover:underline">RDOR3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,83%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 34,36</td>
+            <td class="py-2.5 font-medium"><a href="acoes/HAPV3.html" class="hover:underline">HAPV3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,90%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 12,36</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">12</td>
-            <td class="py-2.5 font-medium"><a href="acoes/HAPV3.html" class="hover:underline">HAPV3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,83%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 12,37</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">13</td>
             <td class="py-2.5 font-medium"><a href="acoes/CSNA3.html" class="hover:underline">CSNA3</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-1,79%</td>
             <td class="py-2.5 text-right text-gray-400">R$ 6,57</td>
           </tr>
 
           <tr class="border-t border-card-border">
+            <td class="py-2.5 text-gray-500">13</td>
+            <td class="py-2.5 font-medium"><a href="acoes/RDOR3.html" class="hover:underline">RDOR3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,71%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 34,40</td>
+          </tr>
+
+          <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">14</td>
-            <td class="py-2.5 font-medium"><a href="acoes/AXIA3.html" class="hover:underline">AXIA3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,68%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 52,61</td>
+            <td class="py-2.5 font-medium"><a href="acoes/UGPA3.html" class="hover:underline">UGPA3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,69%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 27,40</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">15</td>
             <td class="py-2.5 font-medium"><a href="acoes/EQTL3.html" class="hover:underline">EQTL3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,63%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 37,97</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,68%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 37,95</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">16</td>
-            <td class="py-2.5 font-medium"><a href="acoes/AXIA6.html" class="hover:underline">AXIA6</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,60%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 57,87</td>
+            <td class="py-2.5 font-medium"><a href="acoes/AXIA3.html" class="hover:underline">AXIA3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,63%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 52,64</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">17</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CURY3.html" class="hover:underline">CURY3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,59%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 31,57</td>
+            <td class="py-2.5 font-medium"><a href="acoes/AXIA6.html" class="hover:underline">AXIA6</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,53%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 57,91</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">18</td>
-            <td class="py-2.5 font-medium"><a href="acoes/UGPA3.html" class="hover:underline">UGPA3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,58%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 27,43</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CURY3.html" class="hover:underline">CURY3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,53%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 31,59</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">19</td>
-            <td class="py-2.5 font-medium"><a href="acoes/TOTS3.html" class="hover:underline">TOTS3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,49%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 31,01</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">20</td>
             <td class="py-2.5 font-medium"><a href="acoes/PETR3.html" class="hover:underline">PETR3</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-1,47%</td>
             <td class="py-2.5 text-right text-gray-400">R$ 48,17</td>
           </tr>
 
           <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">21</td>
+            <td class="py-2.5 text-gray-500">20</td>
             <td class="py-2.5 font-medium"><a href="acoes/ISAE4.html" class="hover:underline">ISAE4</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-1,44%</td>
             <td class="py-2.5 text-right text-gray-400">R$ 27,38</td>
+          </tr>
+
+          <tr class="border-t border-card-border">
+            <td class="py-2.5 text-gray-500">21</td>
+            <td class="py-2.5 font-medium"><a href="acoes/TOTS3.html" class="hover:underline">TOTS3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,43%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 31,03</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -249,8 +253,8 @@
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">23</td>
             <td class="py-2.5 font-medium"><a href="acoes/SLCE3.html" class="hover:underline">SLCE3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,36%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 15,91</td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,30%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 15,92</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -262,72 +266,72 @@
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">25</td>
-            <td class="py-2.5 font-medium"><a href="acoes/RAIL3.html" class="hover:underline">RAIL3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,26%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 14,07</td>
+            <td class="py-2.5 font-medium"><a href="acoes/MOTV3.html" class="hover:underline">MOTV3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,17%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 14,34</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">26</td>
-            <td class="py-2.5 font-medium"><a href="acoes/RECV3.html" class="hover:underline">RECV3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,09%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 11,77</td>
+            <td class="py-2.5 font-medium"><a href="acoes/RAIL3.html" class="hover:underline">RAIL3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,12%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 14,09</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">27</td>
-            <td class="py-2.5 font-medium"><a href="acoes/AURE3.html" class="hover:underline">AURE3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-1,04%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 12,37</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CXSE3.html" class="hover:underline">CXSE3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,02%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 17,44</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">28</td>
-            <td class="py-2.5 font-medium"><a href="acoes/PSSA3.html" class="hover:underline">PSSA3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,94%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 48,43</td>
+            <td class="py-2.5 font-medium"><a href="acoes/RECV3.html" class="hover:underline">RECV3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-1,01%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 11,78</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">29</td>
-            <td class="py-2.5 font-medium"><a href="acoes/LREN3.html" class="hover:underline">LREN3</a></td>
+            <td class="py-2.5 font-medium"><a href="acoes/VAMO3.html" class="hover:underline">VAMO3</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-0,93%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 14,90</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 3,21</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">30</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CXSE3.html" class="hover:underline">CXSE3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,85%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 17,47</td>
+            <td class="py-2.5 font-medium"><a href="acoes/PSSA3.html" class="hover:underline">PSSA3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,92%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 48,44</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">31</td>
-            <td class="py-2.5 font-medium"><a href="acoes/MOTV3.html" class="hover:underline">MOTV3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,76%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 14,40</td>
+            <td class="py-2.5 font-medium"><a href="acoes/BPAC11.html" class="hover:underline">BPAC11</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,92%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 54,99</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">32</td>
-            <td class="py-2.5 font-medium"><a href="acoes/CPLE3.html" class="hover:underline">CPLE3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,74%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 14,67</td>
+            <td class="py-2.5 font-medium"><a href="acoes/VIVA3.html" class="hover:underline">VIVA3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,81%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 22,09</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">33</td>
-            <td class="py-2.5 font-medium"><a href="acoes/IGTI11.html" class="hover:underline">IGTI11</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,68%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 26,13</td>
+            <td class="py-2.5 font-medium"><a href="acoes/AURE3.html" class="hover:underline">AURE3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,80%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 12,40</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">34</td>
-            <td class="py-2.5 font-medium"><a href="acoes/VIVA3.html" class="hover:underline">VIVA3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,67%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 22,12</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CPLE3.html" class="hover:underline">CPLE3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,68%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 14,68</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -339,44 +343,44 @@
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">36</td>
-            <td class="py-2.5 font-medium"><a href="acoes/VAMO3.html" class="hover:underline">VAMO3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,62%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 3,22</td>
+            <td class="py-2.5 font-medium"><a href="acoes/IGTI11.html" class="hover:underline">IGTI11</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,65%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 26,14</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">37</td>
-            <td class="py-2.5 font-medium"><a href="acoes/BPAC11.html" class="hover:underline">BPAC11</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,58%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 55,18</td>
+            <td class="py-2.5 font-medium"><a href="acoes/FLRY3.html" class="hover:underline">FLRY3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,62%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 15,95</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">38</td>
+            <td class="py-2.5 font-medium"><a href="acoes/MBRF3.html" class="hover:underline">MBRF3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,61%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 16,26</td>
+          </tr>
+
+          <tr class="border-t border-card-border">
+            <td class="py-2.5 text-gray-500">39</td>
+            <td class="py-2.5 font-medium"><a href="acoes/LREN3.html" class="hover:underline">LREN3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,60%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 14,95</td>
+          </tr>
+
+          <tr class="border-t border-card-border">
+            <td class="py-2.5 text-gray-500">40</td>
             <td class="py-2.5 font-medium"><a href="acoes/MULT3.html" class="hover:underline">MULT3</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-0,57%</td>
             <td class="py-2.5 text-right text-gray-400">R$ 29,83</td>
           </tr>
 
           <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">39</td>
-            <td class="py-2.5 font-medium"><a href="acoes/FLRY3.html" class="hover:underline">FLRY3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,56%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 15,96</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">40</td>
+            <td class="py-2.5 text-gray-500">41</td>
             <td class="py-2.5 font-medium"><a href="acoes/ALOS3.html" class="hover:underline">ALOS3</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-0,56%</td>
             <td class="py-2.5 text-right text-gray-400">R$ 28,52</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">41</td>
-            <td class="py-2.5 font-medium"><a href="acoes/BRAV3.html" class="hover:underline">BRAV3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,40%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 19,99</td>
           </tr>
 
           <tr class="border-t border-card-border">
@@ -395,44 +399,30 @@
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">44</td>
-            <td class="py-2.5 font-medium"><a href="acoes/ENGI11.html" class="hover:underline">ENGI11</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,35%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 48,30</td>
+            <td class="py-2.5 font-medium"><a href="acoes/BRAV3.html" class="hover:underline">BRAV3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,30%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 20,01</td>
           </tr>
 
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">45</td>
-            <td class="py-2.5 font-medium"><a href="acoes/MBRF3.html" class="hover:underline">MBRF3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,31%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 16,31</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">46</td>
             <td class="py-2.5 font-medium"><a href="acoes/DIRR3.html" class="hover:underline">DIRR3</a></td>
             <td class="py-2.5 text-right text-red-500 font-medium">-0,22%</td>
             <td class="py-2.5 text-right text-gray-400">R$ 13,37</td>
           </tr>
 
           <tr class="border-t border-card-border">
+            <td class="py-2.5 text-gray-500">46</td>
+            <td class="py-2.5 font-medium"><a href="acoes/ENGI11.html" class="hover:underline">ENGI11</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,14%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 48,40</td>
+          </tr>
+
+          <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">47</td>
-            <td class="py-2.5 font-medium"><a href="acoes/ENEV3.html" class="hover:underline">ENEV3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,20%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 25,01</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">48</td>
-            <td class="py-2.5 font-medium"><a href="acoes/YDUQ3.html" class="hover:underline">YDUQ3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,10%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 9,59</td>
-          </tr>
-
-          <tr class="border-t border-card-border">
-            <td class="py-2.5 text-gray-500">49</td>
-            <td class="py-2.5 font-medium"><a href="acoes/TIMS3.html" class="hover:underline">TIMS3</a></td>
-            <td class="py-2.5 text-right text-red-500 font-medium">-0,04%</td>
-            <td class="py-2.5 text-right text-gray-400">R$ 22,54</td>
+            <td class="py-2.5 font-medium"><a href="acoes/CYRE3.html" class="hover:underline">CYRE3</a></td>
+            <td class="py-2.5 text-right text-red-500 font-medium">-0,09%</td>
+            <td class="py-2.5 text-right text-gray-400">R$ 22,26</td>
           </tr>
         </tbody>
       </table>
