@@ -33,8 +33,19 @@
 - Se não subiu, repetir `git push origin main` até confirmar
 
 ### Passo 5 — Gerar nova versão
-- Atualizar `README.md` com a nova versão (vX.Y.Z)
-- `git add README.md && git commit -m "docs: vX.Y.Z" && git tag vX.Y.Z && git push origin main && git push --tags`
+- **OBRIGATÓRIO**: Sempre gerar nova versão após fechar issue(s)
+- Se resolveu 1 issue: incrementar patch (ex: v1.4.0 → v1.4.1)
+- Se resolveu várias issues de uma vez: incrementar minor (ex: v1.4.0 → v1.5.0)
+- Se é uma feature major (nova seção, mudança grande): incrementar major (ex: v1.4.0 → v2.0.0)
+- Atualizar `README.md` com a nova versão (vX.Y.Z) e resumo das issues
+- Commitar, taguear e push (cada comando separado para garantir):
+  ```
+  git add README.md
+  git commit -m "docs: vX.Y.Z"
+  git tag vX.Y.Z
+  git push origin main
+  git push --tags
+  ```
 - **VERIFICAR** que subiu: `git log origin/main -1 --oneline`
 
 ### Passo 6 — Deploy
