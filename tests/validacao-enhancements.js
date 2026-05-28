@@ -856,6 +856,23 @@ async function testarPaginacaoRendimentos() {
     else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
 }
 
+async function testarRendimentosAcoesSemLimite() {
+    console.log('\n\ud83d\udd0d TESTE 27 \u2014 A\u00e7\u00f5es mostram mais de 10 rendimentos (#80)')
+
+    const acaoHtml = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3.html'), 'utf-8')
+    const rows = (acaoHtml.match(/<tr class="border-t/g) || []).length
+
+    if (rows > 10) {
+        totalPassou++
+        console.log('   \u2705 VALE3: ' + rows + ' rendimentos (sem limite de 10)')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   \u274c VALE3: apenas ' + rows + ' rendimentos (limitado a 10, issue #80)')
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -903,6 +920,7 @@ async function main() {
     await testarFiltroBots()
     await testarSimuladorSemDY()
     await testarPaginacaoRendimentos()
+    await testarRendimentosAcoesSemLimite()
 
     await browser.close()
 

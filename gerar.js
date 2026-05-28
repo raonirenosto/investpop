@@ -572,7 +572,7 @@ async function buscarRankingsAcoes(tickers) {
                 }
             }
 
-            resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes: anosConsistentes, nome, setor, dividendos: rendimentos.slice(0, 10), descricao: articleBody.replace(/\s+/g, ' ').substring(0, 300) })
+            resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes: anosConsistentes, nome, setor, dividendos: rendimentos, descricao: articleBody.replace(/\s+/g, ' ').substring(0, 300) })
 
             if ((i + 1) % 10 === 0) console.log(`  Investidor 10 ações: ${i + 1}/${tickers.length} (${Date.now() - startTime}ms)`)
         } catch (e) {
