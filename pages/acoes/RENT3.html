@@ -104,7 +104,7 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">P/L</span>
-        <p class="text-lg font-bold mt-1">21,36</p>
+        <p class="text-lg font-bold mt-1">21,31</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
@@ -147,42 +147,86 @@
           </thead>
           <tbody class="text-gray-200">
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">27/03/2026</td>
               <td class="py-2.5">22/05/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,5221</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">17/12/2025</td>
               <td class="py-2.5">06/02/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,5155</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">25/09/2025</td>
               <td class="py-2.5">18/11/2025</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,5154</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">27/06/2025</td>
               <td class="py-2.5">19/08/2025</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,5062</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">26/03/2025</td>
               <td class="py-2.5">16/05/2025</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,4563</td>
             </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">17/12/2024</td>
+              <td class="py-2.5">07/02/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,4047</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">25/09/2024</td>
+              <td class="py-2.5">14/11/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3995</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">26/06/2024</td>
+              <td class="py-2.5">19/08/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3980</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">01/04/2024</td>
+              <td class="py-2.5">23/05/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3835</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">26/12/2023</td>
+              <td class="py-2.5">15/02/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3829</td>
+            </tr>
           </tbody>
         </table>
+        <div class="flex items-center justify-center gap-3 mt-3">
+          <button onclick="mudarPagina(-1)" id="pag-anterior" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white disabled:opacity-30" disabled>Anterior</button>
+          <span class="text-xs text-gray-500" id="pag-info">1 / 2</span>
+          <button onclick="mudarPagina(1)" id="pag-proximo" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white">Próximo</button>
+        </div>
+        <script>
+        var paginaAtual=0,totalPags=2;
+        function mudarPagina(dir){paginaAtual+=dir;if(paginaAtual<0)paginaAtual=0;if(paginaAtual>=totalPags)paginaAtual=totalPags-1;document.querySelectorAll('.div-row').forEach(function(r){r.style.display=r.getAttribute('data-page')==String(paginaAtual)?'':'none';});document.getElementById('pag-info').textContent=(paginaAtual+1)+' / '+totalPags;document.getElementById('pag-anterior').disabled=paginaAtual===0;document.getElementById('pag-proximo').disabled=paginaAtual>=totalPags-1;}
+        </script>
       </div>
 
 
@@ -205,7 +249,7 @@
         <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Aparece nos Rankings</h2>
         <div class="flex flex-wrap gap-3">
           <a href="../acoes-ranking-dy.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">
-            <span class="text-xs font-bold text-gray-400">#41</span>
+            <span class="text-xs font-bold text-gray-400">#40</span>
             <span class="text-sm text-gray-300">Que Mais Pagam (DY)</span>
           </a>
           <a href="../acoes-ranking-baratos.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">

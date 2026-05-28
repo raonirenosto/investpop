@@ -104,7 +104,7 @@
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">P/L</span>
-        <p class="text-lg font-bold mt-1">8,84</p>
+        <p class="text-lg font-bold mt-1">8,83</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
         <span class="text-[10px] text-gray-500 uppercase">Var. Ano (YTD)</span>
@@ -147,42 +147,86 @@
           </thead>
           <tbody class="text-gray-200">
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
               <td class="py-2.5">29/04/2026</td>
               <td class="py-2.5">Provisionado</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 2,6033</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
               <td class="py-2.5">29/04/2026</td>
               <td class="py-2.5">18/05/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 1,1282</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
               <td class="py-2.5">29/04/2025</td>
               <td class="py-2.5">25/08/2025</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3211</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
               <td class="py-2.5">29/04/2025</td>
               <td class="py-2.5">25/06/2025</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,7811</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
               <td class="py-2.5">29/04/2025</td>
               <td class="py-2.5">25/07/2025</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,4339</td>
             </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">29/04/2025</td>
+              <td class="py-2.5">27/10/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,1736</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">29/04/2025</td>
+              <td class="py-2.5">25/09/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,2170</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">29/04/2025</td>
+              <td class="py-2.5">15/12/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,2600</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">29/04/2025</td>
+              <td class="py-2.5">19/11/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,6075</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">26/04/2024</td>
+              <td class="py-2.5">26/12/2024</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,6190</td>
+            </tr>
           </tbody>
         </table>
+        <div class="flex items-center justify-center gap-3 mt-3">
+          <button onclick="mudarPagina(-1)" id="pag-anterior" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white disabled:opacity-30" disabled>Anterior</button>
+          <span class="text-xs text-gray-500" id="pag-info">1 / 2</span>
+          <button onclick="mudarPagina(1)" id="pag-proximo" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white">Próximo</button>
+        </div>
+        <script>
+        var paginaAtual=0,totalPags=2;
+        function mudarPagina(dir){paginaAtual+=dir;if(paginaAtual<0)paginaAtual=0;if(paginaAtual>=totalPags)paginaAtual=totalPags-1;document.querySelectorAll('.div-row').forEach(function(r){r.style.display=r.getAttribute('data-page')==String(paginaAtual)?'':'none';});document.getElementById('pag-info').textContent=(paginaAtual+1)+' / '+totalPags;document.getElementById('pag-anterior').disabled=paginaAtual===0;document.getElementById('pag-proximo').disabled=paginaAtual>=totalPags-1;}
+        </script>
       </div>
 
 

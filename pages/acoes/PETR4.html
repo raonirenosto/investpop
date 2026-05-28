@@ -147,42 +147,86 @@
           </thead>
           <tbody class="text-gray-200">
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">01/06/2026</td>
               <td class="py-2.5">20/08/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3505</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">01/06/2026</td>
               <td class="py-2.5">21/09/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3505</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">22/04/2026</td>
               <td class="py-2.5">20/05/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3131</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">JSCP</td>
               <td class="py-2.5">22/04/2026</td>
               <td class="py-2.5">22/06/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3131</td>
             </tr>
 
-            <tr class="border-t border-card-border">
+            <tr class="border-t border-card-border div-row" data-page="0">
               <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
               <td class="py-2.5">22/12/2025</td>
               <td class="py-2.5">20/03/2026</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,2964</td>
             </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">22/12/2025</td>
+              <td class="py-2.5">20/02/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,4716</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">22/12/2025</td>
+              <td class="py-2.5">20/03/2026</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,1752</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">21/08/2025</td>
+              <td class="py-2.5">21/11/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,3360</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">Dividendos</td>
+              <td class="py-2.5">21/08/2025</td>
+              <td class="py-2.5">22/12/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,2009</td>
+            </tr>
+
+            <tr class="border-t border-card-border div-row" data-page="1" style="display:none">
+              <td class="py-2.5 text-xs text-gray-500">JSCP</td>
+              <td class="py-2.5">21/08/2025</td>
+              <td class="py-2.5">22/12/2025</td>
+              <td class="py-2.5 text-right text-emerald-400 font-medium">R$ 0,1350</td>
+            </tr>
           </tbody>
         </table>
+        <div class="flex items-center justify-center gap-3 mt-3">
+          <button onclick="mudarPagina(-1)" id="pag-anterior" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white disabled:opacity-30" disabled>Anterior</button>
+          <span class="text-xs text-gray-500" id="pag-info">1 / 2</span>
+          <button onclick="mudarPagina(1)" id="pag-proximo" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white">Próximo</button>
+        </div>
+        <script>
+        var paginaAtual=0,totalPags=2;
+        function mudarPagina(dir){paginaAtual+=dir;if(paginaAtual<0)paginaAtual=0;if(paginaAtual>=totalPags)paginaAtual=totalPags-1;document.querySelectorAll('.div-row').forEach(function(r){r.style.display=r.getAttribute('data-page')==String(paginaAtual)?'':'none';});document.getElementById('pag-info').textContent=(paginaAtual+1)+' / '+totalPags;document.getElementById('pag-anterior').disabled=paginaAtual===0;document.getElementById('pag-proximo').disabled=paginaAtual>=totalPags-1;}
+        </script>
       </div>
 
 
@@ -209,7 +253,7 @@
             <span class="text-sm text-gray-300">Que Mais Pagam (DY)</span>
           </a>
           <a href="../acoes-ranking-baratos.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">
-            <span class="text-xs font-bold text-gray-400">#8</span>
+            <span class="text-xs font-bold text-gray-400">#9</span>
             <span class="text-sm text-gray-300">Mais Baratos (P/L)</span>
           </a>
           <a href="../acoes-ranking-valorizacao.html" class="flex items-center gap-2 bg-[#132743] rounded-lg px-3 py-2 hover:bg-[#1a3352]">

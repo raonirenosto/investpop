@@ -794,6 +794,68 @@ async function testarFiltroBots() {
     }
 }
 
+async function testarSimuladorSemDY() {
+    console.log('\n\ud83d\udd0d TESTE 25 \u2014 Simulador escondido quando a\u00e7\u00e3o n\u00e3o tem DY (#78)')
+
+    const acoesDir = path.join(PAGES_DIR, 'acoes')
+    let ok = true
+    // Ações que sabemos que não têm DY
+    const files = fs.readdirSync(acoesDir).filter(f => f.endsWith('.html'))
+    for (const f of files) {
+        const html = fs.readFileSync(path.join(acoesDir, f), 'utf-8')
+        const dyDash = html.match(/Dividend Yield[\s\S]{0,200}>-</) !== null
+        const temSimulador = html.includes('Quanto vou receber')
+        if (dyDash && temSimulador) {
+            ok = false
+            console.log('   \u274c ' + f.replace('.html','') + ': tem simulador mas DY = -')
+        }
+    }
+    if (ok) {
+        totalPassou++
+        console.log('   \u2705 Nenhuma a\u00e7\u00e3o sem DY mostra simulador')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
+async function testarPaginacaoRendimentos() {
+    console.log('\n\ud83d\udd0d TESTE 26 \u2014 Pagina\u00e7\u00e3o de rendimentos em FIIs e A\u00e7\u00f5es (#79)')
+
+    let ok = true
+    // Verificar FII com muitos dividendos
+    const fiiHtml = fs.readFileSync(path.join(PAGES_DIR, 'fiis', 'MXRF11.html'), 'utf-8')
+    const fiiRows = (fiiHtml.match(/<tr class="border-t/g) || []).length
+    const fiiTemPaginacao = fiiHtml.includes('pag-anterior') || fiiHtml.includes('pag-proximo') || fiiHtml.includes('data-page')
+    if (fiiRows > 5 && fiiTemPaginacao) {
+        console.log('   \u2705 FII MXRF11: ' + fiiRows + ' rendimentos com pagina\u00e7\u00e3o')
+    } else if (fiiRows <= 5) {
+        ok = false
+        console.log('   \u274c FII MXRF11: apenas ' + fiiRows + ' rendimentos (esperado todos)')
+    } else {
+        ok = false
+        console.log('   \u274c FII MXRF11: ' + fiiRows + ' rendimentos mas sem pagina\u00e7\u00e3o')
+    }
+
+    // Verificar Ação com muitos dividendos
+    const acaoHtml = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3.html'), 'utf-8')
+    const acaoRows = (acaoHtml.match(/<tr class="border-t/g) || []).length
+    const acaoTemPaginacao = acaoHtml.includes('pag-anterior') || acaoHtml.includes('pag-proximo') || acaoHtml.includes('data-page')
+    if (acaoRows > 5 && acaoTemPaginacao) {
+        console.log('   \u2705 A\u00e7\u00e3o VALE3: ' + acaoRows + ' rendimentos com pagina\u00e7\u00e3o')
+    } else if (acaoRows <= 5) {
+        ok = false
+        console.log('   \u274c A\u00e7\u00e3o VALE3: apenas ' + acaoRows + ' rendimentos (esperado todos)')
+    } else {
+        ok = false
+        console.log('   \u274c A\u00e7\u00e3o VALE3: ' + acaoRows + ' rendimentos mas sem pagina\u00e7\u00e3o')
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -839,6 +901,8 @@ async function main() {
     await testarBuscaMostraNomeEmpresa()
     await testarDescricaoEmpresaAcoes()
     await testarFiltroBots()
+    await testarSimuladorSemDY()
+    await testarPaginacaoRendimentos()
 
     await browser.close()
 

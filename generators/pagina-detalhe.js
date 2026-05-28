@@ -38,8 +38,11 @@ function gerarPaginaDetalhe(fii, todosFiis, rankings) {
         return ((valor / fii.preco) * mediaMensal).toFixed(2).replace('.', ',')
     }
 
-    const linhasDividendos = (fii.dividendos || []).slice(0, 5).map(d => `
-            <tr class="border-t border-card-border">
+    const allDivsFii = (fii.dividendos || [])
+    const POR_PAGINA_FII = 5
+    const totalPaginasFii = Math.ceil(allDivsFii.length / POR_PAGINA_FII)
+    const linhasDividendos = allDivsFii.map((d, i) => `
+            <tr class="border-t border-card-border div-row" data-page="${Math.floor(i / POR_PAGINA_FII)}"${i >= POR_PAGINA_FII ? ' style="display:none"' : ''}>
               <td class="py-2.5">${d.dataCom}</td>
               <td class="py-2.5">${d.pagamento}</td>
               <td class="py-2.5 text-right text-emerald-400 font-medium">R$ ${d.valor.toFixed(2).replace('.', ',')}</td>
@@ -145,6 +148,15 @@ ${headerHtml({basePath: '../'})}
 ${linhasDividendos}
           </tbody>
         </table>
+${totalPaginasFii > 1 ? `        <div class="flex items-center justify-center gap-3 mt-3">
+          <button onclick="mudarPagina(-1)" id="pag-anterior" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white disabled:opacity-30" disabled>Anterior</button>
+          <span class="text-xs text-gray-500" id="pag-info">1 / ${totalPaginasFii}</span>
+          <button onclick="mudarPagina(1)" id="pag-proximo" class="px-3 py-1 text-xs border border-card-border rounded-lg text-gray-400 hover:text-white">Pr\u00f3ximo</button>
+        </div>
+        <script>
+        var paginaAtual=0,totalPags=${totalPaginasFii};
+        function mudarPagina(dir){paginaAtual+=dir;if(paginaAtual<0)paginaAtual=0;if(paginaAtual>=totalPags)paginaAtual=totalPags-1;document.querySelectorAll('.div-row').forEach(function(r){r.style.display=r.getAttribute('data-page')==String(paginaAtual)?'':'none';});document.getElementById('pag-info').textContent=(paginaAtual+1)+' / '+totalPags;document.getElementById('pag-anterior').disabled=paginaAtual===0;document.getElementById('pag-proximo').disabled=paginaAtual>=totalPags-1;}
+        </script>` : ''}
         <div class="mt-3 pt-3 border-t border-card-border text-xs text-gray-500">
           Total 12M: R$ ${totalAnualFmt} por cota \u2022 DY 12M: ${fii.dy.toFixed(2).replace('.', ',')}%
         </div>
