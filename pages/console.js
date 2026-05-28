@@ -106,6 +106,15 @@ function isBot(d) {
   var botPatterns = ['bot','crawler','spider','headlesschrome','python','go-http','curl','wget','scrapy','phantom','selenium','puppeteer','playwright','facebookexternalhit','twitterbot','linkedinbot','slackbot','telegrambot','whatsapp','semrush','ahrefs','petalbot','yandex','baidu','bytespider','gptbot','chatgpt','claudebot','anthropic','applebot','duckduckbot','ia_archiver','archive.org'];
   for(var i=0;i<botPatterns.length;i++){if(ua.includes(botPatterns[i]))return true;}
   if(d.cidade && (d.cidade.includes('Boardman') || d.cidade.includes('Ashburn') || d.cidade.includes('Dublin'))) return true;
+  // Resolução quadrada (nenhum monitor real)
+  if(d.resolucao){var p=d.resolucao.trim().split('x');if(p.length===2&&p[0]===p[1]&&p[0]!=='0')return true;}
+  // UA contraditório: diz Windows mas plataforma Linux
+  if(ua.includes('windows nt')&&d.os&&d.os.toLowerCase().includes('linux'))return true;
+  // Chrome muito antigo (< 100)
+  var chromeMatch=ua.match(/chrome\/(\d+)/);
+  if(chromeMatch&&parseInt(chromeMatch[1])<100)return true;
+  // Cidades de datacenter
+  if(d.cidade){var dc=['Santa Clara','San Jose','Hillsboro','Reston','Council Bluffs','The Dalles','Burnaby'];for(var j=0;j<dc.length;j++){if(d.cidade.includes(dc[j]))return true;}}
   return false;
 }
 

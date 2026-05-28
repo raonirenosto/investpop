@@ -856,6 +856,50 @@ async function testarPaginacaoRendimentos() {
     else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
 }
 
+async function testarFiltroBotsMelhorado() {
+    console.log('\n\ud83d\udd0d TESTE 28 \u2014 Filtro detecta bots sofisticados (#81)')
+
+    const consoleJs = fs.readFileSync(path.join(PAGES_DIR, 'console.js'), 'utf-8')
+    const isBotMatch = consoleJs.match(/function isBot\(d\)\s*\{([\s\S]*?)\n\}/)
+    if (!isBotMatch) {
+        totalFalhou++
+        console.log('   \u274c fun\u00e7\u00e3o isBot n\u00e3o encontrada')
+        console.log('   Status: \u274c FALHOU')
+        return
+    }
+    const isBotFn = new Function('d', isBotMatch[1])
+
+    const botsSofisticados = [
+        { navegador: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36', cidade: 'Santa Clara', resolucao: '1024x1024', os: 'Linux x86_64' },
+        { navegador: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', cidade: 'Burnaby', resolucao: '800x600' },
+        { navegador: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/90.0.4430.93 Safari/537.36', cidade: 'San Jose', resolucao: '1920x1080' },
+        { navegador: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/85.0.4183.121 Safari/537.36', cidade: 'Reston', resolucao: '1366x768' },
+        { navegador: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/148.0.0.0 Safari/537.36', cidade: 'Hillsboro', resolucao: '800x800', os: 'Linux x86_64' },
+    ]
+
+    const humanosReais = [
+        { navegador: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', cidade: 'Santa Barbara d\'Oeste', resolucao: '1920x1080', os: 'Win32', dispositivo: 'Desktop' },
+        { navegador: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1', cidade: 'S\u00e3o Paulo', resolucao: '390x844', os: 'iPhone', dispositivo: 'Mobile' },
+    ]
+
+    let ok = true
+    for (const b of botsSofisticados) {
+        if (!isBotFn(b)) { ok = false; console.log('   \u274c N\u00e3o detectou: ' + b.cidade + ' ' + b.resolucao) }
+    }
+    for (const h of humanosReais) {
+        if (isBotFn(h)) { ok = false; console.log('   \u274c Bloqueou humano: ' + h.cidade) }
+    }
+
+    if (ok) {
+        totalPassou++
+        console.log('   \u2705 Detecta ' + botsSofisticados.length + ' bots sofisticados, permite ' + humanosReais.length + ' humanos')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function testarRendimentosAcoesSemLimite() {
     console.log('\n\ud83d\udd0d TESTE 27 \u2014 A\u00e7\u00f5es mostram mais de 10 rendimentos (#80)')
 
@@ -921,6 +965,7 @@ async function main() {
     await testarSimuladorSemDY()
     await testarPaginacaoRendimentos()
     await testarRendimentosAcoesSemLimite()
+    await testarFiltroBotsMelhorado()
 
     await browser.close()
 
