@@ -37,11 +37,10 @@ function gerarPaginaDetalheAcao(acao, todasAcoes, rankings) {
             </tr>`).join('\n')
     const totalPaginas = Math.ceil(divs.length / POR_PAGINA)
 
-    // Simulador anual
-    const totalAnual = (acao.dividendos || []).slice(0, 20).reduce((s, d) => s + (d.valor || 0), 0)
+    // Simulador anual baseado no DY
     const simularAnual = (valor) => {
-        if (acao.preco <= 0 || totalAnual <= 0) return '-'
-        return ((valor / acao.preco) * totalAnual).toFixed(2).replace('.', ',')
+        if (acao.preco <= 0 || acao.dy <= 0) return '-'
+        return (valor * acao.dy / 100).toFixed(2).replace('.', ',')
     }
 
     return `${headHtml(acao.ticker + " \u2014 InvestPop", acao.ticker + " - " + (acao.nome || 'A\u00e7\u00e3o') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
@@ -140,7 +139,7 @@ ${totalPaginas > 1 ? `        <div class="flex items-center justify-center gap-3
         <p class="text-sm text-gray-500 text-center py-4">Esta a\u00e7\u00e3o n\u00e3o possui hist\u00f3rico de dividendos</p>
       </div>`}
 
-${totalAnual > 0 && acao.dy > 0 ? `
+${acao.dy > 0 ? `
       <div class="lg:col-span-3 bg-card border border-card-border rounded-xl p-4 md:p-5">
         <h2 class="text-sm font-semibold text-gray-300 uppercase mb-3">Quanto vou receber por ano?</h2>
         <p class="text-xs text-gray-500 mb-3">Baseado nos proventos dos \u00faltimos 12 meses (a\u00e7\u00e3o a R$ ${acao.preco.toFixed(2).replace('.', ',')})</p>
