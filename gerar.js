@@ -559,8 +559,12 @@ async function buscarRankingsAcoes(tickers) {
             }
             const anoVigente = parseInt(new Date().getFullYear())
             let anosConsistentes = 0
-            // Contar anos consecutivos de trás pra frente a partir do vigente
-            for (let a = anoVigente; a >= anoVigente - 30; a--) {
+            // Comecar do ano vigente; se nao tiver, tenta vigente-1
+            let anoInicio = anoVigente
+            if (!porAno[String(anoInicio)] || porAno[String(anoInicio)] <= 0) {
+                anoInicio = anoVigente - 1
+            }
+            for (let a = anoInicio; a >= anoInicio - 30; a--) {
                 if (porAno[String(a)] && porAno[String(a)] > 0) anosConsistentes++
                 else break
             }
