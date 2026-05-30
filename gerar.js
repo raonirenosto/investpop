@@ -182,6 +182,29 @@ async function buscarIfix() {
 }
 
 // ===============================
+
+// BUSCAR HISTORICO DE COTACAO (Yahoo Finance - batch 5y/1d)
+
+async function buscarHistoricoCotacao(tickers) {
+    const historico = {}
+    for (let i = 0; i < tickers.length; i += 20) {
+        const batch = tickers.slice(i, i + 20)
+        const symbols = batch.map(t => t + '.SA').join(',')
+        try {
+            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=5y&interval=1d`, {
+                httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" }
+            })
+            for (const t of batch) {
+                const d = r.data[t + '.SA']
+                if (d && d.timestamp && d.close) {
+                    historico[t] = { t: d.timestamp, c: d.close }
+                }
+            }
+        } catch (e) {}
+    }
+    return historico
+}
+
 // 🌐 BUSCAR FIIs (Yahoo Finance - batch)
 // ===============================
 
@@ -653,11 +676,17 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "ifix-historico.html"), gerarPaginaIfixHistorico())
             fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
+            // Buscar historico de cotacao para graficos (FIIs)
+            console.log("\n📈 Buscando histórico de cotação (" + fiis.length + " FIIs)...")
+            const historicoCotacao = await buscarHistoricoCotacao(fiis)
+            console.log("✅ Histórico FIIs: " + Object.keys(historicoCotacao).length + " tickers")
+
+
             // Gerar páginas de detalhe (via cache)
             const pastaFiisCache = path.join(pasta, "fiis")
             if (!fs.existsSync(pastaFiisCache)) fs.mkdirSync(pastaFiisCache)
             for (const det of rankings.detalhes) {
-                fs.writeFileSync(path.join(pastaFiisCache, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings))
+                fs.writeFileSync(path.join(pastaFiisCache, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
             }
 
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
@@ -711,6 +740,13 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
             fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
 
+
+            // Buscar historico de cotacao para acoes
+            console.log("📈 Buscando histórico de cotação (" + acoes.length + " ações)...")
+            const histAcoes = await buscarHistoricoCotacao(acoes)
+            Object.assign(historicoCotacao, histAcoes)
+            console.log("✅ Histórico ações: " + Object.keys(histAcoes).length + " tickers")
+
             // Gerar páginas de detalhe de ações
             const pastaAcoesCache = path.join(pasta, "acoes")
             if (!fs.existsSync(pastaAcoesCache)) fs.mkdirSync(pastaAcoesCache)
@@ -730,7 +766,7 @@ async function main() {
                 const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
                 const varDia = cotacao ? cotacao.varNum : 0
                 const nomeAcao = nomesCSVCache[t] || det.nome || ''
-                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVCache[t]||det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes))
+                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVCache[t]||det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes, historicoCotacao[t]))
             }
             console.log(`✅ ${tickersUnicos.length} páginas de detalhe de ações geradas`)
 
@@ -790,12 +826,17 @@ async function main() {
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
     // Gerar páginas de detalhe
+    const todosTickers2 = [...fiis, ...acoes]
+    console.log("\n📈 Buscando histórico de cotação (" + todosTickers2.length + " tickers)...")
+    const historicoCotacao = await buscarHistoricoCotacao(todosTickers2)
+    console.log("✅ Histórico: " + Object.keys(historicoCotacao).length + " tickers com dados")
+
     const pastaFiis = path.join(pasta, "fiis")
     if (!fs.existsSync(pastaFiis)) fs.mkdirSync(pastaFiis)
     for (const det of rankings.detalhes) {
         const cotacao = resultados.find(r => r.ticker === det.ticker)
         if (cotacao) det.preco = parseFloat(cotacao.preco.replace(',', '.')) || 0
-        fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings))
+        fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
     }
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
     fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
@@ -854,7 +895,7 @@ async function main() {
         const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
         const varDia = cotacao ? cotacao.varNum : 0
         const nomeAcao = nomesCSVFull[t] || det.nome || ''
-        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVFull[t]||det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes))
+        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVFull[t]||det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes, historicoCotacao[t]))
     }
     console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 

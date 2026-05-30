@@ -1,6 +1,6 @@
 const { headHtml, headerHtml, footerHtml } = require("./componentes")
 
-function gerarPaginaDetalheAcao(acao, todasAcoes, rankings) {
+function gerarPaginaDetalheAcao(acao, todasAcoes, rankings, historico) {
     const corVar = acao.varDia >= 0 ? 'text-emerald-500' : 'text-red-500'
     const setaVar = acao.varDia >= 0 ? '\u2191' : '\u2193'
     const varDiaFmt = (acao.varDia >= 0 ? '+' : '') + acao.varDia.toFixed(2).replace('.', ',') + '%'
@@ -91,6 +91,45 @@ ${headerHtml({basePath: '../', paginaAcoes: true})}
         <div id="tooltip-consist-det" class="hidden mt-2 text-[11px] text-gray-400">Anos consecutivos em que a a\u00e7\u00e3o pagou dividendos, contando do ano atual para tr\u00e1s.</div>
       </div>
     </div>
+
+${historico && historico.t && historico.t.length > 0 ? `
+    <div class="bg-card border border-card-border rounded-xl p-4 md:p-5 mb-5">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold text-gray-300 uppercase">Cota\u00e7\u00e3o</h2>
+        <div class="flex gap-1">
+          <button onclick="setChartPeriod('1m')" data-period="1m" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">1M</button>
+          <button onclick="setChartPeriod('ytd')" data-period="ytd" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">YTD</button>
+          <button onclick="setChartPeriod('1y')" data-period="1y" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">1A</button>
+          <button onclick="setChartPeriod('5y')" data-period="5y" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-emerald-500 bg-emerald-500/20 text-emerald-400">5A</button>
+        </div>
+      </div>
+      <canvas id="chart-cotacao" height="200"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script>
+    var chartData = ${JSON.stringify({t: historico.t, c: historico.c})};
+    var chartInstance = null;
+    function setChartPeriod(p) {
+      var now = Math.floor(Date.now()/1000);
+      var cutoff = 0;
+      if (p==='1m') cutoff = now - 30*86400;
+      else if (p==='ytd') { var jan1 = new Date(new Date().getFullYear(),0,1); cutoff = Math.floor(jan1.getTime()/1000); }
+      else if (p==='1y') cutoff = now - 365*86400;
+      else cutoff = 0;
+      var t=[],c=[];
+      for(var i=0;i<chartData.t.length;i++){if(chartData.t[i]>=cutoff&&chartData.c[i]!=null){t.push(chartData.t[i]);c.push(chartData.c[i]);}}
+      renderChart(t,c);
+      document.querySelectorAll('.chart-period-btn').forEach(function(b){b.className='chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white';});
+      document.querySelector('[data-period="'+p+'"]').className='chart-period-btn px-2 py-1 text-[10px] rounded border border-emerald-500 bg-emerald-500/20 text-emerald-400';
+    }
+    function renderChart(t,c) {
+      var labels = t.map(function(ts){var d=new Date(ts*1000);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'2-digit'});});
+      var cor = c.length>1&&c[c.length-1]>=c[0]?'#10b981':'#ef4444';
+      if(chartInstance){chartInstance.destroy();}
+      chartInstance = new Chart(document.getElementById('chart-cotacao'),{type:'line',data:{labels:labels,datasets:[{data:c,borderColor:cor,borderWidth:1.5,pointRadius:0,fill:{target:'origin',above:cor+'15',below:cor+'15'},tension:0.1}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},scales:{x:{display:true,ticks:{maxTicksLimit:6,font:{size:9},color:'#6b7280'}},y:{display:true,ticks:{font:{size:9},color:'#6b7280',callback:function(v){return'R$'+v.toFixed(0)}}}},interaction:{mode:'nearest',axis:'x',intersect:false}}});
+    }
+    setChartPeriod('5y');
+    </script>` : ''}
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 ${acao.descricao ? `
