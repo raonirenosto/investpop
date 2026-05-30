@@ -794,6 +794,57 @@ async function testarFiltroBots() {
     }
 }
 
+async function testarConsistenciaCorreta() {
+    console.log('\n\ud83d\udd0d TESTE 28 \u2014 Consist\u00eancia de a\u00e7\u00f5es com gaps n\u00e3o conta anos pulados (#83)')
+
+    // MGLU3 tem gap em 2023/2024, n\u00e3o deve ter consist\u00eancia alta
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'MGLU3.html'), 'utf-8')
+    const match = html.match(/text-orange-400 mt-1">(\d+) anos/)
+    if (!match) {
+        // Pode ser "-" (sem consist\u00eancia) - tamb\u00e9m aceit\u00e1vel
+        const temDash = html.match(/Consist[^<]*<\/span>[\s\S]*?<p[^>]*>-</)
+        if (temDash) {
+            totalPassou++
+            console.log('   \u2705 MGLU3: consist\u00eancia = - (correto, tem gaps)')
+            console.log('   Status: \u2705 PASSOU')
+        } else {
+            totalFalhou++
+            console.log('   \u274c MGLU3: n\u00e3o encontrou valor de consist\u00eancia')
+            console.log('   Status: \u274c FALHOU')
+        }
+        return
+    }
+    const anos = parseInt(match[1])
+    if (anos <= 2) {
+        totalPassou++
+        console.log('   \u2705 MGLU3: consist\u00eancia = ' + anos + ' anos (correto, tem gaps em 2023/2024)')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   \u274c MGLU3: consist\u00eancia = ' + anos + ' anos (errado, deveria ser \u2264 2 por gaps)')
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
+async function testarTooltipConsistenciaDetalhe() {
+    console.log('\n\ud83d\udd0d TESTE 29 \u2014 Tooltip (i) de consist\u00eancia no detalhe de a\u00e7\u00f5es (#84)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3.html'), 'utf-8')
+    const temTooltip = html.includes('tooltip-consist-det') && html.includes('Anos consecutivos')
+    const textoCorreto = html.includes('Anos consecutivos em que a a')
+
+    if (temTooltip && textoCorreto) {
+        totalPassou++
+        console.log('   \u2705 VALE3: tooltip (i) presente com texto correto')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        if (!temTooltip) console.log('   \u274c VALE3: tooltip n\u00e3o encontrado no detalhe')
+        if (!textoCorreto) console.log('   \u274c VALE3: texto do tooltip incorreto')
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function testarSimuladorSemDY() {
     console.log('\n\ud83d\udd0d TESTE 25 \u2014 Simulador escondido quando a\u00e7\u00e3o n\u00e3o tem DY (#78)')
 
@@ -966,6 +1017,8 @@ async function main() {
     await testarPaginacaoRendimentos()
     await testarRendimentosAcoesSemLimite()
     await testarFiltroBotsMelhorado()
+    await testarConsistenciaCorreta()
+    await testarTooltipConsistenciaDetalhe()
 
     await browser.close()
 

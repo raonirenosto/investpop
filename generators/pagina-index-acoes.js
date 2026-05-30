@@ -193,7 +193,7 @@ ${footerHtml(global.INVESTPOP_TESTE ? {teste:true, paginaAcoes:true} : {paginaAc
   </div>
   <div id="tooltip-consistencia" class="tooltip-box hidden">
     <div class="flex items-center justify-between mb-2"><div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center"><svg class="w-3 h-3 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></span><span class="font-semibold text-sm text-gray-100">Consist&ecirc;ncia</span></div><button onclick="closeTooltip('tooltip-consistencia')" class="text-gray-500 hover:text-gray-300 text-lg leading-none">&times;</button></div>
-    <p class="text-xs text-gray-400">Pagamentos consecutivos sem redu&ccedil;&atilde;o no valor dos dividendos/JCP.</p>
+    <p class="text-xs text-gray-400">Anos consecutivos em que a a&ccedil;&atilde;o pagou dividendos, contando do ano atual para tr&aacute;s.</p>
   </div>
 
   <style>.tooltip-box{position:fixed;z-index:9999;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 16px;width:260px;box-shadow:0 20px 40px rgba(0,0,0,0.5)}@media(max-width:768px){.tooltip-box{bottom:0;left:0;right:0;width:100%;border-radius:16px 16px 0 0;padding:20px}}</style>

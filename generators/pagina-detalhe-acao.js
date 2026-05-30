@@ -86,8 +86,9 @@ ${headerHtml({basePath: '../', paginaAcoes: true})}
         <p class="text-lg font-bold mt-1 ${corYtd}">${ytdFmt}</p>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-4">
-        <span class="text-[10px] text-gray-500 uppercase">Consist\u00eancia</span>
+        <span class="text-[10px] text-gray-500 uppercase">Consist\u00eancia <button onclick="document.getElementById('tooltip-consist-det').classList.toggle('hidden')" class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-700 text-[9px] text-gray-400 hover:text-white">i</button></span>
         <p class="text-lg font-bold text-orange-400 mt-1">${acao.mesesConsistentes > 0 ? acao.mesesConsistentes + ' anos' : '-'}</p>
+        <div id="tooltip-consist-det" class="hidden mt-2 text-[11px] text-gray-400">Anos consecutivos em que a a\u00e7\u00e3o pagou dividendos, contando do ano atual para tr\u00e1s.</div>
       </div>
     </div>
 
