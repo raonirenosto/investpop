@@ -795,12 +795,13 @@ async function testarFiltroBots() {
 }
 
 async function testarConsistenciaCorreta() {
-    console.log('\n\ud83d\udd0d TESTE 28 \u2014 Consist\u00eancia de a\u00e7\u00f5es com gaps n\u00e3o conta anos pulados (#83/#85)')
+    console.log('\n\ud83d\udd0d TESTE 28 \u2014 Consist\u00eancia de a\u00e7\u00f5es usa data de pagamento e come\u00e7a do vigente (#85)')
 
     const acoesDir = path.join(PAGES_DIR, 'acoes')
     const files = fs.readdirSync(acoesDir).filter(f => f.endsWith('.html'))
     let ok = true
     let erros = []
+    const anoVigente = new Date().getFullYear()
 
     for (const f of files) {
         const ticker = f.replace('.html', '')
@@ -810,43 +811,31 @@ async function testarConsistenciaCorreta() {
         const matchConsist = html.match(/text-orange-400 mt-1">(\d+) anos/)
         const consistMostrada = matchConsist ? parseInt(matchConsist[1]) : 0
 
-        // Extrair anos dos dividendos
+        // Extrair anos de PAGAMENTO dos dividendos (3a coluna da tabela)
         const rows = html.match(/<tr class="border-t[\s\S]*?<\/tr>/g) || []
         const porAno = {}
         for (const row of rows) {
             const tds = row.match(/<td[^>]*>([\s\S]*?)<\/td>/g) || []
             if (tds.length >= 4) {
-                const dataCom = tds[1].replace(/<[^>]+>/g, '').trim()
                 const pagamento = tds[2].replace(/<[^>]+>/g, '').trim()
-                const anoMatch = dataCom.match(/(\d{4})/) || pagamento.match(/(\d{4})/)
+                const anoMatch = pagamento.match(/(\d{4})/)
                 if (anoMatch) porAno[anoMatch[1]] = true
             }
         }
 
-        // Calcular consist\u00eancia esperada
-        const anoVigente = new Date().getFullYear()
-        let anoInicio = anoVigente
-        if (!porAno[String(anoInicio)]) anoInicio = anoVigente - 1
+        // Calcular consist\u00eancia esperada (sempre come\u00e7a do vigente)
         let esperada = 0
-        for (let a = anoInicio; a >= anoInicio - 30; a--) {
-            if (porAno[String(a)]) esperada++
-            else break
+        if (porAno[String(anoVigente)]) {
+            for (let a = anoVigente; a >= anoVigente - 30; a--) {
+                if (porAno[String(a)]) esperada++
+                else break
+            }
         }
 
-        // MGLU3: verificar que gaps s\u00e3o respeitados
-        if (ticker === 'MGLU3' && consistMostrada > 2) {
+        // Validar: consist\u00eancia mostrada deve ser igual \u00e0 esperada
+        if (consistMostrada !== esperada) {
             ok = false
-            erros.push(ticker + ': ' + consistMostrada + ' anos (deveria \u2264 2)')
-        }
-        // KLBN11: deve ter consist\u00eancia > 0
-        if (ticker === 'KLBN11' && consistMostrada === 0 && esperada > 0) {
-            ok = false
-            erros.push(ticker + ': mostra 0 mas deveria ter ' + esperada + ' anos')
-        }
-        // Geral: consist\u00eancia mostrada n\u00e3o deve ser maior que a esperada
-        if (consistMostrada > esperada + 1) {
-            ok = false
-            erros.push(ticker + ': mostra ' + consistMostrada + ' mas esperada \u2264 ' + esperada)
+            erros.push(ticker + ': mostra ' + consistMostrada + ', esperada ' + esperada)
         }
     }
 

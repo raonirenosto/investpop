@@ -548,10 +548,10 @@ async function buscarRankingsAcoes(tickers) {
                 }
             }
 
-            // Consistência para ações: anos consecutivos que pagou dividendos
+            // Consistência para ações: anos consecutivos com pagamento (usa data de PAGAMENTO, nunca dataCom)
             const porAno = {}
             for (const r of rendimentos) {
-                const anoMatch = (r.dataCom && r.dataCom.match(/(\d{4})/)) || (r.pagamento && r.pagamento.match(/(\d{4})/))
+                const anoMatch = r.pagamento && r.pagamento.match(/(\d{4})/)
                 if (anoMatch) {
                     const ano = anoMatch[1]
                     porAno[ano] = (porAno[ano] || 0) + r.valor
@@ -559,14 +559,12 @@ async function buscarRankingsAcoes(tickers) {
             }
             const anoVigente = parseInt(new Date().getFullYear())
             let anosConsistentes = 0
-            // Comecar do ano vigente; se nao tiver, tenta vigente-1
-            let anoInicio = anoVigente
-            if (!porAno[String(anoInicio)] || porAno[String(anoInicio)] <= 0) {
-                anoInicio = anoVigente - 1
-            }
-            for (let a = anoInicio; a >= anoInicio - 30; a--) {
-                if (porAno[String(a)] && porAno[String(a)] > 0) anosConsistentes++
-                else break
+            // Sempre começar do ano vigente. Se não tem pagamento no vigente, consistência = 0
+            if (porAno[String(anoVigente)] && porAno[String(anoVigente)] > 0) {
+                for (let a = anoVigente; a >= anoVigente - 30; a--) {
+                    if (porAno[String(a)] && porAno[String(a)] > 0) anosConsistentes++
+                    else break
+                }
             }
 
             resultados.push({ ticker: t, dy, pl, varAno: varAnoBatch[t] || 0, mesesConsistentes: anosConsistentes, nome, setor, dividendos: rendimentos, descricao: articleBody.replace(/\s+/g, ' ').substring(0, 300) })
