@@ -825,11 +825,12 @@ async function main() {
             fs.writeFileSync(path.join(pasta, "ifix-historico.html"), gerarPaginaIfixHistorico())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
-    // Gerar páginas de detalhe
-    const todosTickers2 = [...fiis, ...acoes]
-    console.log("\n📈 Buscando histórico de cotação (" + todosTickers2.length + " tickers)...")
-    const historicoCotacao = await buscarHistoricoCotacao(todosTickers2)
-    console.log("✅ Histórico: " + Object.keys(historicoCotacao).length + " tickers com dados")
+
+
+    // Buscar historico de cotacao para FIIs
+    console.log("\n📈 Buscando histórico de cotação (" + fiis.length + " FIIs)...")
+    const historicoCotacao = await buscarHistoricoCotacao(fiis)
+    console.log("✅ Histórico FIIs: " + Object.keys(historicoCotacao).length + " tickers")
 
     const pastaFiis = path.join(pasta, "fiis")
     if (!fs.existsSync(pastaFiis)) fs.mkdirSync(pastaFiis)
@@ -845,6 +846,12 @@ async function main() {
     // Gerar páginas de ações
     await sincronizarIBOV()
     const acoes = lerAcoes()
+
+    // Buscar historico de cotacao para acoes
+    console.log("📈 Buscando histórico de cotação (" + acoes.length + " ações)...")
+    const histAcoes = await buscarHistoricoCotacao(acoes)
+    Object.assign(historicoCotacao, histAcoes)
+    console.log("✅ Histórico ações: " + Object.keys(histAcoes).length + " tickers")
     console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
     const ibovData = await buscarIbov()
     const resAcoes = await buscarAcoes(acoes)
