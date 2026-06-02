@@ -19,12 +19,12 @@ function gerarPaginaDetalhe(fii, todosFiis, rankings, historico) {
     const posCons = posAll(r.allConsistentes, fii.ticker)
     const posAlta = posAll(r.topAltas, fii.ticker)
     const posQueda = posAll(r.topQuedas, fii.ticker)
-    if (posAlta > 0) tops.push({ nome: posAlta <= 5 ? 'Top 5 Maiores Altas do Dia' : 'Maiores Altas do Dia', pos: posAlta, cor: posAlta <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../altas.html' })
-    if (posQueda > 0) tops.push({ nome: posQueda <= 5 ? 'Top 5 Maiores Quedas do Dia' : 'Maiores Quedas do Dia', pos: posQueda, cor: posQueda <= 5 ? 'text-red-400' : 'text-gray-400', link: '../quedas.html' })
-    if (posDY > 0) tops.push({ nome: posDY <= 5 ? 'Top 5 Que Mais Pagam' : 'Que Mais Pagam (DY)', pos: posDY, cor: posDY <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../ranking-dy.html' })
-    if (posPVP > 0) tops.push({ nome: posPVP <= 5 ? 'Top 5 Mais Baratos' : 'Mais Baratos (P/VP)', pos: posPVP, cor: posPVP <= 5 ? 'text-blue-400' : 'text-gray-400', link: '../ranking-baratos.html' })
-    if (posYTD > 0) tops.push({ nome: posYTD <= 5 ? 'Top 5 Maior Valoriza\u00e7\u00e3o' : 'Maior Valoriza\u00e7\u00e3o (YTD)', pos: posYTD, cor: posYTD <= 5 ? 'text-purple-400' : 'text-gray-400', link: '../ranking-valorizacao.html' })
-    if (posCons > 0) tops.push({ nome: posCons <= 5 ? 'Top 5 Mais Consistentes' : 'Mais Consistentes', pos: posCons, cor: posCons <= 5 ? 'text-orange-400' : 'text-gray-400', link: '../ranking-consistentes.html' })
+    if (posAlta > 0) tops.push({ nome: posAlta <= 5 ? 'Top 5 Maiores Altas do Dia' : 'Maiores Altas do Dia', pos: posAlta, cor: posAlta <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../../altas/' })
+    if (posQueda > 0) tops.push({ nome: posQueda <= 5 ? 'Top 5 Maiores Quedas do Dia' : 'Maiores Quedas do Dia', pos: posQueda, cor: posQueda <= 5 ? 'text-red-400' : 'text-gray-400', link: '../../quedas/' })
+    if (posDY > 0) tops.push({ nome: posDY <= 5 ? 'Top 5 Que Mais Pagam' : 'Que Mais Pagam (DY)', pos: posDY, cor: posDY <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../../ranking-dy/' })
+    if (posPVP > 0) tops.push({ nome: posPVP <= 5 ? 'Top 5 Mais Baratos' : 'Mais Baratos (P/VP)', pos: posPVP, cor: posPVP <= 5 ? 'text-blue-400' : 'text-gray-400', link: '../../ranking-baratos/' })
+    if (posYTD > 0) tops.push({ nome: posYTD <= 5 ? 'Top 5 Maior Valoriza\u00e7\u00e3o' : 'Maior Valoriza\u00e7\u00e3o (YTD)', pos: posYTD, cor: posYTD <= 5 ? 'text-purple-400' : 'text-gray-400', link: '../../ranking-valorizacao/' })
+    if (posCons > 0) tops.push({ nome: posCons <= 5 ? 'Top 5 Mais Consistentes' : 'Mais Consistentes', pos: posCons, cor: posCons <= 5 ? 'text-orange-400' : 'text-gray-400', link: '../../ranking-consistentes/' })
 
     const mediaMensal = fii.dividendos && fii.dividendos.length > 0
         ? fii.dividendos.slice(0, 12).reduce((s, d) => s + d.valor, 0) / Math.min(fii.dividendos.length, 12)
@@ -53,12 +53,12 @@ function gerarPaginaDetalhe(fii, todosFiis, rankings, historico) {
 
     return `${headHtml(fii.ticker + " \u2014 InvestPop", fii.ticker + " - " + (fii.nome || 'Fundo Imobili\u00e1rio') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
 
-${headerHtml({basePath: '../'})}
+${headerHtml({basePath: '../../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
 
     <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 mb-4">
-      <a href="../index.html" class="hover:text-white">In\u00edcio</a>
+      <a href="../../" class="hover:text-white">In\u00edcio</a>
       <span>\u203a</span>
       <span>Fundos Imobili\u00e1rios</span>
       <span>\u203a</span>
@@ -228,7 +228,7 @@ ${tops.map(t => `          <a href="${t.link}" class="flex items-center gap-2 bg
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../', fiisBase:'', acoesBase:'../acoes/'} : {basePath:'../', fiisBase:'', acoesBase:'../acoes/'})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../../', fiisBase:'../', acoesBase:'../../acoes/'} : {basePath:'../../', fiisBase:'../', acoesBase:'../../acoes/'})}
 
 </body>
 </html>`

@@ -30,7 +30,7 @@ function gerarPaginaIbovHistorico() {
     return `${headHtml("InvestPop \u2014 IBOV Composi\u00e7\u00e3o", "Composi\u00e7\u00e3o atual do IBOV e hist\u00f3rico de mudan\u00e7as.")}
   <meta name="robots" content="noindex, nofollow" />
 
-${headerHtml()}
+${headerHtml({basePath:'../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
     <a href="console.html" class="text-sm text-gray-400 hover:text-white mb-4 inline-block">&larr; Console</a>
@@ -64,7 +64,7 @@ ${linhasHistorico}
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
 
 </body>
 </html>`

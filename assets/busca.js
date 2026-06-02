@@ -8,8 +8,8 @@
   var nomesMap = window.NOMES_MAP || {};
 
   function getLink(ticker) {
-    if (acoesList.indexOf(ticker) >= 0) return acoesBase + ticker + '.html';
-    return base + ticker + '.html';
+    if (acoesList.indexOf(ticker) >= 0) return acoesBase + ticker + '/';
+    return base + ticker + '/';
   }
 
   function normalizar(str) {

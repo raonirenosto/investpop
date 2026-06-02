@@ -5,7 +5,7 @@ function gerarPaginaAcessos() {
   <meta name="robots" content="noindex, nofollow" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-${headerHtml()}
+${headerHtml({basePath:'../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
     <a href="console.html" class="text-sm text-gray-400 hover:text-white mb-4 inline-block">&larr; Console</a>
@@ -74,9 +74,9 @@ ${headerHtml()}
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
 
-  <script src="console.js"></script>
+  <script src="../admin-console.js"></script>
 
 </body>
 </html>`

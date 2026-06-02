@@ -33,7 +33,7 @@ async function testarCardTops() {
     console.log('\n🔍 TESTE 1 — Card "Em quais tops aparece" na página de detalhe (#6)')
 
     // HCTR11 aparece no Top DY (#4) e Top Baratos (#1)
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', 'HCTR11.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', 'HCTR11', 'index.html'), 'utf-8')
 
     const temCardTops = html.includes('Aparece nos Rankings') || html.includes('tops') || html.includes('Rankings que participa')
     const temTopDY = html.includes('Mais Pagam') || html.includes('Top DY')
@@ -54,7 +54,7 @@ async function testarCardTopsMultiplos() {
     console.log('\n🔍 TESTE 2 — Card mostra posição real mesmo fora do Top 5 (#52)')
 
     // PETR4 provavelmente não está no top 5 de tudo, mas deve mostrar posição real
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'PETR4.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'PETR4', 'index.html'), 'utf-8')
     const temCard = html.includes('Aparece nos Rankings')
     // Deve ter posição > 5 (ex: #15, #19)
     const temPosGrande = html.match(/#\d{2,}/) !== null
@@ -120,7 +120,7 @@ async function testarFocoAutomatico(browser) {
 async function testarAbasTemporalConsole() {
     console.log('\n🔍 TESTE 4 — Abas de filtro temporal no console (#18/#24)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos', 'index.html'), 'utf-8')
 
     const temAbaHoje = html.includes('data-periodo="hoje"')
     const temAbaOntem = html.includes('data-periodo="ontem"')
@@ -141,7 +141,7 @@ async function testarAbaHojePadrao(browser) {
     console.log('\n🔍 TESTE 5 — Aba "Hoje" selecionada por padrão no console (#18)')
 
     const page = await browser.newPage()
-    await page.goto('file://' + path.join(PAGES_DIR, 'acessos.html'), { waitUntil: 'domcontentloaded' })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acessos', 'index.html'), { waitUntil: 'domcontentloaded' })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -210,7 +210,7 @@ async function testarMensagemVazio() {
 async function testarSemFiltro() {
     console.log('\n🔍 TESTE 8 — Console sem campo de filtro/busca (#20)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos', 'index.html'), 'utf-8')
     const temFiltro = html.includes('id="busca"') && html.includes('Filtrar por IP')
 
     if (!temFiltro) {
@@ -256,7 +256,7 @@ async function testarConsoleSemErroJS(browser) {
     const page = await browser.newPage()
     var erros = []
     page.on('pageerror', function(e) { erros.push(e.message) })
-    await page.goto('file://' + path.join(PAGES_DIR, 'acessos.html'), { waitUntil: 'domcontentloaded' })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acessos', 'index.html'), { waitUntil: 'domcontentloaded' })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -284,7 +284,7 @@ async function testarTabelaEscondidaSemDados(browser) {
     console.log('\n🔍 TESTE 11 — Tabela escondida e msg visível quando sem registros (#22)')
 
     const page = await browser.newPage()
-    await page.goto('file://' + path.join(PAGES_DIR, 'acessos.html'), { waitUntil: 'domcontentloaded' })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acessos', 'index.html'), { waitUntil: 'domcontentloaded' })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -325,7 +325,7 @@ async function testarCardTopsAltasQuedas() {
     let ok = true
 
     if (tickerAlta) {
-        const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', tickerAlta + '.html'), 'utf-8')
+        const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', tickerAlta, 'index.html'), 'utf-8')
         const temAlta = html.includes('Maior Alta') || html.includes('Maiores Altas')
         if (temAlta) {
             console.log('   ✅ ' + tickerAlta + ': aparece como Maior Alta no card')
@@ -336,7 +336,7 @@ async function testarCardTopsAltasQuedas() {
     }
 
     if (tickerQueda) {
-        const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', tickerQueda + '.html'), 'utf-8')
+        const html = fs.readFileSync(path.join(PAGES_DIR, 'fiis', tickerQueda, 'index.html'), 'utf-8')
         const temQueda = html.includes('Maior Queda') || html.includes('Maiores Quedas')
         if (temQueda) {
             console.log('   ✅ ' + tickerQueda + ': aparece como Maior Queda no card')
@@ -358,11 +358,11 @@ async function testarCardTopsAltasQuedas() {
 async function testarSemBotaoVoltar() {
     console.log('\n🔍 TESTE 14 — Páginas Ver Todos sem botão Voltar (#33)')
 
-    const paginas = ['altas.html', 'quedas.html', 'ranking-dy.html', 'ranking-baratos.html', 'ranking-valorizacao.html', 'ranking-consistentes.html']
+    const paginas = ['altas', 'quedas', 'ranking-dy', 'ranking-baratos', 'ranking-valorizacao', 'ranking-consistentes']
     let ok = true
 
     for (const p of paginas) {
-        const html = fs.readFileSync(path.join(PAGES_DIR, p), 'utf-8')
+        const html = fs.readFileSync(path.join(PAGES_DIR, p, 'index.html'), 'utf-8')
         if (html.includes('&larr; Voltar') || html.includes('← Voltar')) {
             ok = false
             console.log('   ❌ ' + p + ': ainda tem botão Voltar')
@@ -382,7 +382,7 @@ async function testarSemBotaoVoltar() {
 async function testarPaginaAcoes() {
     console.log('\n🔍 TESTE 15 — Página de ações gerada com dados (#34)')
 
-    const acoes = path.join(PAGES_DIR, 'acoes.html')
+    const acoes = path.join(PAGES_DIR, 'acoes', 'index.html')
     if (!fs.existsSync(acoes)) {
         totalFalhou++
         console.log('   ❌ acoes.html não existe')
@@ -401,7 +401,7 @@ async function testarPaginaAcoes() {
         rankPL: html.includes('Mais Baratos') && html.includes('P/L'),
         rankVar: html.includes('Valoriza'),
         rankCons: html.includes('Consistentes'),
-        navAcoes: html.includes('acoes.html'),
+        navAcoes: html.includes('acoes/'),
     }
 
     const falhas = Object.entries(checks).filter(([k, v]) => !v).map(([k]) => k)
@@ -415,9 +415,9 @@ async function testarPaginaAcoes() {
     if (!temTicker) { ok = false; console.log('   ❌ Sem tickers de ações') }
 
     // Verificar páginas auxiliares
-    const auxiliares = ['acoes-altas.html', 'acoes-quedas.html', 'acoes-ranking-dy.html', 'acoes-ranking-baratos.html', 'acoes-ranking-valorizacao.html', 'acoes-ranking-consistentes.html']
+    const auxiliares = ['acoes-altas', 'acoes-quedas', 'acoes-ranking-dy', 'acoes-ranking-baratos', 'acoes-ranking-valorizacao', 'acoes-ranking-consistentes']
     for (const a of auxiliares) {
-        if (!fs.existsSync(path.join(PAGES_DIR, a))) { ok = false; console.log('   ❌ ' + a + ' não existe') }
+        if (!fs.existsSync(path.join(PAGES_DIR, a, 'index.html'))) { ok = false; console.log('   ❌ ' + a + ' não existe') }
     }
 
     if (ok) {
@@ -433,11 +433,11 @@ async function testarPaginaAcoes() {
 async function testarTooltipsAcoes() {
     console.log('\n🔍 TESTE 16 — Tooltips informativos nos rankings de ações (#35/#39)')
 
-    const paginas = ['acoes.html', 'acoes-ranking-dy.html', 'acoes-ranking-baratos.html', 'acoes-ranking-valorizacao.html', 'acoes-ranking-consistentes.html']
+    const paginas = ['acoes', 'acoes-ranking-dy', 'acoes-ranking-baratos', 'acoes-ranking-valorizacao', 'acoes-ranking-consistentes']
     let ok = true
 
     for (const p of paginas) {
-        const filePath = path.join(PAGES_DIR, p)
+        const filePath = path.join(PAGES_DIR, p, 'index.html')
         if (!fs.existsSync(filePath)) { ok = false; console.log('   ❌ ' + p + ' não existe'); continue }
         const html = fs.readFileSync(filePath, 'utf-8')
         if (!html.includes('tooltip-trigger')) {
@@ -484,7 +484,7 @@ async function testarDetalheAcoes() {
         return
     }
 
-    const arquivos = fs.readdirSync(pastaAcoes).filter(f => f.endsWith('.html'))
+    const arquivos = fs.readdirSync(pastaAcoes).filter(f => fs.statSync(path.join(pastaAcoes,f)).isDirectory())
     if (arquivos.length >= 70) {
         totalPassou++
         console.log('   ✅ ' + arquivos.length + ' páginas de detalhe de ações geradas')
@@ -501,9 +501,9 @@ async function testarBuscaUnificada() {
 
     const paginas = [
         {file: 'index.html', desc: 'index FIIs'},
-        {file: 'acoes.html', desc: 'index Ações'},
-        {file: 'fiis/HGLG11.html', desc: 'detalhe FII'},
-        {file: 'acoes/PETR4.html', desc: 'detalhe Ação'},
+        {file: 'acoes/index.html', desc: 'index Ações'},
+        {file: 'fiis/HGLG11/index.html', desc: 'detalhe FII'},
+        {file: 'acoes/PETR4/index.html', desc: 'detalhe Ação'},
     ]
     let ok = true
 
@@ -539,7 +539,7 @@ async function testarBuscaUnificada() {
 async function testarBotaoLimparRemovido() {
     console.log('\n🔍 TESTE 12 — Botão Limpar removido do console (#23)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acessos', 'index.html'), 'utf-8')
     const temLimpar = html.includes('limparDados()')
 
     if (!temLimpar) {
@@ -581,7 +581,7 @@ async function testarNomeEmpresaAcoes() {
     let ok = true
     const amostra = ['ASAI3', 'VALE3', 'PETR4', 'ITUB4', 'BBAS3']
     for (const ticker of amostra) {
-        const filePath = path.join(acoesDir, ticker + '.html')
+        const filePath = path.join(acoesDir, ticker, 'index.html')
         if (!fs.existsSync(filePath)) continue
         const html = fs.readFileSync(filePath, 'utf-8')
         const nomeEsperado = mapa[ticker]
@@ -621,7 +621,7 @@ async function testarSemSetorIrrelevante() {
     let ok = true
     const amostra = ['ASAI3', 'PETR4', 'ITUB4', 'VALE3', 'BBAS3']
     for (const ticker of amostra) {
-        const filePath = path.join(acoesDir, ticker + '.html')
+        const filePath = path.join(acoesDir, ticker, 'index.html')
         if (!fs.existsSync(filePath)) continue
         const html = fs.readFileSync(filePath, 'utf-8')
         // N\u00e3o deve ter texto de setor/subsetor cortado
@@ -651,7 +651,7 @@ async function testarBuscaMostraNomeEmpresa() {
 
     const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-gpu', '--allow-file-access-from-files'] })
     const page = await browser.newPage()
-    await page.goto('file://' + path.join(PAGES_DIR, 'acoes', 'VALE3.html'), { waitUntil: 'domcontentloaded', timeout: 10000 })
+    await page.goto('file://' + path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), { waitUntil: 'domcontentloaded', timeout: 10000 })
     await new Promise(r => setTimeout(r, 500))
 
     const resultado = await page.evaluate(() => {
@@ -709,7 +709,7 @@ async function testarDescricaoEmpresaAcoes() {
     let ok = true
     const amostra = ['VALE3', 'PETR4', 'ITUB4', 'WEGE3', 'ASAI3']
     for (const ticker of amostra) {
-        const filePath = path.join(acoesDir, ticker + '.html')
+        const filePath = path.join(acoesDir, ticker, 'index.html')
         if (!fs.existsSync(filePath)) continue
         const html = fs.readFileSync(filePath, 'utf-8')
         const temDescricao = html.includes('Sobre a Empresa') && html.match(/leading-relaxed[^>]*>[^<]{30,}/)
@@ -728,7 +728,7 @@ async function testarDescricaoEmpresaAcoes() {
 async function testarFiltroBots() {
     console.log('\n\ud83d\udd0d TESTE 23 \u2014 Filtro de bots detecta padr\u00f5es comuns (#66)')
 
-    const consoleJs = fs.readFileSync(path.join(PAGES_DIR, 'console.js'), 'utf-8')
+    const consoleJs = fs.readFileSync(path.join(PAGES_DIR, 'admin-console.js'), 'utf-8')
 
     // Extrair a fun\u00e7\u00e3o isBot
     const isBotMatch = consoleJs.match(/function isBot\(d\)\s*\{([\s\S]*?)\n\}/)
@@ -798,14 +798,14 @@ async function testarConsistenciaCorreta() {
     console.log('\n\ud83d\udd0d TESTE 28 \u2014 Consist\u00eancia de a\u00e7\u00f5es usa data de pagamento e come\u00e7a do vigente (#85)')
 
     const acoesDir = path.join(PAGES_DIR, 'acoes')
-    const files = fs.readdirSync(acoesDir).filter(f => f.endsWith('.html'))
+    const files = fs.readdirSync(acoesDir).filter(f => fs.statSync(path.join(acoesDir,f)).isDirectory())
     let ok = true
     let erros = []
     const anoVigente = new Date().getFullYear()
 
     for (const f of files) {
-        const ticker = f.replace('.html', '')
-        const html = fs.readFileSync(path.join(acoesDir, f), 'utf-8')
+        const ticker = f
+        const html = fs.readFileSync(path.join(acoesDir, f, 'index.html'), 'utf-8')
 
         // Extrair consist\u00eancia mostrada
         const matchConsist = html.match(/text-orange-400 mt-1">(\d+) anos/)
@@ -853,7 +853,7 @@ async function testarConsistenciaCorreta() {
 async function testarTooltipConsistenciaDetalhe() {
     console.log('\n\ud83d\udd0d TESTE 29 \u2014 Tooltip (i) de consist\u00eancia no detalhe de a\u00e7\u00f5es (#84)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3.html'), 'utf-8')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
     const temTooltip = html.includes('tooltip-consist-det') && html.includes('Anos consecutivos')
     const textoCorreto = html.includes('Anos consecutivos em que a a')
 
@@ -875,14 +875,14 @@ async function testarSimuladorSemDY() {
     const acoesDir = path.join(PAGES_DIR, 'acoes')
     let ok = true
     // Ações que sabemos que não têm DY
-    const files = fs.readdirSync(acoesDir).filter(f => f.endsWith('.html'))
+    const files = fs.readdirSync(acoesDir).filter(f => fs.statSync(path.join(acoesDir,f)).isDirectory())
     for (const f of files) {
-        const html = fs.readFileSync(path.join(acoesDir, f), 'utf-8')
+        const html = fs.readFileSync(path.join(acoesDir, f, 'index.html'), 'utf-8')
         const dyDash = html.match(/Dividend Yield[\s\S]{0,200}>-</) !== null
         const temSimulador = html.includes('Quanto vou receber')
         if (dyDash && temSimulador) {
             ok = false
-            console.log('   \u274c ' + f.replace('.html','') + ': tem simulador mas DY = -')
+            console.log('   \u274c ' + f + ': tem simulador mas DY = -')
         }
     }
     if (ok) {
@@ -900,7 +900,7 @@ async function testarPaginacaoRendimentos() {
 
     let ok = true
     // Verificar FII com muitos dividendos
-    const fiiHtml = fs.readFileSync(path.join(PAGES_DIR, 'fiis', 'MXRF11.html'), 'utf-8')
+    const fiiHtml = fs.readFileSync(path.join(PAGES_DIR, 'fiis', 'MXRF11', 'index.html'), 'utf-8')
     const fiiRows = (fiiHtml.match(/<tr class="border-t/g) || []).length
     const fiiTemPaginacao = fiiHtml.includes('pag-anterior') || fiiHtml.includes('pag-proximo') || fiiHtml.includes('data-page')
     if (fiiRows > 5 && fiiTemPaginacao) {
@@ -914,7 +914,7 @@ async function testarPaginacaoRendimentos() {
     }
 
     // Verificar Ação com muitos dividendos
-    const acaoHtml = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3.html'), 'utf-8')
+    const acaoHtml = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
     const acaoRows = (acaoHtml.match(/<tr class="border-t/g) || []).length
     const acaoTemPaginacao = acaoHtml.includes('pag-anterior') || acaoHtml.includes('pag-proximo') || acaoHtml.includes('data-page')
     if (acaoRows > 5 && acaoTemPaginacao) {
@@ -934,7 +934,7 @@ async function testarPaginacaoRendimentos() {
 async function testarFiltroBotsMelhorado() {
     console.log('\n\ud83d\udd0d TESTE 28 \u2014 Filtro detecta bots sofisticados (#81)')
 
-    const consoleJs = fs.readFileSync(path.join(PAGES_DIR, 'console.js'), 'utf-8')
+    const consoleJs = fs.readFileSync(path.join(PAGES_DIR, 'admin-console.js'), 'utf-8')
     const isBotMatch = consoleJs.match(/function isBot\(d\)\s*\{([\s\S]*?)\n\}/)
     if (!isBotMatch) {
         totalFalhou++
@@ -995,7 +995,7 @@ async function testarPagesNoGitignore() {
 async function testarRendimentosAcoesSemLimite() {
     console.log('\n\ud83d\udd0d TESTE 27 \u2014 A\u00e7\u00f5es mostram mais de 10 rendimentos (#80)')
 
-    const acaoHtml = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3.html'), 'utf-8')
+    const acaoHtml = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
     const rows = (acaoHtml.match(/<tr class="border-t/g) || []).length
 
     if (rows > 10) {

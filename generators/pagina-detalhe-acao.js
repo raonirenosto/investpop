@@ -18,12 +18,12 @@ function gerarPaginaDetalheAcao(acao, todasAcoes, rankings, historico) {
     const posPL = posAll(r.allBaratos, acao.ticker)
     const posYTD = posAll(r.allVarAno, acao.ticker)
     const posCons = posAll(r.allConsistentes, acao.ticker)
-    if (posAlta > 0) tops.push({ nome: posAlta <= 5 ? 'Top 5 Maiores Altas do Dia' : 'Maiores Altas do Dia', pos: posAlta, cor: posAlta <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../acoes-altas.html' })
-    if (posQueda > 0) tops.push({ nome: posQueda <= 5 ? 'Top 5 Maiores Quedas do Dia' : 'Maiores Quedas do Dia', pos: posQueda, cor: posQueda <= 5 ? 'text-red-400' : 'text-gray-400', link: '../acoes-quedas.html' })
-    if (posDY > 0) tops.push({ nome: posDY <= 5 ? 'Top 5 Que Mais Pagam' : 'Que Mais Pagam (DY)', pos: posDY, cor: posDY <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../acoes-ranking-dy.html' })
-    if (posPL > 0) tops.push({ nome: posPL <= 5 ? 'Top 5 Mais Baratos' : 'Mais Baratos (P/L)', pos: posPL, cor: posPL <= 5 ? 'text-blue-400' : 'text-gray-400', link: '../acoes-ranking-baratos.html' })
-    if (posYTD > 0) tops.push({ nome: posYTD <= 5 ? 'Top 5 Maior Valoriza\u00e7\u00e3o' : 'Maior Valoriza\u00e7\u00e3o (YTD)', pos: posYTD, cor: posYTD <= 5 ? 'text-purple-400' : 'text-gray-400', link: '../acoes-ranking-valorizacao.html' })
-    if (posCons > 0) tops.push({ nome: posCons <= 5 ? 'Top 5 Mais Consistentes' : 'Mais Consistentes', pos: posCons, cor: posCons <= 5 ? 'text-orange-400' : 'text-gray-400', link: '../acoes-ranking-consistentes.html' })
+    if (posAlta > 0) tops.push({ nome: posAlta <= 5 ? 'Top 5 Maiores Altas do Dia' : 'Maiores Altas do Dia', pos: posAlta, cor: posAlta <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../../acoes-altas/' })
+    if (posQueda > 0) tops.push({ nome: posQueda <= 5 ? 'Top 5 Maiores Quedas do Dia' : 'Maiores Quedas do Dia', pos: posQueda, cor: posQueda <= 5 ? 'text-red-400' : 'text-gray-400', link: '../../acoes-quedas/' })
+    if (posDY > 0) tops.push({ nome: posDY <= 5 ? 'Top 5 Que Mais Pagam' : 'Que Mais Pagam (DY)', pos: posDY, cor: posDY <= 5 ? 'text-emerald-400' : 'text-gray-400', link: '../../acoes-ranking-dy/' })
+    if (posPL > 0) tops.push({ nome: posPL <= 5 ? 'Top 5 Mais Baratos' : 'Mais Baratos (P/L)', pos: posPL, cor: posPL <= 5 ? 'text-blue-400' : 'text-gray-400', link: '../../acoes-ranking-baratos/' })
+    if (posYTD > 0) tops.push({ nome: posYTD <= 5 ? 'Top 5 Maior Valoriza\u00e7\u00e3o' : 'Maior Valoriza\u00e7\u00e3o (YTD)', pos: posYTD, cor: posYTD <= 5 ? 'text-purple-400' : 'text-gray-400', link: '../../acoes-ranking-valorizacao/' })
+    if (posCons > 0) tops.push({ nome: posCons <= 5 ? 'Top 5 Mais Consistentes' : 'Mais Consistentes', pos: posCons, cor: posCons <= 5 ? 'text-orange-400' : 'text-gray-400', link: '../../acoes-ranking-consistentes/' })
 
     // Dividendos - todos com paginação
     const divs = (acao.dividendos || [])
@@ -45,12 +45,12 @@ function gerarPaginaDetalheAcao(acao, todasAcoes, rankings, historico) {
 
     return `${headHtml(acao.ticker + " \u2014 InvestPop", acao.ticker + " - " + (acao.nome || 'A\u00e7\u00e3o') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
 
-${headerHtml({basePath: '../', paginaAcoes: true})}
+${headerHtml({basePath: '../../', paginaAcoes: true})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-5xl mx-auto">
 
     <div class="hidden md:flex items-center gap-2 text-xs text-gray-500 mb-4">
-      <a href="../acoes.html" class="hover:text-white">A\u00e7\u00f5es</a>
+      <a href="../../acoes/" class="hover:text-white">A\u00e7\u00f5es</a>
       <span>\u203a</span>
       <span class="text-gray-300">${acao.ticker}</span>
     </div>
@@ -208,7 +208,7 @@ ${tops.map(t => `          <a href="${t.link}" class="flex items-center gap-2 bg
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../', paginaAcoes:true, fiisBase:'../fiis/', acoesBase:''} : {basePath:'../', paginaAcoes:true, fiisBase:'../fiis/', acoesBase:''})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../../', paginaAcoes:true, fiisBase:'../../fiis/', acoesBase:'../'} : {basePath:'../../', paginaAcoes:true, fiisBase:'../../fiis/', acoesBase:'../'})}
 
 </body>
 </html>`

@@ -4,7 +4,7 @@ function gerarConsole() {
     return `${headHtml("InvestPop \u2014 Console", "Painel administrativo do InvestPop.")}
   <meta name="robots" content="noindex, nofollow" />
 
-${headerHtml()}
+${headerHtml({basePath:'../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-3xl mx-auto">
     <h1 class="text-lg md:text-xl font-bold mb-6">&#9881; Console Administrativo</h1>
@@ -28,7 +28,7 @@ ${headerHtml()}
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
 
 </body>
 </html>`

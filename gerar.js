@@ -17,6 +17,13 @@ const agentSemSSL = new https.Agent({ rejectUnauthorized: false })
 const CACHE_FILE = path.resolve(__dirname, "data/cache_fiis.csv")
 const CACHE_FULL = path.resolve(__dirname, "data/cache_full.json")
 
+// Helper: escreve página em pasta/index.html (URLs limpas)
+function writePage(base, nome, conteudo) {
+    const dir = path.join(base, nome)
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+    fs.writeFileSync(path.join(dir, 'index.html'), conteudo)
+}
+
 // ===============================
 // 📥 LER FIIs
 // ===============================
@@ -664,16 +671,16 @@ async function main() {
             for (const [ticker, nome] of Object.entries(nomesCSV)) { global.INVESTPOP_NOMES[ticker] = nome }
 
             fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
-            fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
-            fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
-            fs.writeFileSync(path.join(pasta, "ranking-dy.html"), gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
-            fs.writeFileSync(path.join(pasta, "ranking-baratos.html"), gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
-            fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
-            fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
-            fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
-            fs.writeFileSync(path.join(pasta, "acessos.html"), gerarPaginaAcessos())
-            fs.writeFileSync(path.join(pasta, "ibov-historico.html"), gerarPaginaIbovHistorico())
-            fs.writeFileSync(path.join(pasta, "ifix-historico.html"), gerarPaginaIfixHistorico())
+            writePage(pasta, "altas", gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
+            writePage(pasta, "quedas", gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
+            writePage(pasta, "ranking-dy", gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
+            writePage(pasta, "ranking-baratos", gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
+            writePage(pasta, "ranking-valorizacao", gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
+            writePage(pasta, "ranking-consistentes", gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
+            writePage(pasta, "console", gerarConsole())
+            writePage(pasta, "acessos", gerarPaginaAcessos())
+            writePage(pasta, "ibov-historico", gerarPaginaIbovHistorico())
+            writePage(pasta, "ifix-historico", gerarPaginaIfixHistorico())
             fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
             // Buscar historico de cotacao para graficos (FIIs)
@@ -686,21 +693,21 @@ async function main() {
             const pastaFiisCache = path.join(pasta, "fiis")
             if (!fs.existsSync(pastaFiisCache)) fs.mkdirSync(pastaFiisCache)
             for (const det of rankings.detalhes) {
-                fs.writeFileSync(path.join(pastaFiisCache, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
+                writePage(pastaFiisCache, det.ticker, gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
             }
 
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
-            fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
+            fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "admin-console.js"))
 
             // Gerar sitemap dinâmico
-            const sitemapUrls = ['index.html','acoes.html','altas.html','quedas.html','acoes-altas.html','acoes-quedas.html','ranking-dy.html','ranking-baratos.html','ranking-valorizacao.html','ranking-consistentes.html','acoes-ranking-dy.html','acoes-ranking-baratos.html','acoes-ranking-valorizacao.html','acoes-ranking-consistentes.html']
-            const fiisFiles = fs.readdirSync(path.join(pasta,'fiis')).filter(f=>f.endsWith('.html')).map(f=>'fiis/'+f)
-            const acoesFiles = fs.existsSync(path.join(pasta,'acoes')) ? fs.readdirSync(path.join(pasta,'acoes')).filter(f=>f.endsWith('.html')).map(f=>'acoes/'+f) : []
+            const sitemapUrls = ['','acoes/','altas/','quedas/','acoes-altas/','acoes-quedas/','ranking-dy/','ranking-baratos/','ranking-valorizacao/','ranking-consistentes/','acoes-ranking-dy/','acoes-ranking-baratos/','acoes-ranking-valorizacao/','acoes-ranking-consistentes/']
+            const fiisFiles = fs.readdirSync(path.join(pasta,'fiis')).filter(f=>fs.statSync(path.join(pasta,'fiis',f)).isDirectory()).map(f=>'fiis/'+f+'/')
+            const acoesFiles = fs.existsSync(path.join(pasta,'acoes')) ? fs.readdirSync(path.join(pasta,'acoes')).filter(f=>fs.existsSync(path.join(pasta,'acoes',f))&&fs.statSync(path.join(pasta,'acoes',f)).isDirectory()).map(f=>'acoes/'+f+'/') : []
             const allUrls = sitemapUrls.concat(fiisFiles, acoesFiles)
             let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
             for (const u of allUrls) {
-                const prio = u === 'index.html' || u === 'acoes.html' ? '1.0' : u.includes('/') ? '0.6' : '0.8'
-                sitemap += `  <url><loc>https://investpop.com.br/${u === 'index.html' ? '' : u}</loc><changefreq>hourly</changefreq><priority>${prio}</priority></url>\n`
+                const prio = u === '' || u === 'acoes/' ? '1.0' : u.includes('/') ? '0.6' : '0.8'
+                sitemap += `  <url><loc>https://investpop.com.br/${u}</loc><changefreq>hourly</changefreq><priority>${prio}</priority></url>\n`
             }
             sitemap += '</urlset>'
             fs.writeFileSync(path.join(pasta, 'sitemap.xml'), sitemap)
@@ -732,13 +739,13 @@ async function main() {
             }
 
 
-            fs.writeFileSync(path.join(pasta, "acoes.html"), gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
-            fs.writeFileSync(path.join(pasta, "acoes-altas.html"), gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
-            fs.writeFileSync(path.join(pasta, "acoes-quedas.html"), gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
-            fs.writeFileSync(path.join(pasta, "acoes-ranking-dy.html"), gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
-            fs.writeFileSync(path.join(pasta, "acoes-ranking-baratos.html"), gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
-            fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
-            fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
+            writePage(pasta, "acoes", gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
+            writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
+            writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
+            writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
+            writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
+            writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
+            writePage(pasta, "acoes-ranking-consistentes", gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
 
 
             // Buscar historico de cotacao para acoes
@@ -766,7 +773,7 @@ async function main() {
                 const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
                 const varDia = cotacao ? cotacao.varNum : 0
                 const nomeAcao = nomesCSVCache[t] || det.nome || ''
-                fs.writeFileSync(path.join(pastaAcoesCache, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVCache[t]||det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes, historicoCotacao[t]))
+                writePage(pastaAcoesCache, t, gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVCache[t]||det.descricao||''}, tickersUnicos.map(x => ({ticker: x})), rankingsAcoes, historicoCotacao[t]))
             }
             console.log(`✅ ${tickersUnicos.length} páginas de detalhe de ações geradas`)
 
@@ -813,16 +820,16 @@ async function main() {
     for (const [ticker, nome] of Object.entries(nomesCSVOnline)) { global.INVESTPOP_NOMES[ticker] = nome }
 
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
-    fs.writeFileSync(path.join(pasta, "altas.html"), gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "quedas.html"), gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
-    fs.writeFileSync(path.join(pasta, "ranking-dy.html"), gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "ranking-baratos.html"), gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
-    fs.writeFileSync(path.join(pasta, "ranking-valorizacao.html"), gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "ranking-consistentes.html"), gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
-    fs.writeFileSync(path.join(pasta, "console.html"), gerarConsole())
-    fs.writeFileSync(path.join(pasta, "acessos.html"), gerarPaginaAcessos())
-    fs.writeFileSync(path.join(pasta, "ibov-historico.html"), gerarPaginaIbovHistorico())
-            fs.writeFileSync(path.join(pasta, "ifix-historico.html"), gerarPaginaIfixHistorico())
+    writePage(pasta, "altas", gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
+    writePage(pasta, "quedas", gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
+    writePage(pasta, "ranking-dy", gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
+    writePage(pasta, "ranking-baratos", gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
+    writePage(pasta, "ranking-valorizacao", gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
+    writePage(pasta, "ranking-consistentes", gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
+    writePage(pasta, "console", gerarConsole())
+    writePage(pasta, "acessos", gerarPaginaAcessos())
+    writePage(pasta, "ibov-historico", gerarPaginaIbovHistorico())
+            writePage(pasta, "ifix-historico", gerarPaginaIfixHistorico())
     fs.writeFileSync(path.join(pasta, "ghost.html"), '<!DOCTYPE html><html><head><script>document.cookie="ghost=true;path=/;max-age=31536000";location.href="index.html";<\/script></head></html>')
 
 
@@ -837,10 +844,10 @@ async function main() {
     for (const det of rankings.detalhes) {
         const cotacao = resultados.find(r => r.ticker === det.ticker)
         if (cotacao) det.preco = parseFloat(cotacao.preco.replace(',', '.')) || 0
-        fs.writeFileSync(path.join(pastaFiis, det.ticker + ".html"), gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
+        writePage(pastaFiis, det.ticker, gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
     }
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
-    fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "console.js"))
+    fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "admin-console.js"))
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
 
     // Gerar páginas de ações
@@ -875,13 +882,13 @@ async function main() {
     }
 
 
-    fs.writeFileSync(path.join(pasta, "acoes.html"), gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
-    fs.writeFileSync(path.join(pasta, "acoes-altas.html"), gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "acoes-quedas.html"), gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
-    fs.writeFileSync(path.join(pasta, "acoes-ranking-dy.html"), gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "acoes-ranking-baratos.html"), gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
-    fs.writeFileSync(path.join(pasta, "acoes-ranking-valorizacao.html"), gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
-    fs.writeFileSync(path.join(pasta, "acoes-ranking-consistentes.html"), gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
+    writePage(pasta, "acoes", gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
+    writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
+    writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
+    writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
+    writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
+    writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
+    writePage(pasta, "acoes-ranking-consistentes", gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
 
     // Gerar páginas de detalhe de ações
     const pastaAcoes2 = path.join(pasta, "acoes")
@@ -902,19 +909,19 @@ async function main() {
         const preco = cotacao ? parseFloat(cotacao.preco.replace(',','.')) || 0 : 0
         const varDia = cotacao ? cotacao.varNum : 0
         const nomeAcao = nomesCSVFull[t] || det.nome || ''
-        fs.writeFileSync(path.join(pastaAcoes2, t + ".html"), gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVFull[t]||det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes, historicoCotacao[t]))
+        writePage(pastaAcoes2, t, gerarPaginaDetalheAcao({ticker: t, preco, varDia, dy: det.dy||0, pl: det.pl||null, varAno: det.varAno||0, mesesConsistentes: det.mesesConsistentes||0, nome: nomeAcao, setor: det.setor||'', dividendos: det.dividendos||[], descricao: descCSVFull[t]||det.descricao||''}, tickersAcoesUnicos.map(x => ({ticker: x})), rankingsAcoes, historicoCotacao[t]))
     }
     console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 
     // Gerar sitemap dinâmico
-    const sitemapUrls = ['index.html','acoes.html','altas.html','quedas.html','acoes-altas.html','acoes-quedas.html','ranking-dy.html','ranking-baratos.html','ranking-valorizacao.html','ranking-consistentes.html','acoes-ranking-dy.html','acoes-ranking-baratos.html','acoes-ranking-valorizacao.html','acoes-ranking-consistentes.html']
-    const fiisFilesSm = fs.readdirSync(path.join(pasta,'fiis')).filter(f=>f.endsWith('.html')).map(f=>'fiis/'+f)
-    const acoesFilesSm = fs.existsSync(path.join(pasta,'acoes')) ? fs.readdirSync(path.join(pasta,'acoes')).filter(f=>f.endsWith('.html')).map(f=>'acoes/'+f) : []
+    const sitemapUrls = ['','acoes/','altas/','quedas/','acoes-altas/','acoes-quedas/','ranking-dy/','ranking-baratos/','ranking-valorizacao/','ranking-consistentes/','acoes-ranking-dy/','acoes-ranking-baratos/','acoes-ranking-valorizacao/','acoes-ranking-consistentes/']
+    const fiisFilesSm = fs.readdirSync(path.join(pasta,'fiis')).filter(f=>fs.statSync(path.join(pasta,'fiis',f)).isDirectory()).map(f=>'fiis/'+f+'/')
+    const acoesFilesSm = fs.existsSync(path.join(pasta,'acoes')) ? fs.readdirSync(path.join(pasta,'acoes')).filter(f=>fs.existsSync(path.join(pasta,'acoes',f))&&fs.statSync(path.join(pasta,'acoes',f)).isDirectory()).map(f=>'acoes/'+f+'/') : []
     const allUrlsSm = sitemapUrls.concat(fiisFilesSm, acoesFilesSm)
     let sitemapXml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for (const u of allUrlsSm) {
-        const prio = u === 'index.html' || u === 'acoes.html' ? '1.0' : u.includes('/') ? '0.6' : '0.8'
-        sitemapXml += `  <url><loc>https://investpop.com.br/${u === 'index.html' ? '' : u}</loc><changefreq>hourly</changefreq><priority>${prio}</priority></url>\n`
+        const prio = u === '' || u === 'acoes/' ? '1.0' : u.includes('/') ? '0.6' : '0.8'
+        sitemapXml += `  <url><loc>https://investpop.com.br/${u}</loc><changefreq>hourly</changefreq><priority>${prio}</priority></url>\n`
     }
     sitemapXml += '</urlset>'
     fs.writeFileSync(path.join(pasta, 'sitemap.xml'), sitemapXml)

@@ -29,15 +29,8 @@ jobs:
 
       - name: Preparar deploy
         run: |
-          mkdir -p _site/fiis
-          mkdir -p _site/acoes
-          cp pages/*.html _site/
-          cp pages/fiis/*.html _site/fiis/
-          test -d pages/acoes && cp pages/acoes/*.html _site/acoes/ || true
-          cp pages/busca.js _site/
-          cp assets/console.js _site/
+          cp -r pages/* _site/
           cp assets/robots.txt _site/
-          cp pages/sitemap.xml _site/
           cp assets/og-image.svg _site/
           echo "investpop.com.br" > _site/CNAME
 

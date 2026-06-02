@@ -4,14 +4,14 @@ function gerarPaginaLista(titulo, lista, cor) {
     const linhas = lista.map((item, i) => `
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">${i + 1}</td>
-            <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}.html" class="hover:underline">${item.ticker}</a></td>
+            <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
             <td class="py-2.5 text-right ${cor} font-medium">${item.variacao}</td>
             <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
           </tr>`).join("\n")
 
     return `${headHtml("InvestPop \u2014 " + titulo, titulo + " - FIIs atualizados a cada 10 minutos.")}
 
-${headerHtml()}
+${headerHtml({basePath:'../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-3xl mx-auto">
     <h1 class="text-lg md:text-xl font-bold mb-6">${titulo}</h1>
@@ -42,7 +42,7 @@ ${linhas}
     </div>
   </main>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
 
   <script>
     function filtrar() {
@@ -73,13 +73,13 @@ function gerarPaginaRanking(titulo, coluna, lista, cor) {
     const linhas = lista.map((item, i) => `
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">${i + 1}</td>
-            <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}.html" class="hover:underline">${item.ticker}</a></td>
+            <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
             <td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td>
           </tr>`).join("\n")
 
     return `${headHtml("InvestPop \u2014 " + titulo, titulo + " - Ranking de FIIs atualizado.")}
 
-${headerHtml()}
+${headerHtml({basePath:'../'})}
 
   <main class="px-4 md:px-8 py-6 md:py-8 max-w-3xl mx-auto">
     <h1 class="text-lg md:text-xl font-bold mb-6">${titulo}</h1>
@@ -134,7 +134,7 @@ ${tooltipHtml}
     }
   </style>
 
-${footerHtml(global.INVESTPOP_TESTE ? {teste:true} : {})}
+${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'../'})}
 
   <script>
     function filtrar() {
