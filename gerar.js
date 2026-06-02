@@ -906,6 +906,20 @@ async function main() {
     }
     console.log(`✅ ${tickersAcoesUnicos.length} páginas de detalhe de ações geradas`)
 
+    // Gerar sitemap dinâmico
+    const sitemapUrls = ['index.html','acoes.html','altas.html','quedas.html','acoes-altas.html','acoes-quedas.html','ranking-dy.html','ranking-baratos.html','ranking-valorizacao.html','ranking-consistentes.html','acoes-ranking-dy.html','acoes-ranking-baratos.html','acoes-ranking-valorizacao.html','acoes-ranking-consistentes.html']
+    const fiisFilesSm = fs.readdirSync(path.join(pasta,'fiis')).filter(f=>f.endsWith('.html')).map(f=>'fiis/'+f)
+    const acoesFilesSm = fs.existsSync(path.join(pasta,'acoes')) ? fs.readdirSync(path.join(pasta,'acoes')).filter(f=>f.endsWith('.html')).map(f=>'acoes/'+f) : []
+    const allUrlsSm = sitemapUrls.concat(fiisFilesSm, acoesFilesSm)
+    let sitemapXml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for (const u of allUrlsSm) {
+        const prio = u === 'index.html' || u === 'acoes.html' ? '1.0' : u.includes('/') ? '0.6' : '0.8'
+        sitemapXml += `  <url><loc>https://investpop.com.br/${u === 'index.html' ? '' : u}</loc><changefreq>hourly</changefreq><priority>${prio}</priority></url>\n`
+    }
+    sitemapXml += '</urlset>'
+    fs.writeFileSync(path.join(pasta, 'sitemap.xml'), sitemapXml)
+    console.log(`📍 Sitemap gerado: ${allUrlsSm.length} URLs`)
+
     console.log("\n✅ Páginas geradas em pages/")
 
     // Salvar cache full para uso local
