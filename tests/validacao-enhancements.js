@@ -1009,6 +1009,61 @@ async function testarRendimentosAcoesSemLimite() {
     }
 }
 
+async function testarLinksAcoesIndex() {
+    console.log('\n\ud83d\udd0d TESTE 31 \u2014 Links na index de a\u00e7\u00f5es sem path duplicado (#88)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'index.html'), 'utf-8')
+    const links = html.match(/href="[^"]*"/g) || []
+    // A p\u00e1gina est\u00e1 em /acoes/index.html, links para detalhes devem ser relativos: TICKER/ (n\u00e3o acoes/TICKER/)
+    const duplicados = links.filter(l => l.match(/href="acoes\/[A-Z]/))
+    const htmlErrados = links.filter(l => l.match(/\.html/) && !l.includes('http') && !l.includes('ghost') && !l.includes('data:') && !l.includes('index.html'))
+
+    let ok = true
+    if (duplicados.length > 0) {
+        ok = false
+        console.log('   \u274c Links com path duplicado (acoes/TICKER dentro de /acoes/): ' + duplicados.slice(0,3).join(', '))
+    }
+    if (htmlErrados.length > 0) {
+        ok = false
+        console.log('   \u274c Links com .html: ' + htmlErrados.slice(0,3).join(', '))
+    }
+    if (ok) {
+        totalPassou++
+        console.log('   \u2705 Todos os links corretos na index de a\u00e7\u00f5es')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
+async function testarLinksConsole() {
+    console.log('\n\ud83d\udd0d TESTE 32 \u2014 Links no console sem .html e paths corretos (#88)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'console', 'index.html'), 'utf-8')
+    const links = html.match(/href="[^"]*"/g) || []
+    const htmlErrados = links.filter(l => l.match(/\.html/) && !l.includes('http') && !l.includes('ghost') && !l.includes('data:'))
+    const pathEstranhos = links.filter(l => l.includes('..././') || l.includes('.././'))
+
+    let ok = true
+    if (htmlErrados.length > 0) {
+        ok = false
+        console.log('   \u274c Links com .html: ' + htmlErrados.join(', '))
+    }
+    if (pathEstranhos.length > 0) {
+        ok = false
+        console.log('   \u274c Paths estranhos: ' + pathEstranhos.join(', '))
+    }
+    if (ok) {
+        totalPassou++
+        console.log('   \u2705 Todos os links corretos no console')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -1060,6 +1115,8 @@ async function main() {
     await testarFiltroBotsMelhorado()
     await testarConsistenciaCorreta()
     await testarTooltipConsistenciaDetalhe()
+    await testarLinksAcoesIndex()
+    await testarLinksConsole()
     await testarPagesNoGitignore()
 
     await browser.close()
