@@ -43,4 +43,5 @@ https://raonirenosto.github.io/investpop/
 - **v1.4.2** — Esconder simulador sem DY (#78), paginação rendimentos FIIs+Ações (#79), remover limite 10 rendimentos ações (#80), 27 testes enhancements
 - **v1.4.3** — Filtro bots melhorado: resolução quadrada, UA contraditório, Chrome antigo, cidades datacenter (#81), 28 testes enhancements
 - **v1.4.4** — Fix consistência ações verifica gaps (#83), tooltip correto + detalhe (#84), 30 testes enhancements
-- **v1.4.5 — Fix consistência Klabin e ações com dataCom no ano anterior (#85), teste valida 79 ações, 30 testes enhancements
+- **v1.4.5** — Fix consistência Klabin e ações com dataCom no ano anterior (#85), teste valida 79 ações, 30 testes enhancements
+- **v1.5.0** — Remover pages/ do versionamento (#87), gráfico de cotação nas páginas de detalhe (#86), sitemap no path online (CI), 31 testes enhancements
