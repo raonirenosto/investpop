@@ -29,6 +29,7 @@ jobs:
 
       - name: Preparar deploy
         run: |
+          mkdir -p _site
           cp -r pages/* _site/
           cp assets/robots.txt _site/
           cp assets/og-image.svg _site/
