@@ -55,14 +55,14 @@ function headerHtml(opts) {
     var acoesNavClass = isAcoes ? 'text-emerald-500' : 'text-gray-500'
     return `
   <nav class="w-full border-b border-card-border px-4 py-3 md:px-8 md:py-4 flex items-center justify-between">
-    <a href="${base}./" class="flex items-center gap-2">
+    <a href="${base}" class="flex items-center gap-2">
       <svg class="w-6 h-6 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
       <span class="text-xl font-bold">Invest<span class="text-emerald-500">Pop</span></span>
     </a>
     <div class="hidden md:flex items-center gap-6 text-sm">
-      <a href="${base}./" class="${fiisClass}">FIIs</a>
+      <a href="${base}" class="${fiisClass}">FIIs</a>
       <a href="${base}acoes/" class="${acoesClass}">Ações</a>
     </div>
     <div class="hidden md:flex items-center gap-3">
@@ -124,7 +124,7 @@ function footerHtml(opts) {
 
     return `
   <footer class="flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-4 border-t border-card-border gap-2">
-    <a href="${base}./" class="flex items-center gap-2">
+    <a href="${base}" class="flex items-center gap-2">
       <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
@@ -134,7 +134,7 @@ function footerHtml(opts) {
   </footer>
 
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-card-border px-4 py-2 flex items-center justify-around">
-    <a href="${base}./" class="flex flex-col items-center gap-1 ${fiisNavClass}">
+    <a href="${base}" class="flex flex-col items-center gap-1 ${fiisNavClass}">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
       <span class="text-[10px] font-medium">FIIs</span>
     </a>

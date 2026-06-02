@@ -10,17 +10,17 @@ ${headerHtml({basePath:'../'})}
     <h1 class="text-lg md:text-xl font-bold mb-6">&#9881; Console Administrativo</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <a href="acessos.html" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
+      <a href="../acessos/" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
         <p class="text-2xl mb-2">&#128202;</p>
         <h2 class="text-sm font-bold text-gray-200 mb-1">Acessos</h2>
         <p class="text-xs text-gray-500">Tracking de visitas, dispositivos, pa\u00edses e gr\u00e1fico de acessos</p>
       </a>
-      <a href="ibov-historico.html" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
+      <a href="../ibov-historico/" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
         <p class="text-2xl mb-2">&#128200;</p>
         <h2 class="text-sm font-bold text-gray-200 mb-1">IBOV - Composi\u00e7\u00e3o</h2>
         <p class="text-xs text-gray-500">Lista atual de a\u00e7\u00f5es do IBOV e hist\u00f3rico de adi\u00e7\u00f5es/remo\u00e7\u00f5es</p>
       </a>
-      <a href="ifix-historico.html" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
+      <a href="../ifix-historico/" class="bg-card border border-card-border rounded-xl p-6 hover:border-emerald-500/50 transition-colors">
         <p class="text-2xl mb-2">&#127970;</p>
         <h2 class="text-sm font-bold text-gray-200 mb-1">IFIX - Composi\u00e7\u00e3o</h2>
         <p class="text-xs text-gray-500">Lista atual de FIIs do IFIX e hist\u00f3rico de adi\u00e7\u00f5es/remo\u00e7\u00f5es</p>

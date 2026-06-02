@@ -4,7 +4,7 @@ function linhasTabela(lista, cor) {
     return lista.map((item, i) => `
               <tr class="border-t border-card-border">
                 <td class="py-2.5 text-gray-500">${i + 1}</td>
-                <td class="py-2.5 font-medium"><a href="acoes/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
+                <td class="py-2.5 font-medium"><a href="${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
                 <td class="py-2.5 text-right ${cor} font-medium">${item.variacao}</td>
                 <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
               </tr>`).join("\n")
@@ -12,7 +12,7 @@ function linhasTabela(lista, cor) {
 
 function linhasRanking(lista, cor) {
     return lista.map((item, i) => `
-              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">${i + 1}</td><td class="py-2.5 font-medium"><a href="acoes/${item.ticker}/" class="hover:underline">${item.ticker}</a></td><td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td></tr>`).join("\n")
+              <tr class="border-t border-card-border"><td class="py-2.5 text-gray-500">${i + 1}</td><td class="py-2.5 font-medium"><a href="${item.ticker}/" class="hover:underline">${item.ticker}</a></td><td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td></tr>`).join("\n")
 }
 
 const tooltipIcon = (id) => `<span class="tooltip-trigger" data-tooltip="${id}"><svg class="w-4 h-4 inline cursor-pointer" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#475569" stroke="#64748b" stroke-width="1.5"/><path d="M12 16v-4" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1" fill="white"/></svg></span>`
@@ -44,13 +44,13 @@ ${headerHtml({basePath:'../', paginaAcoes:true})}
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Alta</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="acoes/${maiorAlta.ticker}/" class="hover:underline">${maiorAlta.ticker}</a></p>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="${maiorAlta.ticker}/" class="hover:underline">${maiorAlta.ticker}</a></p>
         <span class="text-xs md:text-sm text-emerald-500 font-medium">${maiorAlta.variacao}</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorAlta.preco}</div>
       </div>
       <div class="bg-card border border-card-border rounded-xl p-3 md:p-5">
         <span class="text-[10px] md:text-xs text-gray-500 uppercase font-medium">Maior Baixa</span>
-        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="acoes/${maiorBaixa.ticker}/" class="hover:underline">${maiorBaixa.ticker}</a></p>
+        <p class="text-lg md:text-2xl lg:text-3xl font-bold mt-1"><a href="${maiorBaixa.ticker}/" class="hover:underline">${maiorBaixa.ticker}</a></p>
         <span class="text-xs md:text-sm text-red-500 font-medium">${maiorBaixa.variacao}</span>
         <div class="hidden md:block mt-1 text-xs text-gray-400">R$ ${maiorBaixa.preco}</div>
       </div>
@@ -81,7 +81,7 @@ ${headerHtml({basePath:'../', paginaAcoes:true})}
 ${linhasTabela(altas, "text-emerald-500")}
             </tbody>
           </table>
-          <div class="mt-3 text-center"><a href="acoes-altas/" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
+          <div class="mt-3 text-center"><a href="../acoes-altas/" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
         </div>
 
         <div id="panel-quedas" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
@@ -95,7 +95,7 @@ ${linhasTabela(altas, "text-emerald-500")}
 ${linhasTabela(quedas, "text-red-500")}
             </tbody>
           </table>
-          <div class="mt-3 text-center"><a href="acoes-quedas/" class="text-red-500 text-xs font-medium hover:underline">Ver todos</a></div>
+          <div class="mt-3 text-center"><a href="../acoes-quedas/" class="text-red-500 text-xs font-medium hover:underline">Ver todos</a></div>
         </div>
       </div>
     </div>
@@ -125,7 +125,7 @@ ${linhasTabela(quedas, "text-red-500")}
 ${linhasRanking(rankings.topDY, "text-emerald-500")}
             </tbody>
           </table>
-          <div class="mt-3 text-center"><a href="acoes-ranking-dy/" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
+          <div class="mt-3 text-center"><a href="../acoes-ranking-dy/" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
         </div>
 
         <div id="panel-rank-baratos" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
@@ -139,7 +139,7 @@ ${linhasRanking(rankings.topDY, "text-emerald-500")}
 ${linhasRanking(rankings.topBaratos, "text-blue-400")}
             </tbody>
           </table>
-          <div class="mt-3 text-center"><a href="acoes-ranking-baratos/" class="text-blue-500 text-xs font-medium hover:underline">Ver todos</a></div>
+          <div class="mt-3 text-center"><a href="../acoes-ranking-baratos/" class="text-blue-500 text-xs font-medium hover:underline">Ver todos</a></div>
         </div>
 
         <div id="panel-rank-valorizacao" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
@@ -153,7 +153,7 @@ ${linhasRanking(rankings.topBaratos, "text-blue-400")}
 ${linhasRanking(rankings.topVarAno, "text-emerald-500")}
             </tbody>
           </table>
-          <div class="mt-3 text-center"><a href="acoes-ranking-valorizacao/" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
+          <div class="mt-3 text-center"><a href="../acoes-ranking-valorizacao/" class="text-emerald-500 text-xs font-medium hover:underline">Ver todos</a></div>
         </div>
 
         <div id="panel-rank-consistentes" class="hidden md:block bg-card border border-card-border rounded-xl p-4 md:p-5">
@@ -167,7 +167,7 @@ ${linhasRanking(rankings.topVarAno, "text-emerald-500")}
 ${linhasRanking(rankings.topConsistentes, "text-orange-400")}
             </tbody>
           </table>
-          <div class="mt-3 text-center"><a href="acoes-ranking-consistentes/" class="text-orange-500 text-xs font-medium hover:underline">Ver todos</a></div>
+          <div class="mt-3 text-center"><a href="../acoes-ranking-consistentes/" class="text-orange-500 text-xs font-medium hover:underline">Ver todos</a></div>
         </div>
       </div>
     </div>
