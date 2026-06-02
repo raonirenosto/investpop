@@ -975,6 +975,23 @@ async function testarFiltroBotsMelhorado() {
     }
 }
 
+async function testarPagesNoGitignore() {
+    console.log('\n\ud83d\udd0d TESTE 30 \u2014 pages/ no .gitignore (#87)')
+
+    const gitignore = fs.readFileSync(path.resolve(__dirname, '../.gitignore'), 'utf-8')
+    const temPages = gitignore.includes('pages/')
+
+    if (temPages) {
+        totalPassou++
+        console.log('   \u2705 pages/ est\u00e1 no .gitignore')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   \u274c pages/ N\u00c3O est\u00e1 no .gitignore')
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function testarRendimentosAcoesSemLimite() {
     console.log('\n\ud83d\udd0d TESTE 27 \u2014 A\u00e7\u00f5es mostram mais de 10 rendimentos (#80)')
 
@@ -1043,6 +1060,7 @@ async function main() {
     await testarFiltroBotsMelhorado()
     await testarConsistenciaCorreta()
     await testarTooltipConsistenciaDetalhe()
+    await testarPagesNoGitignore()
 
     await browser.close()
 
