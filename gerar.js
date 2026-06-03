@@ -866,8 +866,6 @@ async function main() {
     console.log("\n📈 Buscando histórico de cotação (" + fiis.length + " FIIs)...")
     const historicoCotacao = await buscarHistoricoCotacao(fiis)
     console.log("✅ Histórico FIIs: " + Object.keys(historicoCotacao).length + " tickers")
-    const intradayAll = await buscarIntraday([...fiis, ...acoes])
-    for (const t of Object.keys(intradayAll)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAll[t]; }
 
     const pastaFiis = path.join(pasta, "fiis")
     if (!fs.existsSync(pastaFiis)) fs.mkdirSync(pastaFiis)
@@ -883,6 +881,8 @@ async function main() {
     // Gerar páginas de ações
     await sincronizarIBOV()
     const acoes = lerAcoes()
+    const intradayAll = await buscarIntraday([...fiis, ...acoes])
+    for (const t of Object.keys(intradayAll)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAll[t]; }
 
     // Buscar historico de cotacao para acoes
     console.log("📈 Buscando histórico de cotação (" + acoes.length + " ações)...")
