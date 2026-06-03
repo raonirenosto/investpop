@@ -212,6 +212,28 @@ async function buscarHistoricoCotacao(tickers) {
     return historico
 }
 
+// BUSCAR INTRADAY (Yahoo Finance - batch 1d/5m)
+
+async function buscarIntraday(tickers) {
+    const intraday = {}
+    for (let i = 0; i < tickers.length; i += 20) {
+        const batch = tickers.slice(i, i + 20)
+        const symbols = batch.map(t => t + '.SA').join(',')
+        try {
+            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=1d&interval=5m`, {
+                httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" }
+            })
+            for (const t of batch) {
+                const d = r.data[t + '.SA']
+                if (d && d.timestamp && d.close) {
+                    intraday[t] = { t: d.timestamp, c: d.close }
+                }
+            }
+        } catch (e) {}
+    }
+    return intraday
+}
+
 // 🌐 BUSCAR FIIs (Yahoo Finance - batch)
 // ===============================
 
@@ -687,6 +709,9 @@ async function main() {
             console.log("\n📈 Buscando histórico de cotação (" + fiis.length + " FIIs)...")
             const historicoCotacao = await buscarHistoricoCotacao(fiis)
             console.log("✅ Histórico FIIs: " + Object.keys(historicoCotacao).length + " tickers")
+            console.log("📈 Buscando intraday FIIs...")
+            const intradayFiis = await buscarIntraday(fiis)
+            for (const t of Object.keys(intradayFiis)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayFiis[t]; }
 
 
             // Gerar páginas de detalhe (via cache)
@@ -753,6 +778,9 @@ async function main() {
             const histAcoes = await buscarHistoricoCotacao(acoes)
             Object.assign(historicoCotacao, histAcoes)
             console.log("✅ Histórico ações: " + Object.keys(histAcoes).length + " tickers")
+            console.log("📈 Buscando intraday ações...")
+            const intradayAcoes = await buscarIntraday(acoes)
+            for (const t of Object.keys(intradayAcoes)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAcoes[t]; }
 
             // Gerar páginas de detalhe de ações
             const pastaAcoesCache = path.join(pasta, "acoes")
@@ -838,6 +866,8 @@ async function main() {
     console.log("\n📈 Buscando histórico de cotação (" + fiis.length + " FIIs)...")
     const historicoCotacao = await buscarHistoricoCotacao(fiis)
     console.log("✅ Histórico FIIs: " + Object.keys(historicoCotacao).length + " tickers")
+    const intradayAll = await buscarIntraday([...fiis, ...acoes])
+    for (const t of Object.keys(intradayAll)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAll[t]; }
 
     const pastaFiis = path.join(pasta, "fiis")
     if (!fs.existsSync(pastaFiis)) fs.mkdirSync(pastaFiis)
