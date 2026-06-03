@@ -1099,6 +1099,66 @@ async function testarLinksConsole() {
     }
 }
 
+async function testarGraficoIntraday() {
+    console.log('\n\ud83d\udd0d TESTE 34 \u2014 Gr\u00e1fico tem bot\u00e3o 1D (intraday) e dados (#91)')
+
+    const acoesDir = path.join(PAGES_DIR, 'acoes')
+    const fiisDir = path.join(PAGES_DIR, 'fiis')
+    let ok = true
+
+    // Verificar ação
+    const acaoHtml = fs.readFileSync(path.join(acoesDir, 'VALE3', 'index.html'), 'utf-8')
+    const temBotao1D = acaoHtml.includes('data-period="1d"')
+    const temIntraday = acaoHtml.includes('intradayData')
+    if (temBotao1D && temIntraday) {
+        console.log('   \u2705 VALE3: bot\u00e3o 1D presente + dados intraday')
+    } else {
+        ok = false
+        if (!temBotao1D) console.log('   \u274c VALE3: bot\u00e3o 1D ausente')
+        if (!temIntraday) console.log('   \u274c VALE3: dados intraday ausentes')
+    }
+
+    // Verificar FII
+    const fiiHtml = fs.readFileSync(path.join(fiisDir, 'MXRF11', 'index.html'), 'utf-8')
+    const temBotao1DFII = fiiHtml.includes('data-period="1d"')
+    const temIntradayFII = fiiHtml.includes('intradayData')
+    if (temBotao1DFII && temIntradayFII) {
+        console.log('   \u2705 MXRF11: bot\u00e3o 1D presente + dados intraday')
+    } else {
+        ok = false
+        if (!temBotao1DFII) console.log('   \u274c MXRF11: bot\u00e3o 1D ausente')
+        if (!temIntradayFII) console.log('   \u274c MXRF11: dados intraday ausentes')
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
+
+async function testarGraficoCrosshair() {
+    console.log('\n\ud83d\udd0d TESTE 35 \u2014 Gr\u00e1fico tem crosshair vertical (#91)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
+    const temCrosshair = html.includes('crosshairPlugin') || html.includes('crosshair')
+    const temTooltipRS = html.includes('R$') && html.includes('toFixed(2)')
+
+    let ok = true
+    if (temCrosshair) {
+        console.log('   \u2705 Plugin crosshair registrado')
+    } else {
+        ok = false
+        console.log('   \u274c Plugin crosshair ausente')
+    }
+    if (temTooltipRS) {
+        console.log('   \u2705 Tooltip com R$ formatado')
+    } else {
+        ok = false
+        console.log('   \u274c Tooltip sem R$ formatado')
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -1153,6 +1213,8 @@ async function main() {
     await testarLinksTopsSemPathDuplicado()
     await testarLinksAcoesIndex()
     await testarLinksConsole()
+    await testarGraficoIntraday()
+    await testarGraficoCrosshair()
     await testarPagesNoGitignore()
 
     await browser.close()
