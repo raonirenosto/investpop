@@ -109,11 +109,11 @@ ${historico && historico.t && historico.t.length > 0 ? `
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-semibold text-gray-300 uppercase">Cota\u00e7\u00e3o</h2>
         <div class="flex gap-1">
-          ${historico.intra ? '<button onclick="setChartPeriod(\'1d\')" data-period="1d" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">1D</button>' : ''}
+          <button onclick="setChartPeriod('1d')" data-period="1d" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-emerald-500 bg-emerald-500/20 text-emerald-400">1D</button>
           <button onclick="setChartPeriod('1m')" data-period="1m" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">1M</button>
           <button onclick="setChartPeriod('ytd')" data-period="ytd" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">YTD</button>
           <button onclick="setChartPeriod('1y')" data-period="1y" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">1A</button>
-          <button onclick="setChartPeriod('5y')" data-period="5y" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-emerald-500 bg-emerald-500/20 text-emerald-400">5A</button>
+          <button onclick="setChartPeriod('5y')" data-period="5y" class="chart-period-btn px-2 py-1 text-[10px] rounded border border-card-border text-gray-400 hover:text-white">5A</button>
         </div>
       </div>
       <canvas id="chart-cotacao" height="200"></canvas>
@@ -128,7 +128,7 @@ ${historico && historico.t && historico.t.length > 0 ? `
     function setChartPeriod(p) {
       var now = Math.floor(Date.now()/1000);
       var t=[],c=[];
-      if (p==='1d' && intradayData) { t=intradayData.t.filter(function(_,i){return intradayData.c[i]!=null;}); c=intradayData.c.filter(function(v){return v!=null;}); }
+      if (p==='1d') { if(intradayData){t=intradayData.t.filter(function(_,i){return intradayData.c[i]!=null;});c=intradayData.c.filter(function(v){return v!=null;});}else{var lastT=chartData.t[chartData.t.length-1];for(var i=0;i<chartData.t.length;i++){if(chartData.t[i]>=lastT-86400&&chartData.c[i]!=null){t.push(chartData.t[i]);c.push(chartData.c[i]);}}} }
       else {
         var cutoff = 0;
         if (p==='1m') cutoff = now - 30*86400;
@@ -147,7 +147,7 @@ ${historico && historico.t && historico.t.length > 0 ? `
       if(chartInstance){chartInstance.destroy();}
       chartInstance = new Chart(document.getElementById('chart-cotacao'),{type:'line',data:{labels:labels,datasets:[{data:c,borderColor:cor,borderWidth:1.5,pointRadius:0,fill:{target:'origin',above:cor+'15',below:cor+'15'},tension:0.1}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:function(ctx){return'R$ '+ctx.parsed.y.toFixed(2)}}}},scales:{x:{display:true,ticks:{maxTicksLimit:6,font:{size:9},color:'#6b7280'}},y:{display:true,ticks:{font:{size:9},color:'#6b7280',callback:function(v){return'R$'+v.toFixed(0)}}}},interaction:{mode:'nearest',axis:'x',intersect:false}}});
     }
-    setChartPeriod('5y');
+    setChartPeriod('1d');
     </script>` : ''}
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">

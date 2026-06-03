@@ -1159,6 +1159,54 @@ async function testarGraficoCrosshair() {
     else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
 }
 
+async function testarGraficoBotao1DSempre() {
+    console.log('\n\ud83d\udd0d TESTE 37 \u2014 Bot\u00e3o 1D sempre presente no gr\u00e1fico (#91)')
+
+    const acoesDir = path.join(PAGES_DIR, 'acoes')
+    const fiisDir = path.join(PAGES_DIR, 'fiis')
+    let ok = true
+
+    // Verificar que TODAS as p\u00e1ginas com gr\u00e1fico t\u00eam bot\u00e3o 1D (independente de dados intraday)
+    const acaoHtml = fs.readFileSync(path.join(acoesDir, 'VALE3', 'index.html'), 'utf-8')
+    if (acaoHtml.includes('chart-cotacao') && !acaoHtml.includes('data-period="1d"')) {
+        ok = false
+        console.log('   \u274c VALE3: tem gr\u00e1fico mas n\u00e3o tem bot\u00e3o 1D')
+    } else if (acaoHtml.includes('data-period="1d"')) {
+        console.log('   \u2705 VALE3: bot\u00e3o 1D presente')
+    }
+
+    const fiiHtml = fs.readFileSync(path.join(fiisDir, 'MXRF11', 'index.html'), 'utf-8')
+    if (fiiHtml.includes('chart-cotacao') && !fiiHtml.includes('data-period="1d"')) {
+        ok = false
+        console.log('   \u274c MXRF11: tem gr\u00e1fico mas n\u00e3o tem bot\u00e3o 1D')
+    } else if (fiiHtml.includes('data-period="1d"')) {
+        console.log('   \u2705 MXRF11: bot\u00e3o 1D presente')
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
+
+async function testarGraficoPadrao1D() {
+    console.log('\n\ud83d\udd0d TESTE 38 \u2014 Gr\u00e1fico inicia em 1D por padr\u00e3o (#91)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
+    // O per\u00edodo padr\u00e3o \u00e9 o que tem a classe ativa E \u00e9 chamado no setChartPeriod final
+    const iniciaCom1D = html.includes("setChartPeriod('1d');") && html.match(/data-period="1d"[^>]*border-emerald/)
+    const iniciaComOutro = html.includes("setChartPeriod('5y');")
+
+    if (iniciaCom1D && !iniciaComOutro) {
+        totalPassou++
+        console.log('   \u2705 Gr\u00e1fico inicia em 1D')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        if (iniciaComOutro) console.log('   \u274c Gr\u00e1fico inicia em 5Y (deveria ser 1D)')
+        else console.log('   \u274c setChartPeriod(\'1d\') n\u00e3o encontrado como padr\u00e3o')
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function testarGerarSemCache() {
     console.log('\n\ud83d\udd0d TESTE 36 \u2014 gerar.js compila sem erro no path sem cache (CI)')
 
@@ -1228,6 +1276,8 @@ async function main() {
     console.log('║  #11 Foco automático na busca mobile                        ║')
     console.log('║  #18 Abas de filtro temporal no console                      ║')
     console.log('║  #19 Bug: gerador com abas + msg vazio                      ║')
+    await testarGraficoBotao1DSempre()
+    await testarGraficoPadrao1D()
     console.log('║  #20 Remover filtro/busca do console                         ║')
     console.log('║  #23 Bug: remover botão Limpar                               ║')
     console.log('║  #24 Trocar "Esta Semana" por "Ontem"                         ║')
