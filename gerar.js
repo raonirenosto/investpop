@@ -881,13 +881,13 @@ async function main() {
     // Gerar páginas de ações
     await sincronizarIBOV()
     const acoes = lerAcoes()
-    const intradayAll = await buscarIntraday([...fiis, ...acoes])
-    for (const t of Object.keys(intradayAll)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAll[t]; }
 
     // Buscar historico de cotacao para acoes
     console.log("📈 Buscando histórico de cotação (" + acoes.length + " ações)...")
     const histAcoes = await buscarHistoricoCotacao(acoes)
     Object.assign(historicoCotacao, histAcoes)
+    const intradayAll = await buscarIntraday([...fiis, ...acoes])
+    for (const t of Object.keys(intradayAll)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAll[t]; }
     console.log("✅ Histórico ações: " + Object.keys(histAcoes).length + " tickers")
     console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
     const ibovData = await buscarIbov()
