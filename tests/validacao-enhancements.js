@@ -1207,6 +1207,43 @@ async function testarGraficoPadrao1D() {
     }
 }
 
+async function testarIntraday1DMultiplosPontos() {
+    console.log('\n\ud83d\udd0d TESTE 39 \u2014 Gr\u00e1fico 1D tem m\u00faltiplos pontos intraday (#92)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
+    const match = html.match(/intradayData = (\{[^;]+\});/)
+    if (!match) {
+        // intradayData = null
+        const isNull = html.includes('intradayData = null')
+        if (isNull) {
+            totalFalhou++
+            console.log('   \u274c VALE3: intradayData \u00e9 null (sem dados intraday)')
+            console.log('   Status: \u274c FALHOU')
+        } else {
+            totalFalhou++
+            console.log('   \u274c VALE3: intradayData n\u00e3o encontrado')
+            console.log('   Status: \u274c FALHOU')
+        }
+        return
+    }
+    try {
+        const data = JSON.parse(match[1])
+        if (data.t && data.t.length > 10) {
+            totalPassou++
+            console.log('   \u2705 VALE3: intradayData tem ' + data.t.length + ' pontos')
+            console.log('   Status: \u2705 PASSOU')
+        } else {
+            totalFalhou++
+            console.log('   \u274c VALE3: intradayData tem apenas ' + (data.t ? data.t.length : 0) + ' pontos (esperado >10)')
+            console.log('   Status: \u274c FALHOU')
+        }
+    } catch(e) {
+        totalFalhou++
+        console.log('   \u274c Erro ao parsear intradayData: ' + e.message)
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function testarGerarSemCache() {
     console.log('\n\ud83d\udd0d TESTE 36 \u2014 gerar.js compila sem erro no path sem cache (CI)')
 
@@ -1326,6 +1363,7 @@ async function main() {
     await testarGraficoCrosshair()
     await testarPagesNoGitignore()
     await testarGerarSemCache()
+    await testarIntraday1DMultiplosPontos()
 
     await browser.close()
 

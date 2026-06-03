@@ -128,7 +128,7 @@ ${historico && historico.t && historico.t.length > 0 ? `
     function setChartPeriod(p) {
       var now = Math.floor(Date.now()/1000);
       var t=[],c=[];
-      if (p==='1d') { if(intradayData){t=intradayData.t.filter(function(_,i){return intradayData.c[i]!=null;});c=intradayData.c.filter(function(v){return v!=null;});}else{var lastT=chartData.t[chartData.t.length-1];for(var i=0;i<chartData.t.length;i++){if(chartData.t[i]>=lastT-86400&&chartData.c[i]!=null){t.push(chartData.t[i]);c.push(chartData.c[i]);}}} }
+      if (p==='1d') { var src=intradayData||chartData;var lastT=src.t[src.t.length-1];var cutoff1d=lastT-86400;t=[];c=[];for(var i=0;i<src.t.length;i++){if(src.t[i]>=cutoff1d&&src.c[i]!=null){t.push(src.t[i]);c.push(src.c[i]);}} }
       else {
         var cutoff = 0;
         if (p==='1m') cutoff = now - 30*86400;

@@ -220,7 +220,7 @@ async function buscarIntraday(tickers) {
         const batch = tickers.slice(i, i + 20)
         const symbols = batch.map(t => t + '.SA').join(',')
         try {
-            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=1d&interval=5m`, {
+            const r = await axios.get(`https://query1.finance.yahoo.com/v8/finance/spark?symbols=${symbols}&range=2d&interval=5m`, {
                 httpsAgent: agentSemSSL, headers: { "User-Agent": "Mozilla/5.0" }
             })
             for (const t of batch) {
