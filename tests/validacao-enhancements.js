@@ -1208,40 +1208,37 @@ async function testarGraficoPadrao1D() {
 }
 
 async function testarIntraday1DMultiplosPontos() {
-    console.log('\n\ud83d\udd0d TESTE 39 \u2014 Gr\u00e1fico 1D tem m\u00faltiplos pontos intraday (#92)')
+    console.log('\n\ud83d\udd0d TESTE 39 \u2014 Gr\u00e1fico 1D tem m\u00faltiplos pontos intraday a\u00e7\u00f5es e FIIs (#92/#93)')
 
-    const html = fs.readFileSync(path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html'), 'utf-8')
-    const match = html.match(/intradayData = (\{[^;]+\});/)
-    if (!match) {
-        // intradayData = null
-        const isNull = html.includes('intradayData = null')
-        if (isNull) {
-            totalFalhou++
-            console.log('   \u274c VALE3: intradayData \u00e9 null (sem dados intraday)')
-            console.log('   Status: \u274c FALHOU')
+    let ok = true
+    const checks = [
+        { label: 'VALE3 (a\u00e7\u00e3o)', path: path.join(PAGES_DIR, 'acoes', 'VALE3', 'index.html') },
+        { label: 'MXRF11 (FII)', path: path.join(PAGES_DIR, 'fiis', 'MXRF11', 'index.html') },
+    ]
+    for (const chk of checks) {
+        const html = fs.readFileSync(chk.path, 'utf-8')
+        const match = html.match(/intradayData = (\{[^;]+\});/)
+        if (!match) {
+            const isNull = html.includes('intradayData = null')
+            ok = false
+            console.log('   \u274c ' + chk.label + ': intradayData ' + (isNull ? '\u00e9 null' : 'n\u00e3o encontrado'))
         } else {
-            totalFalhou++
-            console.log('   \u274c VALE3: intradayData n\u00e3o encontrado')
-            console.log('   Status: \u274c FALHOU')
+            try {
+                const data = JSON.parse(match[1])
+                if (data.t && data.t.length > 10) {
+                    console.log('   \u2705 ' + chk.label + ': intradayData tem ' + data.t.length + ' pontos')
+                } else {
+                    ok = false
+                    console.log('   \u274c ' + chk.label + ': apenas ' + (data.t ? data.t.length : 0) + ' pontos')
+                }
+            } catch(e) {
+                ok = false
+                console.log('   \u274c ' + chk.label + ': erro ao parsear')
+            }
         }
-        return
     }
-    try {
-        const data = JSON.parse(match[1])
-        if (data.t && data.t.length > 10) {
-            totalPassou++
-            console.log('   \u2705 VALE3: intradayData tem ' + data.t.length + ' pontos')
-            console.log('   Status: \u2705 PASSOU')
-        } else {
-            totalFalhou++
-            console.log('   \u274c VALE3: intradayData tem apenas ' + (data.t ? data.t.length : 0) + ' pontos (esperado >10)')
-            console.log('   Status: \u274c FALHOU')
-        }
-    } catch(e) {
-        totalFalhou++
-        console.log('   \u274c Erro ao parsear intradayData: ' + e.message)
-        console.log('   Status: \u274c FALHOU')
-    }
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
 }
 
 async function testarGerarSemCache() {

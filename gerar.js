@@ -866,6 +866,8 @@ async function main() {
     console.log("\n📈 Buscando histórico de cotação (" + fiis.length + " FIIs)...")
     const historicoCotacao = await buscarHistoricoCotacao(fiis)
     console.log("✅ Histórico FIIs: " + Object.keys(historicoCotacao).length + " tickers")
+    const intradayFiis2 = await buscarIntraday(fiis)
+    for (const t of Object.keys(intradayFiis2)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayFiis2[t]; }
 
     const pastaFiis = path.join(pasta, "fiis")
     if (!fs.existsSync(pastaFiis)) fs.mkdirSync(pastaFiis)
@@ -886,7 +888,7 @@ async function main() {
     console.log("📈 Buscando histórico de cotação (" + acoes.length + " ações)...")
     const histAcoes = await buscarHistoricoCotacao(acoes)
     Object.assign(historicoCotacao, histAcoes)
-    const intradayAll = await buscarIntraday([...fiis, ...acoes])
+    const intradayAll = await buscarIntraday(acoes)
     for (const t of Object.keys(intradayAll)) { if (historicoCotacao[t]) historicoCotacao[t].intra = intradayAll[t]; }
     console.log("✅ Histórico ações: " + Object.keys(histAcoes).length + " tickers")
     console.log(`\n📊 Gerando páginas de ações (${acoes.length} tickers)...`)
