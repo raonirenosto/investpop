@@ -56,8 +56,10 @@
 - `gh workflow run gerar.yml`
 
 ### Passo 7 — Monitorar
+- **SEMPRE** monitorar até completar (nunca perguntar se deve monitorar)
 - Verificar status a cada 60s até completar: `gh run view <ID> --json status,conclusion`
 - Informar quando completou com sucesso
+- Se falhar, investigar o erro imediatamente
 
 ## Comandos importantes:
 - Sempre usar o comando que mostra output completo (sem filtros como `tail`, `grep`, `head`)
