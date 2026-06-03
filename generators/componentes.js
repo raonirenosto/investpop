@@ -1,5 +1,6 @@
-function headHtml(titulo, descricao, jsonLd) {
+function headHtml(titulo, descricao, jsonLd, urlPath) {
     var ldScript = jsonLd ? `\n  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : '';
+    var canonicalUrl = 'https://investpop.com.br' + (urlPath || '/')
     return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,10 +9,10 @@ function headHtml(titulo, descricao, jsonLd) {
   <title>${titulo}</title>
   <meta name="description" content="${descricao}" />
   <meta name="keywords" content="FIIs, fundos imobiliários, IFIX, IBOV, ações, investimentos, radar FIIs, cotação, dividendos, maiores altas, maiores quedas, dividend yield, P/L, P/VP" />
-  <link rel="canonical" href="https://investpop.com.br" />
+  <link rel="canonical" href="${canonicalUrl}" />
   <meta property="og:title" content="${titulo}" />
   <meta property="og:description" content="${descricao}" />
-  <meta property="og:url" content="https://investpop.com.br" />
+  <meta property="og:url" content="${canonicalUrl}" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="twitter:card" content="summary_large_image" />

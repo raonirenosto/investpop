@@ -43,7 +43,7 @@ function gerarPaginaDetalheAcao(acao, todasAcoes, rankings, historico) {
         return (valor * acao.dy / 100).toFixed(2).replace('.', ',')
     }
 
-    return `${headHtml(acao.ticker + " \u2014 InvestPop", acao.ticker + " - " + (acao.nome || 'A\u00e7\u00e3o') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
+    return `${headHtml(acao.ticker + " \u2014 InvestPop", acao.ticker + " - " + (acao.nome || 'A\u00e7\u00e3o') + ". Cota\u00e7\u00e3o, dividendos e indicadores.", null, "/acoes/" + acao.ticker + "/")}
 
 ${headerHtml({basePath: '../../', paginaAcoes: true})}
 

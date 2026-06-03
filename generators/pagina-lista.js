@@ -4,7 +4,7 @@ function gerarPaginaLista(titulo, lista, cor) {
     const linhas = lista.map((item, i) => `
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">${i + 1}</td>
-            <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
+            <td class="py-2.5 font-medium"><a href="../fiis/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
             <td class="py-2.5 text-right ${cor} font-medium">${item.variacao}</td>
             <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
           </tr>`).join("\n")
@@ -73,7 +73,7 @@ function gerarPaginaRanking(titulo, coluna, lista, cor) {
     const linhas = lista.map((item, i) => `
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">${i + 1}</td>
-            <td class="py-2.5 font-medium"><a href="fiis/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
+            <td class="py-2.5 font-medium"><a href="../fiis/${item.ticker}/" class="hover:underline">${item.ticker}</a></td>
             <td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td>
           </tr>`).join("\n")
 

@@ -740,8 +740,8 @@ async function main() {
 
 
             writePage(pasta, "acoes", gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
-            writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
-            writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
+            writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500", "acoes-altas"))
+            writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500", "acoes-quedas"))
             writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
             writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
             writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
@@ -883,8 +883,8 @@ async function main() {
 
 
     writePage(pasta, "acoes", gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
-    writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500"))
-    writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500"))
+    writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500", "acoes-altas"))
+    writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500", "acoes-quedas"))
     writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
     writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
     writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))

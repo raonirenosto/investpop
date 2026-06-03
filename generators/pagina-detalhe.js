@@ -51,7 +51,7 @@ function gerarPaginaDetalhe(fii, todosFiis, rankings, historico) {
     // Lista de FIIs para busca (JSON inline)
     const listaBusca = todosFiis.map(f => f.ticker)
 
-    return `${headHtml(fii.ticker + " \u2014 InvestPop", fii.ticker + " - " + (fii.nome || 'Fundo Imobili\u00e1rio') + ". Cota\u00e7\u00e3o, dividendos e indicadores.")}
+    return `${headHtml(fii.ticker + " \u2014 InvestPop", fii.ticker + " - " + (fii.nome || 'Fundo Imobili\u00e1rio') + ". Cota\u00e7\u00e3o, dividendos e indicadores.", null, "/fiis/" + fii.ticker + "/")}
 
 ${headerHtml({basePath: '../../'})}
 

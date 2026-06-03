@@ -1009,6 +1009,41 @@ async function testarRendimentosAcoesSemLimite() {
     }
 }
 
+async function testarLinksTopsSemPathDuplicado() {
+    console.log('\n\ud83d\udd0d TESTE 33 \u2014 Links nos tops/rankings sem path duplicado (#90)')
+
+    const paginas = ['altas', 'quedas', 'ranking-dy', 'ranking-baratos', 'ranking-valorizacao', 'ranking-consistentes',
+                     'acoes-altas', 'acoes-quedas', 'acoes-ranking-dy', 'acoes-ranking-baratos', 'acoes-ranking-valorizacao', 'acoes-ranking-consistentes']
+    let ok = true
+    let erros = []
+
+    for (const p of paginas) {
+        const filePath = path.join(PAGES_DIR, p, 'index.html')
+        if (!fs.existsSync(filePath)) continue
+        const html = fs.readFileSync(filePath, 'utf-8')
+        const links = html.match(/href="[^"]*"/g) || []
+        // Links para detalhes n\u00e3o devem come\u00e7ar com fiis/ ou acoes/ sem ../ (causa 404)
+        const errados = links.filter(l => {
+            var m = l.match(/href="(fiis\/[A-Z]|acoes\/[A-Z])/)
+            return m !== null
+        })
+        if (errados.length > 0) {
+            ok = false
+            erros.push(p + ': ' + errados.length + ' links sem ../ (ex: ' + errados[0] + ')')
+        }
+    }
+
+    if (ok) {
+        totalPassou++
+        console.log('   \u2705 ' + paginas.length + ' p\u00e1ginas verificadas, links corretos')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        for (const e of erros) console.log('   \u274c ' + e)
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function testarLinksAcoesIndex() {
     console.log('\n\ud83d\udd0d TESTE 31 \u2014 Links na index de a\u00e7\u00f5es sem path duplicado (#88)')
 
@@ -1115,6 +1150,7 @@ async function main() {
     await testarFiltroBotsMelhorado()
     await testarConsistenciaCorreta()
     await testarTooltipConsistenciaDetalhe()
+    await testarLinksTopsSemPathDuplicado()
     await testarLinksAcoesIndex()
     await testarLinksConsole()
     await testarPagesNoGitignore()
