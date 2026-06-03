@@ -10,9 +10,13 @@
 **IMPORTANTE: Executar TODOS os passos sequencialmente sem pedir confirmação entre eles.**
 
 ### Passo 1 — Criar teste que FALHA
+
+**⛔ BLOQUEANTE: NÃO TOCAR em generators/, gerar.js, assets/ ou qualquer código de implementação ANTES deste passo estar completo e o teste falhando ter sido mostrado ao usuário.**
+
 - Adicionar teste automatizado em `tests/validacao-busca.js` (ou suite apropriada)
 - O teste deve verificar exatamente o comportamento esperado após a correção
 - Rodar o teste e confirmar que **falha** (TDD)
+- **MOSTRAR a saída com ❌ ao usuário** antes de prosseguir
 - Numerar o teste sequencialmente e referenciar a issue: `(#N)`
 
 ### Passo 2 — Implementar a correção/feature
