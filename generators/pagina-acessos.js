@@ -1,7 +1,7 @@
 const { headHtml, headerHtml, footerHtml } = require("./componentes")
 
 function gerarPaginaAcessos() {
-    return `${headHtml("InvestPop \u2014 Acessos", "Painel de acessos do InvestPop.")}
+    return `${headHtml("InvestPop \u2014 Acessos", "Painel de acessos do InvestPop.", null, "/acessos/")}
   <meta name="robots" content="noindex, nofollow" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 

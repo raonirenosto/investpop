@@ -1,7 +1,7 @@
 const { headHtml, headerHtml, footerHtml } = require("./componentes")
 
 function gerarConsole() {
-    return `${headHtml("InvestPop \u2014 Console", "Painel administrativo do InvestPop.")}
+    return `${headHtml("InvestPop \u2014 Console", "Painel administrativo do InvestPop.", null, "/console/")}
   <meta name="robots" content="noindex, nofollow" />
 
 ${headerHtml({basePath:'../'})}

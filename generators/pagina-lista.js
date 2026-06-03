@@ -1,6 +1,6 @@
 const { headHtml, headerHtml, footerHtml } = require("./componentes")
 
-function gerarPaginaLista(titulo, lista, cor) {
+function gerarPaginaLista(titulo, lista, cor, slug) {
     const linhas = lista.map((item, i) => `
           <tr class="border-t border-card-border">
             <td class="py-2.5 text-gray-500">${i + 1}</td>
@@ -9,7 +9,7 @@ function gerarPaginaLista(titulo, lista, cor) {
             <td class="py-2.5 text-right text-gray-400">R$ ${item.preco}</td>
           </tr>`).join("\n")
 
-    return `${headHtml("InvestPop \u2014 " + titulo, titulo + " - FIIs atualizados a cada 10 minutos.")}
+    return `${headHtml("InvestPop \u2014 " + titulo, titulo + " - FIIs atualizados a cada 10 minutos.", null, "/" + (slug || "") + "/")}
 
 ${headerHtml({basePath:'../'})}
 
@@ -59,7 +59,7 @@ ${footerHtml(global.INVESTPOP_TESTE ? {teste:true, basePath:'../'} : {basePath:'
 </html>`
 }
 
-function gerarPaginaRanking(titulo, coluna, lista, cor) {
+function gerarPaginaRanking(titulo, coluna, lista, cor, slug) {
     const tooltipIcon = '<span class="tooltip-trigger" data-tooltip="tooltip-col"><svg class="w-4 h-4 inline cursor-pointer" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#475569" stroke="#64748b" stroke-width="1.5"/><path d="M12 16v-4" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1" fill="white"/></svg></span>'
 
     const tooltips = {
@@ -77,7 +77,7 @@ function gerarPaginaRanking(titulo, coluna, lista, cor) {
             <td class="py-2.5 text-right ${cor} font-medium">${item.valor}</td>
           </tr>`).join("\n")
 
-    return `${headHtml("InvestPop \u2014 " + titulo, titulo + " - Ranking de FIIs atualizado.")}
+    return `${headHtml("InvestPop \u2014 " + titulo, titulo + " - Ranking de FIIs atualizado.", null, "/" + (slug || "") + "/")}
 
 ${headerHtml({basePath:'../'})}
 

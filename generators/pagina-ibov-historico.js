@@ -27,7 +27,7 @@ function gerarPaginaIbovHistorico() {
             <td class="py-2 text-xs font-medium ${h.tipo === 'ADICIONADA' ? 'text-emerald-400' : 'text-red-400'}">${h.tipo || ''}</td>
           </tr>`).join('\n')
 
-    return `${headHtml("InvestPop \u2014 IBOV Composi\u00e7\u00e3o", "Composi\u00e7\u00e3o atual do IBOV e hist\u00f3rico de mudan\u00e7as.")}
+    return `${headHtml("InvestPop \u2014 IBOV Composi\u00e7\u00e3o", "Composi\u00e7\u00e3o atual do IBOV e hist\u00f3rico de mudan\u00e7as.", null, "/ibov-historico/")}
   <meta name="robots" content="noindex, nofollow" />
 
 ${headerHtml({basePath:'../'})}

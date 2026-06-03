@@ -671,12 +671,12 @@ async function main() {
             for (const [ticker, nome] of Object.entries(nomesCSV)) { global.INVESTPOP_NOMES[ticker] = nome }
 
             fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
-            writePage(pasta, "altas", gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
-            writePage(pasta, "quedas", gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
-            writePage(pasta, "ranking-dy", gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
-            writePage(pasta, "ranking-baratos", gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
-            writePage(pasta, "ranking-valorizacao", gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
-            writePage(pasta, "ranking-consistentes", gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
+            writePage(pasta, "altas", gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500", "altas"))
+            writePage(pasta, "quedas", gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500", "quedas"))
+            writePage(pasta, "ranking-dy", gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500", "ranking-dy"))
+            writePage(pasta, "ranking-baratos", gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400", "ranking-baratos"))
+            writePage(pasta, "ranking-valorizacao", gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500", "ranking-valorizacao"))
+            writePage(pasta, "ranking-consistentes", gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400", "ranking-consistentes"))
             writePage(pasta, "console", gerarConsole())
             writePage(pasta, "acessos", gerarPaginaAcessos())
             writePage(pasta, "ibov-historico", gerarPaginaIbovHistorico())
@@ -742,10 +742,10 @@ async function main() {
             writePage(pasta, "acoes", gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
             writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500", "acoes-altas"))
             writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500", "acoes-quedas"))
-            writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
-            writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
-            writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
-            writePage(pasta, "acoes-ranking-consistentes", gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
+            writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500", "acoes-ranking-dy"))
+            writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400", "acoes-ranking-baratos"))
+            writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500", "acoes-ranking-valorizacao"))
+            writePage(pasta, "acoes-ranking-consistentes", gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400", "acoes-ranking-consistentes"))
 
 
             // Buscar historico de cotacao para acoes
@@ -820,12 +820,12 @@ async function main() {
     for (const [ticker, nome] of Object.entries(nomesCSVOnline)) { global.INVESTPOP_NOMES[ticker] = nome }
 
     fs.writeFileSync(path.join(pasta, "index.html"), gerarHtml(ifix, altas, quedas, rankings))
-    writePage(pasta, "altas", gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500"))
-    writePage(pasta, "quedas", gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500"))
-    writePage(pasta, "ranking-dy", gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500"))
-    writePage(pasta, "ranking-baratos", gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400"))
-    writePage(pasta, "ranking-valorizacao", gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500"))
-    writePage(pasta, "ranking-consistentes", gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400"))
+    writePage(pasta, "altas", gerarPaginaLista("Maiores Altas do Dia", todasAltas, "text-emerald-500", "altas"))
+    writePage(pasta, "quedas", gerarPaginaLista("Maiores Quedas do Dia", todasQuedas, "text-red-500", "quedas"))
+    writePage(pasta, "ranking-dy", gerarPaginaRanking("FIIs que Mais Pagam (DY 12M)", "DY (12M)", rankings.allDY, "text-emerald-500", "ranking-dy"))
+    writePage(pasta, "ranking-baratos", gerarPaginaRanking("FIIs Mais Baratos (P/VP)", "P/VP", rankings.allBaratos, "text-blue-400", "ranking-baratos"))
+    writePage(pasta, "ranking-valorizacao", gerarPaginaRanking("FIIs que Mais Valorizaram no Ano", "Var. Ano", rankings.allVarAno, "text-emerald-500", "ranking-valorizacao"))
+    writePage(pasta, "ranking-consistentes", gerarPaginaRanking("FIIs Pagadores Consistentes", "Consist\u00eancia", rankings.allConsistentes, "text-orange-400", "ranking-consistentes"))
     writePage(pasta, "console", gerarConsole())
     writePage(pasta, "acessos", gerarPaginaAcessos())
     writePage(pasta, "ibov-historico", gerarPaginaIbovHistorico())
@@ -885,10 +885,10 @@ async function main() {
     writePage(pasta, "acoes", gerarHtmlAcoes(ibovData, altasAcoes, quedasAcoes, rankingsAcoes))
     writePage(pasta, "acoes-altas", gerarPaginaListaAcoes("Maiores Altas do Dia - Ações", todasAltasAcoes, "text-emerald-500", "acoes-altas"))
     writePage(pasta, "acoes-quedas", gerarPaginaListaAcoes("Maiores Quedas do Dia - Ações", todasQuedasAcoes, "text-red-500", "acoes-quedas"))
-    writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500"))
-    writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400"))
-    writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500"))
-    writePage(pasta, "acoes-ranking-consistentes", gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400"))
+    writePage(pasta, "acoes-ranking-dy", gerarPaginaRankingAcoes("Ações que Mais Pagam (DY 12M)", "DY (12M)", rankingsAcoes.allDY, "text-emerald-500", "acoes-ranking-dy"))
+    writePage(pasta, "acoes-ranking-baratos", gerarPaginaRankingAcoes("Ações Mais Baratas (P/L)", "P/L", rankingsAcoes.allBaratos, "text-blue-400", "acoes-ranking-baratos"))
+    writePage(pasta, "acoes-ranking-valorizacao", gerarPaginaRankingAcoes("Ações que Mais Valorizaram no Ano", "Var. Ano", rankingsAcoes.allVarAno, "text-emerald-500", "acoes-ranking-valorizacao"))
+    writePage(pasta, "acoes-ranking-consistentes", gerarPaginaRankingAcoes("Ações Pagadoras Consistentes", "Consistência", rankingsAcoes.allConsistentes, "text-orange-400", "acoes-ranking-consistentes"))
 
     // Gerar páginas de detalhe de ações
     const pastaAcoes2 = path.join(pasta, "acoes")
