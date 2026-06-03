@@ -1159,6 +1159,65 @@ async function testarGraficoCrosshair() {
     else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
 }
 
+async function testarGerarSemCache() {
+    console.log('\n\ud83d\udd0d TESTE 36 \u2014 gerar.js compila sem erro no path sem cache (CI)')
+
+    const { execSync } = require('child_process')
+    try {
+        // Rodar node com --check valida sintaxe, mas n\u00e3o executa
+        // Para testar ordem de vari\u00e1veis, precisa parsear o c\u00f3digo
+        const gerarCode = fs.readFileSync(path.resolve(__dirname, '../gerar.js'), 'utf-8')
+
+        // Extrair o bloco do path sem cache (depois de "} else {" at\u00e9 o final do main)
+        // Verificar que buscarIntraday/buscarHistoricoCotacao n\u00e3o usam 'acoes' antes de 'const acoes = lerAcoes'
+        const mainMatch = gerarCode.match(/\/\/ Gerar p\u00e1ginas de detalhe[\s\S]*?const acoes = lerAcoes\(\)/)
+        if (!mainMatch) {
+            // Tentar path alternativo
+            const lines = gerarCode.split('\n')
+            let acoesDef = -1
+            let problemas = []
+            // Encontrar \u00faltima defini\u00e7\u00e3o de 'const acoes' (path sem cache)
+            for (let i = lines.length - 1; i >= 0; i--) {
+                if (lines[i].includes('const acoes = lerAcoes()') && !lines[i].trim().startsWith('//')) {
+                    acoesDef = i
+                    break
+                }
+            }
+            if (acoesDef === -1) {
+                totalFalhou++
+                console.log('   \u274c N\u00e3o encontrou "const acoes = lerAcoes()" no path sem cache')
+                console.log('   Status: \u274c FALHOU')
+                return
+            }
+            // Verificar que nenhuma refer\u00eancia a 'acoes' aparece antes dessa linha (no mesmo bloco)
+            // Buscar de tr\u00e1s pra frente a partir de acoesDef
+            for (let i = acoesDef - 1; i >= Math.max(0, acoesDef - 50); i--) {
+                if (lines[i].includes('...acoes') || lines[i].match(/\bacoes\b/) && !lines[i].includes('const acoes') && !lines[i].includes('//') && !lines[i].includes('pastaAcoes') && !lines[i].includes('acoes/') && !lines[i].includes('acoesFiles') && !lines[i].includes('gerarPaginaIndexAcoes') && !lines[i].includes('rankingsAcoes') && !lines[i].includes('Gerando p')) {
+                    problemas.push('L' + (i+1) + ': ' + lines[i].trim().substring(0, 60))
+                }
+            }
+            if (problemas.length > 0) {
+                totalFalhou++
+                console.log('   \u274c Refer\u00eancias a "acoes" antes da defini\u00e7\u00e3o (L' + (acoesDef+1) + '):')
+                for (const p of problemas) console.log('     ' + p)
+                console.log('   Status: \u274c FALHOU')
+                return
+            }
+        }
+
+        // Tamb\u00e9m validar sintaxe do gerar.js
+        execSync('node --check ' + path.resolve(__dirname, '../gerar.js'), { encoding: 'utf-8' })
+
+        totalPassou++
+        console.log('   \u2705 gerar.js: sintaxe OK e sem refer\u00eancias a "acoes" antes da defini\u00e7\u00e3o')
+        console.log('   Status: \u2705 PASSOU')
+    } catch (e) {
+        totalFalhou++
+        console.log('   \u274c ' + e.message.split('\n')[0])
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
 async function main() {
     const startTotal = Date.now()
 
@@ -1216,6 +1275,7 @@ async function main() {
     await testarGraficoIntraday()
     await testarGraficoCrosshair()
     await testarPagesNoGitignore()
+    await testarGerarSemCache()
 
     await browser.close()
 
