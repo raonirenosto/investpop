@@ -1301,6 +1301,32 @@ async function testarGerarSemCache() {
 }
 
 
+
+async function testarStylesCSSPath() {
+    console.log('\\n\u{1f50d} TESTE 33 \u2014 styles.css referenciado com path correto em todas as p\u00e1ginas (#94)')
+    let ok = true
+    const checks = [
+        {file: 'index.html', expected: './styles.css'},
+        {file: 'acoes/index.html', expected: '../styles.css'},
+        {file: 'altas/index.html', expected: '../styles.css'},
+        {file: 'fiis/HGLG11/index.html', expected: '../../styles.css'},
+        {file: 'acoes/PETR4/index.html', expected: '../../styles.css'},
+    ]
+    for (const c2 of checks) {
+        const fp = path.join(PAGES_DIR, c2.file)
+        if (!fs.existsSync(fp)) { ok = false; console.log('   \u274c ' + c2.file + ' n\u00e3o existe'); continue }
+        const html = fs.readFileSync(fp, 'utf-8')
+        if (html.includes('href="' + c2.expected + '"')) {
+            console.log('   \u2705 ' + c2.file + ' \u2192 ' + c2.expected)
+        } else {
+            ok = false
+            const m = html.match(/href="(["]*styles\.css)"/) 
+            console.log('   \u274c ' + c2.file + ' esperado ' + c2.expected + ', encontrado ' + (m ? m[1] : '?'))
+        }
+    }
+    if (ok) { totalPassou++; console.log('   Status: \u2705 PASSOU') }
+    else { totalFalhou++; console.log('   Status: \u274c FALHOU') }
+}
 async function testarSemCDNTailwind() {
     console.log('\\n\u{1f50d} TESTE 31 \u2014 Sem cdn.tailwindcss.com no HTML (#94)')
     const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
@@ -1393,6 +1419,7 @@ async function main() {
     await testarPagesNoGitignore()
     await testarGerarSemCache()
     await testarIntraday1DMultiplosPontos()
+    await testarStylesCSSPath()
     await testarSemCDNTailwind()
     await testarMetaSeguranca()
 

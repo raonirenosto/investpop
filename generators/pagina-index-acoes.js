@@ -23,7 +23,7 @@ function gerarHtmlAcoes(ibov, altas, quedas, rankings) {
     const corIbov = !ibov.variacao.includes("-") ? "text-emerald-500" : "text-red-500"
     rankings = rankings || { topDY: [], topBaratos: [], topVarAno: [], topConsistentes: [] }
 
-    return `${headHtml("InvestPop \u2014 Radar de A\u00e7\u00f5es em tempo real", "Acompanhe as A\u00e7\u00f5es do IBOV em tempo real. Veja maiores altas e quedas do dia.")}
+    return `${headHtml("InvestPop \u2014 Radar de A\u00e7\u00f5es em tempo real", "Acompanhe as A\u00e7\u00f5es do IBOV em tempo real. Veja maiores altas e quedas do dia.", null, "/acoes/")}
 
 ${headerHtml({basePath:'../', paginaAcoes:true})}
 
