@@ -1300,6 +1300,38 @@ async function testarGerarSemCache() {
     }
 }
 
+
+async function testarSemCDNTailwind() {
+    console.log('\\n\u{1f50d} TESTE 31 \u2014 Sem cdn.tailwindcss.com no HTML (#94)')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const temCDN = html.includes('cdn.tailwindcss.com')
+    if (!temCDN) {
+        totalPassou++
+        console.log('   \u2705 index.html n\u00e3o usa cdn.tailwindcss.com')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   \u274c index.html ainda usa cdn.tailwindcss.com')
+        console.log('   Status: \u274c FALHOU')
+    }
+}
+
+async function testarMetaSeguranca() {
+    console.log('\\n\u{1f50d} TESTE 32 \u2014 Meta tags de seguran\u00e7a presentes (#94)')
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const temCSP = html.includes('Content-Security-Policy')
+    const temXCTO = html.includes('X-Content-Type-Options')
+    const temReferrer = html.includes('referrer')
+    if (temCSP && temXCTO && temReferrer) {
+        totalPassou++
+        console.log('   \u2705 Meta tags de seguran\u00e7a presentes')
+        console.log('   Status: \u2705 PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   \u274c CSP=' + temCSP + ' XCTO=' + temXCTO + ' referrer=' + temReferrer)
+        console.log('   Status: \u274c FALHOU')
+    }
+}
 async function main() {
     const startTotal = Date.now()
 
@@ -1361,6 +1393,8 @@ async function main() {
     await testarPagesNoGitignore()
     await testarGerarSemCache()
     await testarIntraday1DMultiplosPontos()
+    await testarSemCDNTailwind()
+    await testarMetaSeguranca()
 
     await browser.close()
 

@@ -24,6 +24,9 @@ jobs:
       - name: Instalar dependências
         run: npm install
 
+      - name: Compilar CSS
+        run: npx tailwindcss -i assets/input.css -o assets/styles.css --minify
+
       - name: Gerar página
         run: node gerar.js --no-open
 

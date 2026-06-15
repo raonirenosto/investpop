@@ -1,4 +1,10 @@
-function headHtml(titulo, descricao, jsonLd, urlPath) {
+function headHtml(titulo, descricao, jsonLd, urlPath, opts) {
+    var basePath = (opts && opts.basePath) || ''
+    if (!basePath && urlPath) {
+        var depth = urlPath.split('/').filter(function(s){return s}).length
+        basePath = depth > 0 ? '../'.repeat(depth) : './'
+    }
+    if (!basePath) basePath = './'
     var ldScript = jsonLd ? `\n  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : '';
     var canonicalUrl = 'https://investpop.com.br' + (urlPath || '/')
     return `<!DOCTYPE html>
@@ -21,12 +27,13 @@ function headHtml(titulo, descricao, jsonLd, urlPath) {
   <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="robots" content="index, follow" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23070F1F'/><path d='M6 22l8-8 4 4 8-8' stroke='%2310b981' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='26' cy='10' r='2.5' fill='%2310b981'/></svg>" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: { colors: { bg: '#07111F', card: '#0B1A2E', 'card-border': '#132743' } } }
-    }
-  </script>
+  <link rel="stylesheet" href="${basePath}styles.css" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https:" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https:" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Inter', sans-serif; }

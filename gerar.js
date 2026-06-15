@@ -722,6 +722,7 @@ async function main() {
             }
 
             fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
+            fs.copyFileSync(path.resolve(__dirname, "assets/styles.css"), path.join(pasta, "styles.css"))
             fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "admin-console.js"))
 
             // Gerar sitemap dinâmico
@@ -877,6 +878,7 @@ async function main() {
         writePage(pastaFiis, det.ticker, gerarPaginaDetalhe(det, rankings.detalhes, rankings, historicoCotacao[det.ticker]))
     }
     fs.copyFileSync(path.resolve(__dirname, "assets/busca.js"), path.join(pasta, "busca.js"))
+            fs.copyFileSync(path.resolve(__dirname, "assets/styles.css"), path.join(pasta, "styles.css"))
     fs.copyFileSync(path.resolve(__dirname, "assets/console.js"), path.join(pasta, "admin-console.js"))
     console.log(`📄 ${rankings.detalhes.length} páginas de detalhe geradas`)
 

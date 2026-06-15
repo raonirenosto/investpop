@@ -4,7 +4,8 @@
   "private": true,
   "main": "gerar.js",
   "scripts": {
-    "gerar": "node gerar.js",
+    "build:css": "npx tailwindcss -i assets/input.css -o assets/styles.css --minify",
+    "gerar": "npm run build:css && node gerar.js",
     "test": "jest"
   },
   "dependencies": {
@@ -13,6 +14,7 @@
   },
   "devDependencies": {
     "jest": "^30.4.2",
-    "puppeteer": "^24.43.1"
+    "puppeteer": "^24.43.1",
+    "tailwindcss": "^3.4.19"
   }
 }
