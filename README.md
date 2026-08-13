@@ -46,5 +46,6 @@ https://raonirenosto.github.io/investpop/
 - **v1.4.5** — Fix consistência Klabin e ações com dataCom no ano anterior (#85), teste valida 79 ações, 30 testes enhancements
 - **v1.5.0** — Remover pages/ do versionamento (#87), gráfico de cotação nas páginas de detalhe (#86), sitemap no path online (CI), 31 testes enhancements
 - **v1.6.0** — URLs limpas sem .html (#88), SEO canonical/og:url por página (#89), fix links 404 (#90), gráfico intraday 1D com crosshair (#91), range=2d fora do pregão (#92), fix intraday path sem cache (#93), 31 testes enhancements
+- **v1.7.2** — Atualiza título e description da index para FIIs e Ações brasileiras, remove "tempo real" (#98)
 - **v1.7.1** — Favicon arquivo físico (favicon.svg + apple-touch-icon.png), remove data URI inline, indexação Google (#97)
 - **v1.7.0** — Compilar Tailwind CSS (remove CDN inseguro), meta tags de segurança CSP/X-Content-Type-Options/referrer (#94), 42 testes enhancements
