@@ -26,16 +26,16 @@ function gerarHtml(ifix, altas, quedas, rankings) {
         "@type": "WebSite",
         "name": "InvestPop",
         "url": "https://investpop.com.br",
-        "description": "Acompanhe os Fundos Imobili\u00e1rios (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia.",
+        "description": "Radar de Fundos Imobili\u00e1rios e a\u00e7\u00f5es brasileiras. Altas, quedas, rankings de dividendos, P/VP, valoriza\u00e7\u00e3o e consist\u00eancia \u2014 atualizado a cada 30 minutos.",
         "publisher": { "@type": "Organization", "name": "InvestPop" }
     }
 
-    return `${headHtml("InvestPop \u2014 Radar de FIIs em tempo real", "Acompanhe os Fundos Imobili\u00e1rios (FIIs) em tempo real. Veja IFIX, maiores altas e quedas do dia.", jsonLd)}
+    return `${headHtml("InvestPop \u2014 Radar de FIIs e A\u00e7\u00f5es brasileiras", "Radar de Fundos Imobili\u00e1rios e a\u00e7\u00f5es brasileiras. Altas, quedas, rankings de dividendos, P/VP, valoriza\u00e7\u00e3o e consist\u00eancia \u2014 atualizado a cada 30 minutos.", jsonLd)}
 
 ${headerHtml()}
 
   <main class="px-4 md:px-8 py-6 md:py-8">
-    <h1 class="sr-only">InvestPop \u2014 Radar de Fundos Imobili\u00e1rios em tempo real</h1>
+    <h1 class="sr-only">InvestPop \u2014 Radar de FIIs e A\u00e7\u00f5es brasileiras</h1>
     <div class="flex items-center gap-2 mb-4">
       <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
         <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>

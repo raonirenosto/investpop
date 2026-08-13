@@ -1302,6 +1302,27 @@ async function testarGerarSemCache() {
 
 
 
+async function testarTituloDescricaoIndex() {
+    console.log('\n🔍 TESTE 41 — Título e description atualizados com ações (#98)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const tituloCorreto = html.includes('Radar de FIIs e Ações brasileiras')
+    const descCorreta = html.includes('atualizado a cada 30 minutos')
+    const semTempoReal = !html.includes('em tempo real')
+
+    if (tituloCorreto && descCorreta && semTempoReal) {
+        totalPassou++
+        console.log('   ✅ Título e description corretos, sem "tempo real"')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        if (!tituloCorreto) console.log('   ❌ Título não contém "Radar de FIIs e Ações brasileiras"')
+        if (!descCorreta) console.log('   ❌ Description não contém "atualizado a cada 30 minutos"')
+        if (!semTempoReal) console.log('   ❌ Ainda menciona "em tempo real"')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarFaviconArquivoFisico() {
     console.log('\n🔍 TESTE 40 — Favicon como arquivo físico (não data URI) (#97)')
 
@@ -1448,6 +1469,7 @@ async function main() {
     await testarSemCDNTailwind()
     await testarMetaSeguranca()
     await testarFaviconArquivoFisico()
+    await testarTituloDescricaoIndex()
 
     await browser.close()
 
