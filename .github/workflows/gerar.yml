@@ -34,6 +34,8 @@ jobs:
           cp -r pages/* _site/
           cp assets/robots.txt _site/
           cp assets/og-image.svg _site/
+          cp assets/favicon.svg _site/
+          cp assets/apple-touch-icon.png _site/
           echo "investpop.com.br" > _site/CNAME
 
       - name: Upload Pages artifact

@@ -1302,6 +1302,31 @@ async function testarGerarSemCache() {
 
 
 
+async function testarFaviconArquivoFisico() {
+    console.log('\n🔍 TESTE 40 — Favicon como arquivo físico (não data URI) (#97)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const temDataUri = html.includes('href="data:image/svg+xml')
+    const temArquivo = html.includes('href="./favicon.svg"') || html.includes('href="favicon.svg"')
+    const temAppleTouch = html.includes('apple-touch-icon')
+    const faviconExiste = fs.existsSync(path.join(PAGES_DIR, 'favicon.svg'))
+    const appleExiste = fs.existsSync(path.join(PAGES_DIR, 'apple-touch-icon.png'))
+
+    if (!temDataUri && temArquivo && temAppleTouch && faviconExiste && appleExiste) {
+        totalPassou++
+        console.log('   ✅ favicon.svg e apple-touch-icon.png existem como arquivos físicos')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        if (temDataUri) console.log('   ❌ Ainda usa data URI inline')
+        if (!temArquivo) console.log('   ❌ <link rel="icon"> não aponta para arquivo físico')
+        if (!temAppleTouch) console.log('   ❌ <link rel="apple-touch-icon"> ausente')
+        if (!faviconExiste) console.log('   ❌ pages/favicon.svg não existe')
+        if (!appleExiste) console.log('   ❌ pages/apple-touch-icon.png não existe')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarStylesCSSPath() {
     console.log('\\n\u{1f50d} TESTE 33 \u2014 styles.css referenciado com path correto em todas as p\u00e1ginas (#94)')
     let ok = true
@@ -1422,6 +1447,7 @@ async function main() {
     await testarStylesCSSPath()
     await testarSemCDNTailwind()
     await testarMetaSeguranca()
+    await testarFaviconArquivoFisico()
 
     await browser.close()
 
