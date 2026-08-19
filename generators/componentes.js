@@ -26,8 +26,8 @@ function headHtml(titulo, descricao, jsonLd, urlPath, opts) {
   <meta name="twitter:description" content="${descricao}" />
   <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="robots" content="index, follow" />
-  <link rel="icon" type="image/svg+xml" href="${basePath}favicon.svg" />
-  <link rel="apple-touch-icon" href="${basePath}apple-touch-icon.png" />
+  <link rel="icon" type="image/svg+xml" href="https://investpop.com.br/favicon.svg" />
+  <link rel="apple-touch-icon" href="https://investpop.com.br/apple-touch-icon.png" />
   <link rel="stylesheet" href="${basePath}styles.css" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https:" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />

@@ -1328,7 +1328,7 @@ async function testarFaviconArquivoFisico() {
 
     const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
     const temDataUri = html.includes('href="data:image/svg+xml')
-    const temArquivo = html.includes('href="./favicon.svg"') || html.includes('href="favicon.svg"')
+    const temArquivo = html.includes('href="./favicon.svg"') || html.includes('href="favicon.svg"') || html.includes('href="https://investpop.com.br/favicon.svg"')
     const temAppleTouch = html.includes('apple-touch-icon')
     const faviconExiste = fs.existsSync(path.join(PAGES_DIR, 'favicon.svg'))
     const appleExiste = fs.existsSync(path.join(PAGES_DIR, 'apple-touch-icon.png'))
@@ -1346,6 +1346,37 @@ async function testarFaviconArquivoFisico() {
         if (!appleExiste) console.log('   ❌ pages/apple-touch-icon.png não existe')
         console.log('   Status: ❌ FALHOU')
     }
+}
+
+async function testarFaviconUrlAbsoluta() {
+    console.log('\n🔍 TESTE 42 — Favicon com URL absoluta em todas as páginas (#99)')
+
+    const paginas = [
+        { file: 'index.html', desc: 'raiz' },
+        { file: 'acoes/index.html', desc: 'acoes/' },
+        { file: 'altas/index.html', desc: 'altas/' },
+        { file: 'fiis/HGLG11/index.html', desc: 'fiis/HGLG11/' },
+        { file: 'acoes/PETR4/index.html', desc: 'acoes/PETR4/' },
+    ]
+    let ok = true
+
+    for (const p of paginas) {
+        const filePath = path.join(PAGES_DIR, p.file)
+        if (!fs.existsSync(filePath)) { ok = false; console.log('   ❌ ' + p.file + ' não existe'); continue }
+        const html = fs.readFileSync(filePath, 'utf-8')
+        const temAbsoluta = html.includes('href="https://investpop.com.br/favicon.svg"')
+        const temAppleAbsoluta = html.includes('href="https://investpop.com.br/apple-touch-icon.png"')
+        if (temAbsoluta && temAppleAbsoluta) {
+            console.log('   ✅ ' + p.desc + ': favicon e apple-touch-icon com URL absoluta')
+        } else {
+            ok = false
+            if (!temAbsoluta) console.log('   ❌ ' + p.desc + ': favicon sem URL absoluta')
+            if (!temAppleAbsoluta) console.log('   ❌ ' + p.desc + ': apple-touch-icon sem URL absoluta')
+        }
+    }
+
+    if (ok) { totalPassou++; console.log('   Status: ✅ PASSOU') }
+    else { totalFalhou++; console.log('   Status: ❌ FALHOU') }
 }
 
 async function testarStylesCSSPath() {
@@ -1469,6 +1500,7 @@ async function main() {
     await testarSemCDNTailwind()
     await testarMetaSeguranca()
     await testarFaviconArquivoFisico()
+    await testarFaviconUrlAbsoluta()
     await testarTituloDescricaoIndex()
 
     await browser.close()
