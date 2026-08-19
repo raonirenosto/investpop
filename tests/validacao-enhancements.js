@@ -1302,6 +1302,23 @@ async function testarGerarSemCache() {
 
 
 
+async function testarGoogleVerification() {
+    console.log('\n🔍 TESTE 43 — Meta tag Google Search Console presente (#100)')
+
+    const html = fs.readFileSync(path.join(PAGES_DIR, 'index.html'), 'utf-8')
+    const temTag = html.includes('google-site-verification') && html.includes('iFGzS5PvqHe9AbvIWn8ITfluK70ExbhbWLekl-p-RHg')
+
+    if (temTag) {
+        totalPassou++
+        console.log('   ✅ Meta tag google-site-verification presente na index')
+        console.log('   Status: ✅ PASSOU')
+    } else {
+        totalFalhou++
+        console.log('   ❌ Meta tag google-site-verification ausente ou com content errado')
+        console.log('   Status: ❌ FALHOU')
+    }
+}
+
 async function testarTituloDescricaoIndex() {
     console.log('\n🔍 TESTE 41 — Título e description atualizados com ações (#98)')
 
@@ -1501,6 +1518,7 @@ async function main() {
     await testarMetaSeguranca()
     await testarFaviconArquivoFisico()
     await testarFaviconUrlAbsoluta()
+    await testarGoogleVerification()
     await testarTituloDescricaoIndex()
 
     await browser.close()

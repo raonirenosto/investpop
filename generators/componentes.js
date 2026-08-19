@@ -26,6 +26,7 @@ function headHtml(titulo, descricao, jsonLd, urlPath, opts) {
   <meta name="twitter:description" content="${descricao}" />
   <meta name="twitter:image" content="https://investpop.com.br/og-image.svg" />
   <meta name="robots" content="index, follow" />
+  <meta name="google-site-verification" content="iFGzS5PvqHe9AbvIWn8ITfluK70ExbhbWLekl-p-RHg" />
   <link rel="icon" type="image/svg+xml" href="https://investpop.com.br/favicon.svg" />
   <link rel="apple-touch-icon" href="https://investpop.com.br/apple-touch-icon.png" />
   <link rel="stylesheet" href="${basePath}styles.css" />
